@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.ui.theme
+package com.devdroid07.storeapp.core.presentation.designsystem
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

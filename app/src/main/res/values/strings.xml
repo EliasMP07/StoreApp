@@ -4,4 +4,5 @@
     <string name="hide_password">Hide password</string>
     <string name="dont_have_an_account">If you have an account?</string>
     <string name="sign_up">Sign In here</string>
+    <string name="my_cart">My cart</string>
 </resources>

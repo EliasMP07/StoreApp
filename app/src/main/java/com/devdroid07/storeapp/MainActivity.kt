@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.devdroid07.storeapp.auth.presentation.login.LoginScreenRoot
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
+import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 
@@ -19,12 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StoreAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    LoginScreenRoot(
-                        onRegisterClick = {},
-                        onLoginSuccess = {}
-                    )
-                }
+                HomeScreenRoot()
             }
         }
     }

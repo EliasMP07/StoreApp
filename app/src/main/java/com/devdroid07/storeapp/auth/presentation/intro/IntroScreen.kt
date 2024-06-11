@@ -34,6 +34,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.Logo
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButtonOutline
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreLogoVertical
 
 @Composable
 fun IntroScreenRoot(
@@ -59,7 +60,9 @@ private fun IntroScreen(
             .fillMaxSize()
     ) {
         Image(
-            modifier = Modifier.fillMaxSize().alpha(0.5f),
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.5f),
             contentScale = ContentScale.Crop,
             painter = painterResource(id = R.drawable.background_intro),
             contentDescription = null
@@ -68,7 +71,8 @@ private fun IntroScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp)
-                .align(Alignment.BottomCenter).systemBarsPadding(),
+                .align(Alignment.BottomCenter)
+                .systemBarsPadding(),
             verticalArrangement = Arrangement.Center
         ){
             Box(
@@ -77,7 +81,7 @@ private fun IntroScreen(
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                RuniqueLogoVertical()
+                StoreLogoVertical()
             }
             StoreActionButton(
                 text = "Login",
@@ -94,17 +98,7 @@ private fun IntroScreen(
     }
 }
 
-@Composable
-private fun RuniqueLogoVertical(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-       Image(painter = painterResource(id = R.drawable.logo_splashscreen), contentDescription = "Logo app" )
-    }
-}
+
 
 
 @Preview

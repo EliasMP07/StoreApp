@@ -8,3 +8,8 @@ import com.devdroid07.storeapp.R
 val Logo : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.logo_splashscreen)
+
+val GoogleIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.google_icon)
+

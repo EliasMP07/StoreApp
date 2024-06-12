@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import com.devdroid07.storeapp.auth.presentation.login.LoginScreenRoot
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
+import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRootScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StoreAppTheme {
-                HomeScreenRoot()
+                ProductDetailRootScreenRoot()
             }
         }
     }

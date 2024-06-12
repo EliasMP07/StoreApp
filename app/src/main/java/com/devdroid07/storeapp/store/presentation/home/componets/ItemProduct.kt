@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.shimmerEffect
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -56,19 +57,13 @@ fun ItemProduct(
                 Text(text = "Replica Sneakers", style = MaterialTheme.typography.bodyMedium)
                 Text(text = "$550", style = MaterialTheme.typography.titleMedium)
             }
-            IconButton(
+            StoreIconButtonFavorite(
                 modifier = Modifier.align(Alignment.TopEnd),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                ),
-                onClick = { /*TODO*/ }
-            ) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
-                    contentDescription = "Favorite item",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
+                isFavorite = false,
+                onClick = {
+
+                }
+            )
         }
     }
 }

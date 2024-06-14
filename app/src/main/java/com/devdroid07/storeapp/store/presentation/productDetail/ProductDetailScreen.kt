@@ -1,7 +1,9 @@
-@file:OptIn(ExperimentalGlideComposeApi::class)
+@file:OptIn(ExperimentalGlideComposeApi::class, ExperimentalSharedTransitionApi::class)
 
 package com.devdroid07.storeapp.store.presentation.productDetail
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,14 +55,21 @@ import com.devdroid07.storeapp.core.presentation.designsystem.StoreIconButtonBac
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
+import com.devdroid07.storeapp.store.presentation.home.HomeAction
 
 @Composable
 fun ProductDetailRootScreenRoot(
+    onBack: () -> Unit,
     viewModel: ProductDetailViewModel = hiltViewModel()
 ) {
     ProductDetailScreen(
         state = viewModel.state,
-        onAction = viewModel::onAction
+        onAction = {action ->
+            when(action){
+                ProductDetailAction.OnBackClick -> onBack()
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -92,7 +101,6 @@ private fun ProductDetailScreen(
                         .padding(10.dp),
                     isFavorite = false,
                     onClick = {
-
                     }
                 )
                 StoreIconButtonBack(
@@ -100,7 +108,7 @@ private fun ProductDetailScreen(
                         .align(Alignment.TopStart)
                         .padding(10.dp),
                     onClick = {
-
+                        onAction(ProductDetailAction.OnBackClick)
                     }
                 )
             }

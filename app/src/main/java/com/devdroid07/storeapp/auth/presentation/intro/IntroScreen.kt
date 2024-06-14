@@ -86,13 +86,17 @@ private fun IntroScreen(
             StoreActionButton(
                 text = "Login",
                 isLoading = false,
-                onClick = {}
+                onClick = {
+                    onAction(IntroAction.OnSignInClick)
+                }
             )
             Spacer(modifier = Modifier.height(20.dp))
             StoreActionButtonOutline(
                 text = "Register",
                 isLoading = false,
-                onClick = {}
+                onClick = {
+                    onAction(IntroAction.OnSignUpClick)
+                }
             )
         }
     }

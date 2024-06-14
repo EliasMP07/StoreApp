@@ -31,13 +31,14 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIc
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.shimmerEffect
 
 @OptIn(ExperimentalGlideComposeApi::class)
-@Preview
 @Composable
 fun ItemProduct(
-    isFavorite: Boolean = false
+    isFavorite: Boolean = false,
+    onClick : () -> Unit
 ) {
     Card(
-        modifier = Modifier.padding(5.dp)
+        modifier = Modifier.padding(5.dp),
+        onClick = onClick
     ) {
         Box(
         ){

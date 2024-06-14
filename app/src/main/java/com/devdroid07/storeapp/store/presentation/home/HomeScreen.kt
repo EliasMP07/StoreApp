@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.devdroid07.storeapp.store.presentation.home
 
@@ -61,12 +61,18 @@ import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
 
 @Composable
 fun HomeScreenRoot(
+    onProductDetail: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     HomeScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = {action ->
+            when(action){
+                HomeAction.OnProductDetailScreen -> onProductDetail()
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -192,7 +198,11 @@ private fun HomeScreen(
             items(10) {
                 ShimmerListProductItem(
                     isLoading = false,
-                    contentAfterLoading = { ItemProduct() }
+                    contentAfterLoading = { ItemProduct(
+                        onClick = {
+                            onAction(HomeAction.OnProductDetailScreen)
+                        }
+                    ) }
                 )
             }
         }

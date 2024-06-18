@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
     alias(libs.plugins.android.hilt.plugin)
+    id("kotlin-parcelize")
+    alias(libs.plugins.android.serialization)
 }
 
 android {
@@ -32,6 +34,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -52,6 +55,11 @@ android {
 }
 
 dependencies {
+    // Get day of week api 25 or lower
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    //Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.core.splashscreen)
     kapt(libs.hilt.compiler)
@@ -64,7 +72,7 @@ dependencies {
     implementation(libs.androidx.datastore)
 
     implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.moshi)
+    implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.glide.compose)
 

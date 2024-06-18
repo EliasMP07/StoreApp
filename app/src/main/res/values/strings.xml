@@ -5,4 +5,7 @@
     <string name="dont_have_an_account">If you have an account?</string>
     <string name="sign_up">Sign In here</string>
     <string name="my_cart">My cart</string>
+    <string name="error_internet_connection">No Internet connection. Please check your connection and try again.</string>
+    <string name="error_timeout_connection">Network error. Your request could not be completed.</string>
+    <string name="error_unknown">Unknown error.</string>
 </resources>

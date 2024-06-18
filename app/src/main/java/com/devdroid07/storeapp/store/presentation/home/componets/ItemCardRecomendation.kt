@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -39,9 +40,13 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateOffset
+import com.devdroid07.storeapp.store.domain.model.Product
+import com.devdroid07.storeapp.store.presentation.productDetail.StarRating
 
 @Composable
-fun ItemCardRecomendation(){
+fun ItemCardRecomendation(
+    product: Product
+) {
     ElevatedCard(
         elevation = CardDefaults.elevatedCardElevation(12.dp),
         shape = RoundedCornerShape(20.dp),
@@ -54,28 +59,40 @@ fun ItemCardRecomendation(){
                 .fillMaxWidth()
                 .height(100.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             GlideImage(
                 modifier = Modifier.size(80.dp),
-                model = R.drawable.server_down_image, contentDescription = null
+                model = product.image, contentDescription = null
             )
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 10.dp)
-            ){
+            ) {
                 Text(
-                    text = "Axel Arigato",
+                    text = product.title,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "Celan 90 Triple",
+                    text = product.category,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Text(
-                    text = "$200",
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "$${product.price}",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    StarRating(
+                        rating = product.ratingRate,
+                    ) {
+                        // Handle rating change
+                    }
+                }
             }
             ButtonAnimation()
         }
@@ -83,7 +100,7 @@ fun ItemCardRecomendation(){
 }
 
 @Composable
-private fun ButtonAnimation(){
+private fun ButtonAnimation() {
 
     Box(
         modifier = Modifier
@@ -92,7 +109,7 @@ private fun ButtonAnimation(){
             .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colorScheme.onBackground),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Icon(
             modifier = Modifier.animateOffset(),
             imageVector = Icons.Rounded.ArrowForwardIos,

@@ -31,17 +31,13 @@ fun StoreScaffold(
     floatingActionButton: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val connection by connectivityState()
     Scaffold(
         topBar = topAppBar,
         floatingActionButton = floatingActionButton,
         floatingActionButtonPosition = FabPosition.End,
         modifier = modifier
     ) { padding ->
-        when(connection){
-            ConnectionState.Available -> content(padding)
-            ConnectionState.Unavailable -> OfflineContent()
-        }
+        content(padding)
     }
 }
 

@@ -34,7 +34,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -139,7 +141,7 @@ private fun ProductDetailScreen(
                             )
                             Spacer(modifier = Modifier.height(10.dp))
                             StarRating(
-                                rating = 2.96f,
+                                rating = 2.96,
                                 valueReview = "320"
                             ) {
 
@@ -238,12 +240,16 @@ fun SelectableItemCard(
 
 @Composable
 fun StarRating(
-    rating: Float = 0.0f,
-    valueReview: String = "",
+    rating: Double = 0.0,
+    valueReview: String? = null,
     maxRating: Int = 5,
-    onRatingChanged: (Float) -> Unit
+    onRatingChanged: (Double) -> Unit
 ) {
-    var currentRating by remember { mutableFloatStateOf(rating) }
+    var currentRating by remember { mutableStateOf(rating) }
+
+    LaunchedEffect(rating) {
+        currentRating = rating
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -255,12 +261,12 @@ fun StarRating(
             for (i in 1..maxRating) {
                 val icon = when {
                     i <= currentRating -> Icons.Filled.Star
-                    i - 0.5f <= currentRating -> Icons.Filled.StarHalf
+                    i - 0.5 <= currentRating -> Icons.Filled.StarHalf
                     else -> Icons.Filled.StarBorder
                 }
                 val tint = when {
                     i <= currentRating -> Color.Yellow
-                    i - 0.5f <= currentRating -> Color.Yellow
+                    i - 0.5 <= currentRating -> Color.Yellow
                     else -> Color.Gray
                 }
 
@@ -271,12 +277,14 @@ fun StarRating(
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            currentRating = i.toFloat()
+                            currentRating = i.toDouble()
                             onRatingChanged(currentRating)
                         }
                 )
             }
         }
-        Text(text = "($valueReview Review)", style = MaterialTheme.typography.labelMedium)
+        if(valueReview != null){
+            Text(text = "($valueReview Reviews)", style = MaterialTheme.typography.labelMedium)
+        }
     }
 }

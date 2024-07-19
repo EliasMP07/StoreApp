@@ -2,14 +2,11 @@ package com.devdroid07.storeapp.store.data.repository
 
 import com.devdroid07.storeapp.store.data.mappers.toProduct
 import com.devdroid07.storeapp.store.data.remote.FakeStoreApi
-import com.devdroid07.storeapp.store.domain.StoreRepository
+import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Response
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.time.withTimeout
-import kotlinx.coroutines.withTimeout
 import java.io.IOException
 import java.net.UnknownHostException
 
@@ -35,4 +32,21 @@ class StoreRepositoryImpl(
             }
         }
     }
+
+    override suspend fun getSingleProduct(idProduct: String): Response<Product> {
+        return try {
+            val result = api.getSingleProduct(idProduct).toProduct()
+            Response.Success(result)
+        } catch (e: UnknownHostException) {
+            e.printStackTrace()
+            Response.Failure(Exception("No Internet Connection"))
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Response.Failure(Exception("Network Error"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response.Failure(e)
+        }
+    }
 }
+

@@ -45,12 +45,15 @@ import com.devdroid07.storeapp.store.presentation.productDetail.StarRating
 
 @Composable
 fun ItemCardRecomendation(
-    product: Product
+    product: Product,
+    onProductClick: (Product) -> Unit
 ) {
     ElevatedCard(
         elevation = CardDefaults.elevatedCardElevation(12.dp),
         shape = RoundedCornerShape(20.dp),
-        onClick = { /*TODO*/ }
+        onClick = {
+            onProductClick(product)
+        }
     ) {
         Row(
             modifier = Modifier

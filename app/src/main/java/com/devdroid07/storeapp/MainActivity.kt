@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
                 viewModel.state.value.isLoading == null
             }
         }
-        enableEdgeToEdge()
         setContent {
             StoreAppTheme {
                 val  navController = rememberNavController()

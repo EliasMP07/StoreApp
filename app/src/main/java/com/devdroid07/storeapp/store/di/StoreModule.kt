@@ -2,7 +2,10 @@ package com.devdroid07.storeapp.store.di
 
 import com.devdroid07.storeapp.store.data.remote.FakeStoreApi
 import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
-import com.devdroid07.storeapp.store.domain.StoreRepository
+import com.devdroid07.storeapp.store.domain.repository.StoreRepository
+import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
+import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
+import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +32,18 @@ object StoreModule {
     @Singleton
     fun provideStoreRepository(
         api: FakeStoreApi
-    ): StoreRepository{
+    ): StoreRepository {
         return StoreRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStoreUseCase(
+        repository: StoreRepository
+    ): StoreUseCases{
+        return StoreUseCases(
+            getAllProducts = GetAllProducts(repository),
+            getSingleProduct = GetSingleProduct(repository)
+        )
     }
 }

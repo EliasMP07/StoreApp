@@ -51,44 +51,36 @@ import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
 
 @Composable
 fun HomeScreenRoot(
-    onProductDetail: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    state: HomeState,
+    onAction: (HomeAction) -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     HomeScreen(
         state = state,
-        onAction = { action ->
-            when (action) {
-                HomeAction.OnProductDetailScreen -> onProductDetail()
-                else -> Unit
-            }
-            viewModel.onAction(action)
-        }
+        onAction = onAction
     )
 }
 
 @Composable
-fun handleResult(
+private fun handleResult(
     isLoading: Boolean,
     error: String?,
-    product: List<Product>,
-    retry : () -> Unit,
+    retry: () -> Unit,
     paddingValues: PaddingValues
 ): Boolean {
-    product.apply {
-        return when {
-            isLoading -> {
-                HomeShimmerEffect(
-                    paddingValues = paddingValues
-                )
-                false
-            }
-            error != null -> {
-                ErrorContent(error = error, onRetry = retry)
-                false
-            }
-            else -> true
+    return when {
+        isLoading -> {
+            HomeShimmerEffect(
+                paddingValues = paddingValues
+            )
+            false
         }
+
+        error != null -> {
+            ErrorContent(error = error, onRetry = retry)
+            false
+        }
+
+        else -> true
     }
 }
 
@@ -111,7 +103,7 @@ private fun HomeScreen(
             )
         },
         floatingActionButton = {
-            if (state.error == null){
+            if (state.error == null) {
                 ExtendedFloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
                     text = {
@@ -139,7 +131,6 @@ private fun HomeScreen(
     ) {
         val result = handleResult(
             isLoading = state.isLoading,
-            product = state.products,
             paddingValues = it,
             error = state.error,
             retry = {
@@ -153,20 +144,24 @@ private fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
-                    .padding(20.dp),
+                    .padding(horizontal = 20.dp),
                 contentPadding = PaddingValues(10.dp)
             ) {
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                    HeaderHome(product = state.productRecomended, onSearchClick = {})
+                    HeaderHome(product = state.productRecomended, onSearchClick = {
+
+                    }, onProductClick = {
+                        onAction(HomeAction.OnProductDetailScreen(it.id.toString()))
+                    })
                 }
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
                     Text(text = "All products", style = MaterialTheme.typography.titleMedium)
                 }
-                items(state.products) { product ->
+                items(state.products, key ={it.id}) { product ->
                     ItemProduct(
                         product = product,
-                        onClick = {
-                            onAction(HomeAction.OnProductDetailScreen)
+                        onClick = { idProduct ->
+                            onAction(HomeAction.OnProductDetailScreen(idProduct))
                         }
                     )
                 }

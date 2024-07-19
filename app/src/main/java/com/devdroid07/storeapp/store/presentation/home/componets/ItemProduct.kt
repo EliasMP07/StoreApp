@@ -37,11 +37,13 @@ import com.devdroid07.storeapp.store.domain.model.Product
 fun ItemProduct(
     isFavorite: Boolean = false,
     product: Product,
-    onClick : () -> Unit
+    onClick : (idProduct: String) -> Unit
 ) {
     Card(
         modifier = Modifier.padding(5.dp),
-        onClick = onClick
+        onClick = {
+            onClick(product.id.toString())
+        }
     ) {
         Box(
         ){

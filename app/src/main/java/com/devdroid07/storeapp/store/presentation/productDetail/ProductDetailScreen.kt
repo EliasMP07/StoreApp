@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalGlideComposeApi::class, ExperimentalSharedTransitionApi::class)
+@file:OptIn(
+    ExperimentalGlideComposeApi::class, ExperimentalSharedTransitionApi::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.devdroid07.storeapp.store.presentation.productDetail
 
@@ -10,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +21,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,12 +33,19 @@ import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material.icons.rounded.ShoppingCart
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomAppBarState
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,29 +63,62 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreIconButtonBack
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
+import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.presentation.home.HomeAction
+import com.devdroid07.storeapp.store.presentation.home.componets.HomeShimmerEffect
+import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetContent
+import com.devdroid07.storeapp.store.presentation.productDetail.components.ProductDetailShimmerEffect
 
 @Composable
 fun ProductDetailRootScreenRoot(
     onBack: () -> Unit,
     viewModel: ProductDetailViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     ProductDetailScreen(
-        state = viewModel.state,
-        onAction = {action ->
-            when(action){
+        state = state,
+        onAction = { action ->
+            when (action) {
                 ProductDetailAction.OnBackClick -> onBack()
+                else -> Unit
             }
             viewModel.onAction(action)
         }
     )
+}
+
+@Composable
+private fun handleResultProduct(
+    isLoading: Boolean,
+    error: String?,
+    retry: () -> Unit,
+    paddingValues: PaddingValues
+): Boolean {
+    return when {
+        isLoading -> {
+            ProductDetailShimmerEffect(
+                paddingValues = paddingValues
+            )
+            false
+        }
+
+        error != null -> {
+            ErrorContent(error = error, onRetry = retry)
+            false
+        }
+
+        else -> true
+    }
+
 }
 
 @Composable
@@ -81,130 +127,59 @@ private fun ProductDetailScreen(
     onAction: (ProductDetailAction) -> Unit
 ) {
     StoreScaffold {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-        ) {
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                GlideImage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp),
-                    model = "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-                    contentDescription = "ImageProduct"
-                )
-                StoreIconButtonFavorite(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(10.dp),
-                    isFavorite = false,
-                    onClick = {
-                    }
-                )
-                StoreIconButtonBack(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(10.dp),
-                    onClick = {
-                        onAction(ProductDetailAction.OnBackClick)
-                    }
-                )
-            }
-            ElevatedCard(
+        val result = handleResultProduct(
+            isLoading = state.isLoading,
+            error = state.error,
+            retry = { /*TODO*/ },
+            paddingValues = it
+        )
+        if (result) {
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                elevation = CardDefaults.elevatedCardElevation(50.dp),
-                shape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
+                    .fillMaxSize()
+                    .padding(it),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                Box(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
                 ) {
-                    Row(
+                    GlideImage(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                        ) {
-                            Text(
-                                text = "Roller Rabbit",
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            StarRating(
-                                rating = 2.96,
-                                valueReview = "320"
-                            ) {
-
-                            }
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            SelectableItemCard()
-                            Text(
-                                text = "Avaliable in stock",
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                        }
-                    }
-                    Column(
-                        modifier = Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Text(
-                            text = "Description",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            text = "USB 3.0 and USB 2.0 Compatibility Fast data transfers Improve PC Performance High Capacity; Compatibility Formatted NTFS for Windows 10, Windows 8.1, Windows 7; Reformatting may be required for other operating systems; Compatibility may vary depending on user’s hardware configuration and operating system",
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Justify
-                        )
-                    }
-                    Row(
+                            .align(Alignment.Center),
+                        model = state.product.image,
+                        contentDescription = "ImageProduct"
+                    )
+                    StoreIconButtonFavorite(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(0.5f)
-                        ) {
-                            Text(
-                                text = "Total price",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primary.copy(
-                                        alpha = 0.5f
-                                    )
-                                )
-                            )
-                            Text(text = "$198.00", style = MaterialTheme.typography.titleLarge)
+                            .align(Alignment.BottomEnd)
+                            .padding(10.dp),
+                        isFavorite = false,
+                        onClick = {
                         }
-                        StoreActionButton(
-                            modifier = Modifier.weight(1f),
-                            text = "Add to Card", isLoading = false,
-                            icon = Icons.Rounded.ShoppingCart
-                        ) {
-
+                    )
+                    StoreIconButtonBack(
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(10.dp),
+                        onClick = {
+                            onAction(ProductDetailAction.OnBackClick)
                         }
-                    }
+                    )
+                }
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.elevatedCardElevation(50.dp),
+                    shape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
+                ) {
+                    BottomSheetContent(product = state.product, isExpanded = state.isExpanded, onExpandedClick = {
+                        onAction(ProductDetailAction.OnMoreInfoClick)
+                    })
                 }
             }
         }
     }
-}
 
+}
 @Preview
 @Composable
 private fun ProductDetailRootScreenPreview() {
@@ -283,7 +258,7 @@ fun StarRating(
                 )
             }
         }
-        if(valueReview != null){
+        if (valueReview != null) {
             Text(text = "($valueReview Reviews)", style = MaterialTheme.typography.labelMedium)
         }
     }

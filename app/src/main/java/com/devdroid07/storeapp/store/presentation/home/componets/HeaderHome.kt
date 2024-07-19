@@ -22,7 +22,8 @@ import com.devdroid07.storeapp.store.domain.model.Product
 @Composable
 fun HeaderHome(
     product: Product,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onProductClick: (Product) -> Unit
 ){
     Column {
         Row(
@@ -54,7 +55,7 @@ fun HeaderHome(
             )
         )
         Spacer(modifier = Modifier.height(30.dp))
-        ItemCardRecomendation(product = product)
+        ItemCardRecomendation(product = product, onProductClick = onProductClick)
         Spacer(modifier = Modifier.height(30.dp))
     }
 }

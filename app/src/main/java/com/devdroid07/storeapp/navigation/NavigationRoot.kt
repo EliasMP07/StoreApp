@@ -5,16 +5,25 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
 import com.devdroid07.storeapp.auth.presentation.intro.IntroScreenRoot
 import com.devdroid07.storeapp.auth.presentation.login.LoginScreenRoot
+import com.devdroid07.storeapp.navigation.util.NavArgs
+import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
+import com.devdroid07.storeapp.store.presentation.home.HomeAction
 import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
+import com.devdroid07.storeapp.store.presentation.home.HomeViewModel
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRootScreenRoot
 
 @Composable
@@ -23,7 +32,7 @@ fun NavigationRoot(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "auth"
+        startDestination = RoutesScreens.Auth.route
     ) {
         auth(navController)
         store(navController)
@@ -34,15 +43,26 @@ fun NavGraphBuilder.store(
     navController: NavHostController
 ) {
     navigation(
-        route = "store",
+        route = RoutesScreens.Store.route,
         startDestination = "home"
     ) {
         composable(
-            route = "home"
+            route = RoutesScreens.Home.route
         ) {
+
+            val viewModel: HomeViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
             HomeScreenRoot(
-                onProductDetail = {
-                    navController.navigate("product_detail")
+                state = state,
+                onAction = { action ->
+                    when (action) {
+                        is HomeAction.OnProductDetailScreen -> {
+                            navController.navigate(RoutesScreens.DetailProduct.createRoute(action.idProduct))
+                        }
+                        else -> Unit
+                    }
+                    viewModel.onAction(action)
                 }
             )
         }
@@ -53,7 +73,9 @@ fun NavGraphBuilder.store(
             exitTransition = {
                 scaleOutOfContainer()
             },
-            route = "product_detail"
+            route = RoutesScreens.DetailProduct.route,
+            arguments = listOf(navArgument(NavArgs.ProductID.key){type = NavType.StringType})
+
         ) {
             ProductDetailRootScreenRoot(
                 onBack = {
@@ -70,7 +92,7 @@ fun NavGraphBuilder.auth(
 ) {
     navigation(
         startDestination = "intro",
-        route = "auth"
+        route = RoutesScreens.Auth.route
     ) {
         composable(
             route = "intro"

@@ -40,16 +40,20 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.LookCloseIcon
+import com.devdroid07.storeapp.core.presentation.designsystem.LookOpenIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 @Composable
 fun StorePasswordTextField(
     state: TextFieldState,
     isPasswordVisible: Boolean,
     onTogglePasswordVisibility: () -> Unit,
+    isSegurityPassword: Boolean = true,
     hint: String,
     title: String?,
     modifier: Modifier = Modifier,
@@ -68,7 +72,8 @@ fun StorePasswordTextField(
             if (title != null) {
                 Text(
                     text = title,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
@@ -114,7 +119,7 @@ fun StorePasswordTextField(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Lock,
+                        imageVector = if (isSegurityPassword) LookCloseIcon else LookOpenIcon,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )

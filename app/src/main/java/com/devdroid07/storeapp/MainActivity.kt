@@ -22,6 +22,7 @@ import dagger.hilt.android.HiltAndroidApp
 class MainActivity : ComponentActivity() {
 
     val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             StoreAppTheme {
                 val  navController = rememberNavController()
-                NavigationRoot(navController = navController)
+                NavigationRoot(navController = navController, context = this)
             }
         }
     }

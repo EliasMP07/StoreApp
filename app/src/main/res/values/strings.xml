@@ -1,11 +1,26 @@
 <resources>
     <string name="app_name">StoreApp</string>
-    <string name="show_password">Show password</string>
-    <string name="hide_password">Hide password</string>
-    <string name="dont_have_an_account">If you have an account?</string>
-    <string name="sign_up">Sign In here</string>
-    <string name="my_cart">My cart</string>
-    <string name="error_internet_connection">No Internet connection. Please check your connection and try again.</string>
-    <string name="error_timeout_connection">Network error. Your request could not be completed.</string>
-    <string name="error_unknown">Unknown error.</string>
+    <string name="show_password">Mostrar contraseña</string>
+    <string name="hide_password">Ocultar contraseña</string>
+    <string name="dont_have_an_account">¿No tienes una cuenta?</string>
+    <string name="sign_up">Regístrate aquí</string>
+    <string name="at_least_x_characters">Al menos %d caracteres</string>
+    <string name="at_least_one_number">Al menos un número</string>
+    <string name="contains_lowercase_char">Contiene un carácter en minúscula</string>
+    <string name="contains_uppercase_char">Contiene un carácter en mayúscula</string>
+    <string name="my_cart">Mi carrito</string>
+    <string name="error_internet_connection">Sin conexión a Internet. Por favor, verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="error_timeout_connection">Error de red. No se pudo completar tu solicitud.</string>
+    <string name="error_unknown">Error desconocido.</string>
+    <string name="have_account">¿Tienes una cuenta?</string>
+    <string name="sign_in">Iniciar Sessión</string>
+    <string name="title_text_email">Email</string>
+    <string name="hint_text_email">example@test.com</string>
+    <string name="hint_text_password">Password</string>
+    <string name="title_text_password">Password</string>
+    <string name="text_btn_register">Registrar</string>
+    <string name="text_btn_login">Iniciar sessión</string>
+    <string name="text_welcome">Welcome!</string>
+    <string name="text_welcome_description">Please login or sign up to continue our app</string>
+
 </resources>

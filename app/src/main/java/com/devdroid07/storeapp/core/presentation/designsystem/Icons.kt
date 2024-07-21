@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp.core.presentation.designsystem
 
+import android.media.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -12,4 +13,25 @@ val Logo : ImageVector
 val GoogleIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.google_icon)
+
+val CheckIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_check)
+
+val CloseIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_close)
+
+val LookOpenIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_look_open)
+
+val LookCloseIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_look_close)
+
+val EmailIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_email)
+
 

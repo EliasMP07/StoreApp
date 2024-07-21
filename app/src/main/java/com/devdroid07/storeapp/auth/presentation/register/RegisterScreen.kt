@@ -1,12 +1,10 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package com.devdroid07.storeapp.auth.presentation.login
+package com.devdroid07.storeapp.auth.presentation.register
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,85 +14,46 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.unit.sp
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.auth.domain.usecases.UserDataValidator
+import com.devdroid07.storeapp.auth.presentation.register.components.PasswordRequirement
 import com.devdroid07.storeapp.core.presentation.designsystem.EmailIcon
-import com.devdroid07.storeapp.core.presentation.designsystem.GoogleIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
-import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButtonOutline
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreLogoVertical
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StorePasswordTextField
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreTextField
-import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 
 @Composable
-fun LoginScreenRoot(
-    onLoginSuccess: () -> Unit,
-    onRegisterClick: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+fun RegisterScreenRoot(
+    state: RegisterState,
+    onAction: (RegisterAction) -> Unit
 ) {
-    val context = LocalContext.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val state by viewModel.state.collectAsState()
-
-    ObserveAsEvents(viewModel.events) { event ->
-        when (event) {
-            is LoginEvent.Error -> {
-                keyboardController?.hide()
-                Toast.makeText(
-                    context,
-                    event.message.asString(context),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            LoginEvent.OnLoginSuccess -> {
-                keyboardController?.hide()
-                Toast.makeText(
-                    context,
-                    "Login successfull",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-    LoginScreen(
+    RegisterScreen(
         state = state,
-        onAction = { action ->
-            when (action) {
-                LoginAction.OnRegisterClick -> onRegisterClick()
-                else -> Unit
-            }
-            viewModel.onAction(action)
-        }
+        onAction = onAction
     )
 }
 
 @Composable
-private fun LoginScreen(
-    state: LoginState,
-    onAction: (LoginAction) -> Unit
+private fun RegisterScreen(
+    state: RegisterState,
+    onAction: (RegisterAction) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -111,18 +70,17 @@ private fun LoginScreen(
             StoreLogoVertical()
         }
         Text(
-            text = stringResource(R.string.text_welcome),
-            style = MaterialTheme.typography.titleLarge.copy(
+            text = "Registrate!", style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold
             )
         )
-        Text(text = stringResource(R.string.text_welcome_description))
+        Text(text = "Please sign upp to continue our app")
         Spacer(modifier = Modifier.height(30.dp))
         StoreTextField(
             state = state.email,
             startIcon = EmailIcon,
             keyboardType = KeyboardType.Email,
-            endIcon = if (state.passwordCorrect) Icons.Default.Check else null,
+            endIcon = if (state.isEmailValid) Icons.Default.Check else null,
             hint = stringResource(R.string.hint_text_email),
             title = stringResource(R.string.title_text_email)
         )
@@ -130,19 +88,49 @@ private fun LoginScreen(
         StorePasswordTextField(
             state = state.password,
             isPasswordVisible = state.isVisiblePassword,
+            isSegurityPassword = state.passwordValidationState.isValidPassword,
             onTogglePasswordVisibility = {
-                onAction(LoginAction.OnToggleVisibilityPassword)
+                onAction(RegisterAction.OnToggleVisibilityPassword)
             },
             hint = stringResource(R.string.hint_text_password),
             title = stringResource(R.string.title_text_password)
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        StoreActionButton(
-            enabled = state.canLogin,
-            text = stringResource(R.string.text_btn_login),
-            isLoading = state.isLoggingIn
-        ) {
+        Spacer(modifier = Modifier.height(16.dp))
 
+        PasswordRequirement(
+            text = stringResource(
+                id = R.string.at_least_x_characters,
+                UserDataValidator.MIN_PASSWORD_LENGTH
+            ),
+            isValid = state.passwordValidationState.hasMinLength
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        PasswordRequirement(
+            text = stringResource(
+                id = R.string.at_least_one_number,
+            ),
+            isValid = state.passwordValidationState.hasNumber
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        PasswordRequirement(
+            text = stringResource(
+                id = R.string.contains_lowercase_char,
+            ),
+            isValid = state.passwordValidationState.hasLowerCaseCharacter
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        PasswordRequirement(
+            text = stringResource(
+                id = R.string.contains_uppercase_char,
+            ),
+            isValid = state.passwordValidationState.hasUpperCaseCharacter
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        StoreActionButton(
+            enabled = state.canRegister,
+            text = stringResource(R.string.text_btn_register), isLoading = state.isRegistering
+        ) {
+            onAction(RegisterAction.OnRegisterClick)
         }
         val annotatedString = buildAnnotatedString {
             withStyle(
@@ -150,10 +138,10 @@ private fun LoginScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             ) {
-                append(stringResource(id = R.string.dont_have_an_account) + " ")
+                append(stringResource(id = R.string.have_account) + " ")
                 pushStringAnnotation(
                     tag = "clickable_text",
-                    annotation = stringResource(id = R.string.sign_up)
+                    annotation = stringResource(id = R.string.sign_in)
                 )
                 withStyle(
                     style = SpanStyle(
@@ -161,7 +149,7 @@ private fun LoginScreen(
                         color = MaterialTheme.colorScheme.primary,
                     )
                 ) {
-                    append(stringResource(id = R.string.sign_up))
+                    append(stringResource(id = R.string.sign_in))
                 }
             }
         }
@@ -176,7 +164,7 @@ private fun LoginScreen(
                     start = offset,
                     end = offset
                 ).firstOrNull()?.let {
-                    onAction(LoginAction.OnRegisterClick)
+                    onAction(RegisterAction.OnLoginClick)
                 }
             }
         )
@@ -184,17 +172,15 @@ private fun LoginScreen(
     }
 }
 
-
 @Preview(
     showSystemUi = true
 )
 @Composable
-private fun LoginScreenPreview() {
+private fun RegisterScreenPreview() {
     StoreAppTheme {
-        LoginScreen(
-            state = (LoginState()),
-            onAction = {}
-        )
+        RegisterScreen(state = RegisterState()) {
+
+        }
     }
 }
 

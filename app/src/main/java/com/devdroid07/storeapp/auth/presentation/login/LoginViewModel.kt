@@ -22,7 +22,6 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userDataValidator: UserDataValidator
-
 ): ViewModel() {
 
     private var _state = MutableStateFlow(LoginState())
@@ -41,6 +40,7 @@ class LoginViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+
     fun onAction(
         action: LoginAction
     ){

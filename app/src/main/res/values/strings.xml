@@ -32,5 +32,6 @@
     <string name="error_email_no_found">El correo electronico no existe.</string>
     <string name="permission_required">Permiso requerido</string>
     <string name="okay">Ok</string>
+    <string name="error_email_exist">El correo ingresado ya esta registrado.</string>
 
 </resources>

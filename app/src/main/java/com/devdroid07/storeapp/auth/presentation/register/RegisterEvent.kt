@@ -4,7 +4,7 @@ import com.devdroid07.storeapp.core.presentation.ui.UiText
 
 sealed interface RegisterEvent {
 
-    data object OnRegisterSuccess: RegisterEvent
+    data object RegisterSuccess: RegisterEvent
 
     data class Error(val message: UiText): RegisterEvent
 

@@ -1,7 +1,3 @@
-@file:OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalGlideComposeApi::class
-)
 
 package com.devdroid07.storeapp.auth.presentation.register
 

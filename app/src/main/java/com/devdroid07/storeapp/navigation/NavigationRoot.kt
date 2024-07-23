@@ -2,10 +2,6 @@ package com.devdroid07.storeapp.navigation
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -19,7 +15,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.devdroid07.storeapp.auth.presentation.intro.IntroScreenRoot
-import com.devdroid07.storeapp.auth.presentation.login.LoginEvent
 import com.devdroid07.storeapp.auth.presentation.login.LoginScreenRoot
 import com.devdroid07.storeapp.auth.presentation.register.RegisterAction
 import com.devdroid07.storeapp.auth.presentation.register.RegisterEvent
@@ -176,7 +171,7 @@ fun NavGraphBuilder.auth(
                             Toast.LENGTH_LONG
                         ).show()
                     }
-                    RegisterEvent.OnRegisterSuccess -> {
+                    RegisterEvent.RegisterSuccess -> {
                         keyboardController?.hide()
                         Toast.makeText(
                             context,

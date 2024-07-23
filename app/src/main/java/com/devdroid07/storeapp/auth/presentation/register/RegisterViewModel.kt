@@ -6,9 +6,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.auth.domain.usecases.AuthUseCases
 import com.devdroid07.storeapp.auth.domain.validator.UserDataValidator
+import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.Result
+import com.devdroid07.storeapp.core.presentation.ui.UiText
+import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.core.presentation.ui.util.imageCamara
 import com.devdroid07.storeapp.core.presentation.ui.util.reduceImageSize
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -128,17 +132,43 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+
+    private fun loading(isLoading: Boolean){
+        _state.update {currentState ->
+            currentState.copy(
+                isRegistering = isLoading
+            )
+        }
+    }
+
+
     private fun register() {
         viewModelScope.launch {
+            loading(true)
             val result = authUseCases.signUpWithEmailUseCase(
                 email = _state.value.email.text.toString().trim(),
                 password = _state.value.password.text.toString(),
                 image = _state.value.image
             )
+            loading(false)
+            when(result){
+                is Result.Error -> {
+                    when(result.error){
+                        DataError.Network.UNAUTHORIZED -> {
+                            eventChannel.send(
+                                RegisterEvent.Error(
+                                UiText.StringResource(R.string.error_email_exist)
+                            ))
+                        }
 
-            when (result) {
-                is Result.Error -> TODO()
-                is Result.Success -> TODO()
+                        else ->{
+                            eventChannel.send(RegisterEvent.Error(result.error.asUiText()))
+                        }
+                    }
+                }
+                is Result.Success -> {
+                    eventChannel.send(RegisterEvent.RegisterSuccess)
+                }
             }
 
         }

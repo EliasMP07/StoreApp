@@ -22,7 +22,8 @@ fun reduceImageSize(imagePath: String): String {
     BitmapFactory.decodeFile(imagePath, options)
 
     // Calcula el factor de reducción
-    val targetWidth = 800  // ancho objetivo
+    val targetWidth = 600  // ancho objetivo más pequeño
+    val targetHeight = (options.outHeight * targetWidth / options.outWidth).coerceAtLeast(1)
     val scaleFactor = (options.outWidth / targetWidth).coerceAtLeast(1)
 
     // Decodifica la imagen con el factor de reducción
@@ -30,8 +31,13 @@ fun reduceImageSize(imagePath: String): String {
     options.inSampleSize = scaleFactor
 
     val bitmap = BitmapFactory.decodeFile(imagePath, options)
+
+    // Redimensiona la imagen
+    val scaledBitmap = Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true)
+
+    // Comprime la imagen y la convierte a Base64
     val byteArrayOutputStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream)
+    scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream) // Comprimir con calidad del 70%
     val byteArray = byteArrayOutputStream.toByteArray()
 
     return Base64.encodeToString(byteArray, Base64.DEFAULT)

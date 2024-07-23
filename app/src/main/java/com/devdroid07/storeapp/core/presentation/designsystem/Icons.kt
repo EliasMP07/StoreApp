@@ -14,6 +14,11 @@ val GoogleIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.google_icon)
 
+val CamaraIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_camara)
+
+
 val CheckIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.ic_check)

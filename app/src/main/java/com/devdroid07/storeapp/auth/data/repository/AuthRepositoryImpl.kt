@@ -1,44 +1,65 @@
 package com.devdroid07.storeapp.auth.data.repository
 
 import com.devdroid07.storeapp.auth.data.remote.api.AuthApi
-import com.devdroid07.storeapp.auth.data.remote.api.LoginRequest
-import com.devdroid07.storeapp.auth.data.remote.response.LoginResponse
+import com.devdroid07.storeapp.auth.data.remote.dto.LoginRequest
+import com.devdroid07.storeapp.auth.data.remote.dto.RegisterRequest
 import com.devdroid07.storeapp.auth.domain.repository.AuthRepository
-import kotlinx.coroutines.withContext
+import com.devdroid07.storeapp.core.data.mappers.toUser
+import com.devdroid07.storeapp.core.data.network.safeCall
+import com.devdroid07.storeapp.core.domain.SessionStorage
+import com.devdroid07.storeapp.core.domain.User
+import com.devdroid07.storeapp.core.domain.util.DataError
+import com.devdroid07.storeapp.core.domain.util.EmptyResult
+import com.devdroid07.storeapp.core.domain.util.Result
+import com.devdroid07.storeapp.core.domain.util.asEmptyDataResult
 
 class AuthRepositoryImpl(
-    val api: AuthApi
-): AuthRepository {
-    override suspend fun login(userName: String, password: String): Result<Unit> {
-        return try {
+    private val api: AuthApi,
+    private val sessionStorage: SessionStorage
+) : AuthRepository {
 
-            Result.success(Unit)
-        }catch (e: Exception){
-            e.printStackTrace()
-            Result.failure(e)
+    override suspend fun login(
+        email: String,
+        password: String
+    ): EmptyResult<DataError.Network> {
+        val result = safeCall {
+            api.login(
+                LoginRequest(
+                    email = email,
+                    password = password
+                )
+            )
         }
+        if (result is Result.Success){
+            sessionStorage.set(
+                user = result.data.data?.toUser()
+            )
+        }
+        return result.asEmptyDataResult()
     }
 
-    override suspend fun register(email: String, userName: String, password: String) {
-        TODO("Not yet implemented")
+    override suspend fun register(
+        email: String,
+        image: String,
+        password: String
+    ): EmptyResult<DataError.Network> {
+        val result = safeCall {
+            api.register(
+                RegisterRequest(
+                    image = image,
+                    email = email,
+                    password = password
+                )
+            )
+        }
+
+        if (result is Result.Success){
+            sessionStorage.set(
+                user = result.data.data?.toUser()
+            )
+        }
+
+        return result.asEmptyDataResult()
     }
+
 }
-/*
-
-interface FakeStoreApi {
-    @POST("graphql")
-    suspend fun login(@Body loginRequest: GraphqlRequest): GraphqlResponse<LoginResponse>
-
-    @POST("graphql")
-    suspend fun getUserProfile(@Header("Authorization") token: String, @Body profileRequest: GraphqlRequest): GraphqlResponse<UserProfile>
-}
-
-data class GraphqlRequest(val query: String, val variables: Map<String, Any>? = null)
-data class GraphqlResponse<T>(val data: T)
-
-data class LoginResponse(val login: TokenResponse)
-data class TokenResponse(val access_token: String, val refresh_token: String)
-
-data class UserProfile(val myProfile: User)
-data class User(val id: String, val name: String, val avatar: String)
-*/

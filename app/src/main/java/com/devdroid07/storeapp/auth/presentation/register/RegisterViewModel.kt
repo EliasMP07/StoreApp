@@ -6,7 +6,11 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devdroid07.storeapp.auth.domain.usecases.UserDataValidator
+import com.devdroid07.storeapp.auth.domain.usecases.AuthUseCases
+import com.devdroid07.storeapp.auth.domain.validator.UserDataValidator
+import com.devdroid07.storeapp.core.domain.util.Result
+import com.devdroid07.storeapp.core.presentation.ui.util.imageCamara
+import com.devdroid07.storeapp.core.presentation.ui.util.reduceImageSize
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,12 +20,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
+    private val authUseCases: AuthUseCases,
     private val userDataValidator: UserDataValidator
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterState())
     val state: StateFlow<RegisterState> get() = _state.asStateFlow()
@@ -46,7 +52,7 @@ class RegisterViewModel @Inject constructor(
         _state.value.password.textAsFlow()
             .onEach { password ->
                 val passwordValidationState = userDataValidator.validatePassword(password.toString())
-                _state.update {currentState ->
+                _state.update { currentState ->
                     currentState.copy(
                         passwordValidationState = passwordValidationState,
                         canRegister = _state.value.isEmailValid && passwordValidationState.isValidPassword
@@ -59,20 +65,82 @@ class RegisterViewModel @Inject constructor(
 
     fun onAction(
         action: RegisterAction
-    ){
-        when(action){
+    ) {
+        when (action) {
             RegisterAction.OnRegisterClick -> register()
             RegisterAction.OnToggleVisibilityPassword -> {
-                _state.update {currentState ->
+                _state.update { currentState ->
                     currentState.copy(
                         isVisiblePassword = !currentState.isVisiblePassword
                     )
                 }
             }
+            RegisterAction.DismissRationaleDialog -> {
+                _state.update { currentState ->
+                    currentState.copy(
+                        showCamaraRationale = false
+                    )
+                }
+            }
+            RegisterAction.OnToggleDialogSelectImage -> {
+                _state.update { currentState ->
+                    currentState.copy(
+                        showOptionProfileImage = !currentState.showOptionProfileImage
+                    )
+                }
+            }
+            is RegisterAction.SubmitCamaraPermissionInfo -> {
+                _state.update { currentState ->
+                    currentState.copy(
+                        showCamaraRationale =  action.showCamaraRationale,
+                        hasPermissionCamara = action.acceptedCamaraPermission
+                    )
+                }
+            }
+            is RegisterAction.OnImageCamaraChange -> {
+                onImageCamaraChange(action.image)
+            }
+            is RegisterAction.OnImageGalleryChange -> {
+                onImageGalleryChange(action.image)
+            }
             else -> Unit
         }
     }
-    private fun register(){
 
+
+    private fun onImageCamaraChange(image: String) {
+        _state.update { currentState ->
+            currentState.copy(
+                showOptionProfileImage = !currentState.showOptionProfileImage,
+                imagePreview = image,
+                image = imageCamara(image)
+            )
+        }
+    }
+
+    private fun onImageGalleryChange(image: String){
+        _state.update { currentState ->
+            currentState.copy(
+                showOptionProfileImage = !currentState.showOptionProfileImage,
+                imagePreview = image,
+                image = reduceImageSize(image)
+            )
+        }
+    }
+
+    private fun register() {
+        viewModelScope.launch {
+            val result = authUseCases.signUpWithEmailUseCase(
+                email = _state.value.email.text.toString().trim(),
+                password = _state.value.password.text.toString(),
+                image = _state.value.image
+            )
+
+            when (result) {
+                is Result.Error -> TODO()
+                is Result.Success -> TODO()
+            }
+
+        }
     }
 }

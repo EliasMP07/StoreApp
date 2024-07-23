@@ -7,8 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.devdroid07.storeapp.auth.presentation.login.LoginScreenRoot
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
@@ -27,13 +29,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                viewModel.state.value.isLoading == null
+                viewModel.state.value.isCheckingAuth
             }
         }
         setContent {
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
             StoreAppTheme {
-                val  navController = rememberNavController()
-                NavigationRoot(navController = navController, context = this)
+                if (!state.isCheckingAuth){
+                    val  navController = rememberNavController()
+                    NavigationRoot(navController = navController, isLoggedIn = state.isLoggedIn, context = this)
+                }
             }
         }
     }

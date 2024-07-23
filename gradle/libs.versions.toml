@@ -21,6 +21,7 @@ ksp = "1.9.22-1.0.17"
 composeAnimation = "1.7.0-alpha07"
 navigationCompose = "2.7.7"
 desugar_jdk_libs = "2.0.3"
+commonsIo = "2.13.0"
 serialization_version = "1.8.0"
 converterGson = "2.11.0"
 
@@ -55,7 +56,7 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 logging-interceptor = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging_interceptor_version"}
 glide-compose = {group = "com.github.bumptech.glide", name ="compose", version.ref = "glide_version"}
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
-
+commons-io = { module = "commons-io:commons-io", version.ref = "commonsIo" }
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "agp" }

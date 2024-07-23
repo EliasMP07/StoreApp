@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.auth.domain.usecases
+package com.devdroid07.storeapp.auth.domain.validator
 
 data class PasswordValidationState(
     val hasMinLength: Boolean = false,

@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp
 
 data class MainState(
-    val isLoading: Boolean? = null
+    val isLoggedIn: Boolean = false,
+    val isCheckingAuth: Boolean = false,
 )

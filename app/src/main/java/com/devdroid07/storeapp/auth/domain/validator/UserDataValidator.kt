@@ -1,13 +1,10 @@
-package com.devdroid07.storeapp.auth.domain.usecases
+package com.devdroid07.storeapp.auth.domain.validator
 
-import com.devdroid07.storeapp.auth.domain.repository.PatternValidator
-
-class UserDataValidator(
-    private val patternValidator: PatternValidator
-) {
+class UserDataValidator {
 
     fun isValidEmail(email: String): Boolean {
-        return patternValidator.matches(email.trim())
+        val emailRegex = Regex("^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})")
+        return email.matches(emailRegex)
     }
 
     fun validatePassword(password: String): PasswordValidationState {

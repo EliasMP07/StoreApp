@@ -38,11 +38,12 @@ import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRoo
 @Composable
 fun NavigationRoot(
     navController: NavHostController,
+    isLoggedIn: Boolean,
     context: Context,
 ) {
     NavHost(
         navController = navController,
-        startDestination = RoutesScreens.Auth.route
+        startDestination = if (isLoggedIn) RoutesScreens.Store.route else RoutesScreens.Auth.route
     ) {
         auth(context, navController)
         store(navController)
@@ -122,7 +123,11 @@ fun NavGraphBuilder.auth(
         ) {
             LoginScreenRoot(
                 onLoginSuccess = {
-
+                    navController.navigate(RoutesScreens.Store.route) {
+                        popUpTo(RoutesScreens.Auth.route) {
+                            inclusive = true
+                        }
+                    }
                 },
                 onRegisterClick = {
                     navController.navigate("register") {
@@ -178,6 +183,11 @@ fun NavGraphBuilder.auth(
                             "Cuenta registrada con exito",
                             Toast.LENGTH_LONG
                         ).show()
+                        navController.navigate(RoutesScreens.Store.route) {
+                            popUpTo(RoutesScreens.Auth.route) {
+                                inclusive = true
+                            }
+                        }
                     }
                 }
             }

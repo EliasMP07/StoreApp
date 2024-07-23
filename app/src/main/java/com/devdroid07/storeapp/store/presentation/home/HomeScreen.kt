@@ -99,6 +99,7 @@ private fun HomeScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topAppBar = {
             StoreToolbar(
+                profile = state.user?.image.orEmpty(),
                 scrollBehavior = scrollBehavior
             )
         },

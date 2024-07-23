@@ -3,9 +3,10 @@
 package com.devdroid07.storeapp.store.presentation.home.componets
 
 
+
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.animateValue
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,16 +29,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateOffset
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.presentation.productDetail.StarRating
@@ -49,7 +46,8 @@ fun ItemCardRecomendation(
     onProductClick: (Product) -> Unit
 ) {
     ElevatedCard(
-        elevation = CardDefaults.elevatedCardElevation(12.dp),
+        modifier = Modifier.animateAttention(),
+        elevation = CardDefaults.cardElevation(20.dp),
         shape = RoundedCornerShape(20.dp),
         onClick = {
             onProductClick(product)

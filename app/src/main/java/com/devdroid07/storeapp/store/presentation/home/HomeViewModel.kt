@@ -3,6 +3,7 @@ package com.devdroid07.storeapp.store.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.store.domain.model.Response
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,13 +16,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val storeUseCases: StoreUseCases
+    private val storeUseCases: StoreUseCases,
+    private val sessionStorage: SessionStorage,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(HomeState(isLoading = true))
     val state: StateFlow<HomeState> get() = _state.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            _state.update { currentState ->
+                currentState.copy(
+                    user = sessionStorage.get()
+                )
+            }
+        }
         loadProducts()
     }
 

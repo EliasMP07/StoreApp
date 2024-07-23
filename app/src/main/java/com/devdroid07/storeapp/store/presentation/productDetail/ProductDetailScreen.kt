@@ -72,6 +72,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorCo
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
+import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.presentation.home.HomeAction
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeShimmerEffect
@@ -145,6 +146,7 @@ private fun ProductDetailScreen(
                 ) {
                     GlideImage(
                         modifier = Modifier
+                            .animateAttention()
                             .align(Alignment.Center),
                         model = state.product.image,
                         contentDescription = "ImageProduct"

@@ -2,7 +2,9 @@
 
 package com.devdroid07.storeapp.auth.presentation.register.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -32,25 +34,33 @@ fun PhotoProfile(
         modifier = modifier
             .size(100.dp)
             .clip(CircleShape)
+            .border(
+                BorderStroke(
+                    2.dp,
+                    MaterialTheme.colorScheme.onBackground
+                ),
+                CircleShape
+            )
             .clickable {
                 onClick()
-            }
-            .background(MaterialTheme.colorScheme.primary),
+            },
         contentAlignment = Alignment.Center
     ) {
         GlideImage(
             modifier = Modifier
-                .clip(CircleShape),
+                .size(80.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.background),
             contentScale = ContentScale.Crop,
             model = image,
             contentDescription = "",
             transition = CrossFade
         )
-        if (image.isBlank()){
+        if (image.isBlank()) {
             Icon(
                 imageVector = CamaraIcon,
                 contentDescription = "",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }

@@ -1,7 +1,6 @@
 package com.devdroid07.storeapp.store.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.Serializable
 
 data class ProductDto(
     @SerializedName("id") val id: Int,

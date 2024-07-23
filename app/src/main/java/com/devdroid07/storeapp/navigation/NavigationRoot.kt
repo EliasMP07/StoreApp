@@ -24,11 +24,10 @@ import com.devdroid07.storeapp.auth.presentation.register.RegisterViewModel
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
+import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
-import com.devdroid07.storeapp.store.presentation.home.HomeAction
-import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
-import com.devdroid07.storeapp.store.presentation.home.HomeViewModel
+import com.devdroid07.storeapp.store.presentation.home.componets.HomeDrawerScreens
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRootScreenRoot
 
 @Composable
@@ -51,25 +50,15 @@ fun NavGraphBuilder.store(
 ) {
     navigation(
         route = RoutesScreens.Store.route,
-        startDestination = "home"
+        startDestination = RoutesScreens.HomeDrawerRoute.route
     ) {
         composable(
-            route = RoutesScreens.Home.route
-        ) {
-
-            val viewModel: HomeViewModel = hiltViewModel()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-
-            HomeScreenRoot(
-                state = state,
-                onAction = { action ->
-                    when (action) {
-                        is HomeAction.OnProductDetailScreen -> {
-                            navController.navigate(RoutesScreens.DetailProduct.createRoute(action.idProduct))
-                        }
-                        else -> Unit
-                    }
-                    viewModel.onAction(action)
+            route = RoutesScreens.HomeDrawerRoute.route
+        ){
+            HomeDrawerScreens(
+                navigateToSettings = {},
+                navigateToDetailProduct = {
+                    navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
                 }
             )
         }
@@ -86,7 +75,7 @@ fun NavGraphBuilder.store(
         ) {
             ProductDetailRootScreenRoot(
                 onBack = {
-                    navController.navigateUp()
+                    navController.navigateBack()
                 }
             )
         }

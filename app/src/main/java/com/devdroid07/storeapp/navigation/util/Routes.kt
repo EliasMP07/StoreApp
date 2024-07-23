@@ -7,7 +7,11 @@ sealed class RoutesScreens(val route: String){
     data object Intro: RoutesScreens("intro")
     data object Store: RoutesScreens("store")
 
+    data object Favorite: RoutesScreens("favorite")
+    data object Settings: RoutesScreens("settings")
+
     data object Home: RoutesScreens("home")
+    data object HomeDrawerRoute: RoutesScreens("home_drawer")
     data  object DetailProduct: RoutesScreens("product_detail/{${NavArgs.ProductID.key}}"){
         fun createRoute(productId: String) = "product_detail/$productId"
     }

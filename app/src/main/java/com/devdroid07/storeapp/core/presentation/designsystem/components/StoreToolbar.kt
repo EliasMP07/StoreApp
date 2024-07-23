@@ -38,12 +38,13 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.devdroid07.storeapp.R
 
-@Preview
 @Composable
 fun StoreToolbar(
     isMenu: Boolean = true,
     profile: String = "",
+    openDrawer: () -> Unit,
     isProfile: Boolean = true,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     navigationIcon: @Composable () -> Unit = {},
@@ -52,7 +53,7 @@ fun StoreToolbar(
         scrollBehavior = scrollBehavior,
         navigationIcon = {
             if (isMenu) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = openDrawer) {
                     Icon(
                         imageVector = Icons.Rounded.Menu,
                         contentDescription = "Menu"
@@ -83,7 +84,7 @@ fun StoreToolbar(
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.background),
                         contentScale = ContentScale.Crop,
-                        model = profile,
+                        model = profile.ifBlank { R.drawable.ic_account },
                         transition = CrossFade,
                         contentDescription = "Profile Photo"
                     )

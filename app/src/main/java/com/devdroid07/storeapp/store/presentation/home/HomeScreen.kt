@@ -2,13 +2,8 @@
 
 package com.devdroid07.storeapp.store.presentation.home
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -16,46 +11,39 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.isScrolled
-import com.devdroid07.storeapp.store.domain.model.Product
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.store.presentation.home.componets.HeaderHome
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeShimmerEffect
-import com.devdroid07.storeapp.store.presentation.home.componets.ItemCardRecomendation
 import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
 
 @Composable
 fun HomeScreenRoot(
     state: HomeState,
+    openDrawer: () -> Unit,
     onAction: (HomeAction) -> Unit
 ) {
     HomeScreen(
         state = state,
+        openDrawer = openDrawer,
         onAction = onAction
     )
 }
@@ -87,6 +75,7 @@ private fun handleResult(
 
 @Composable
 private fun HomeScreen(
+    openDrawer: () -> Unit,
     state: HomeState,
     onAction: (HomeAction) -> Unit
 ) {
@@ -99,6 +88,8 @@ private fun HomeScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topAppBar = {
             StoreToolbar(
+                openDrawer = openDrawer,
+                isMenu = true,
                 profile = state.user?.image.orEmpty(),
                 scrollBehavior = scrollBehavior
             )
@@ -179,6 +170,7 @@ private fun HomeScreenPreview() {
         HomeScreen(
             state = HomeState(),
             onAction = {},
+            openDrawer = {}
         )
     }
 }

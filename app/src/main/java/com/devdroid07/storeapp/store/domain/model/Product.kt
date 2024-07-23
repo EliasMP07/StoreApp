@@ -1,8 +1,5 @@
 package com.devdroid07.storeapp.store.domain.model
 
-import com.devdroid07.storeapp.store.data.remote.dto.RatingDto
-import com.google.gson.annotations.SerializedName
-
 data class Product(
     val id: Int = 0,
     val title: String = "",

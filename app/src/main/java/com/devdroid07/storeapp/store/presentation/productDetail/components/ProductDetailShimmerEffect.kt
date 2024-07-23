@@ -14,27 +14,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.GlideImage
-import com.devdroid07.storeapp.core.presentation.designsystem.StoreIconButtonBack
-import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
-import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.shimmerEffect
-import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailAction
-import com.devdroid07.storeapp.store.presentation.productDetail.SelectableItemCard
-import com.devdroid07.storeapp.store.presentation.productDetail.StarRating
 
 @Composable
 fun ProductDetailShimmerEffect(

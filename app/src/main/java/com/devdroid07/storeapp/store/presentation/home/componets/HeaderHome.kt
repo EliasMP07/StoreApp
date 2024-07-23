@@ -1,6 +1,5 @@
 package com.devdroid07.storeapp.store.presentation.home.componets
 
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

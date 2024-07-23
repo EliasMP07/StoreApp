@@ -39,5 +39,10 @@
     <string name="btn_text_gallery">Galeria</string>
     <string name="text_permission_required_camara">Se requiere el permiso para tomar la foto del perfil</string>
     <string name="account_create_success">Cuenta registrada con exito</string>
+    <string name="favorite">Favoritos</string>
+    <string name="home">Inicio</string>
+    <string name="settings">Configuraciónes</string>
+    <string name="account">Mi cuenta</string>
+    <string name="search">Buscar</string>
 
 </resources>

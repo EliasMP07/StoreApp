@@ -33,5 +33,11 @@
     <string name="permission_required">Permiso requerido</string>
     <string name="okay">Ok</string>
     <string name="error_email_exist">El correo ingresado ya esta registrado.</string>
+    <string name="title_photo_profile_dialog">Foto de perfil</string>
+    <string name="description_text_profile_photo_dialog">Seleciona una opción para la imagen de perfil</string>
+    <string name="btn_text_camara">Camara</string>
+    <string name="btn_text_gallery">Galeria</string>
+    <string name="text_permission_required_camara">Se requiere el permiso para tomar la foto del perfil</string>
+    <string name="account_create_success">Cuenta registrada con exito</string>
 
 </resources>

@@ -31,11 +31,9 @@ fun RegisterScreenRoot(
     val context = LocalContext.current
     val permissionLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
-
             val hasCamaraPermission = it
             val activity = context as ComponentActivity
             val showCamaraRationale = activity.shouldShowCamaraPermissionRationale()
-
             onAction(
                 RegisterAction.SubmitCamaraPermissionInfo(
                     acceptedCamaraPermission = hasCamaraPermission,
@@ -69,8 +67,8 @@ fun RegisterScreenRoot(
     if (state.showCamaraRationale) {
         StoreDialog(
             title = stringResource(id = R.string.permission_required),
-            onDismiss = { /* Normal dismissing not allowed for permissions */ },
-            description = "Se requiere el permiso para la foto de perfil",
+            onDismiss = { },
+            description = stringResource(R.string.text_permission_required_camara),
             primaryButton = {
                 StoreActionButtonOutline(
                     text = stringResource(id = R.string.okay),
@@ -122,15 +120,15 @@ private fun RegisterScreen(
 
     if (state.showOptionProfileImage) {
         StoreDialog(
-            title = "Sefs ",
+            title = stringResource(R.string.title_photo_profile_dialog),
             onDismiss = {
                 onAction(RegisterAction.OnToggleDialogSelectImage)
             },
-            description = "Seleciona una opción",
+            description = stringResource(R.string.description_text_profile_photo_dialog),
             primaryButton = {
                 StoreActionButtonOutline(
                     modifier = Modifier.weight(1f),
-                    text = "Camara",
+                    text = stringResource(R.string.btn_text_camara),
                     isLoading = false,
                     onClick = {
                         if (state.hasPermissionCamara) {
@@ -142,7 +140,7 @@ private fun RegisterScreen(
             secondaryButton = {
                 StoreActionButtonOutline(
                     modifier = Modifier.weight(1f),
-                    text = "Galeria",
+                    text = stringResource(R.string.btn_text_gallery),
                     isLoading = false,
                     onClick = {
                         intentGallery.launch("image/*")

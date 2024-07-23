@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.auth.presentation.intro.IntroScreenRoot
 import com.devdroid07.storeapp.auth.presentation.login.LoginScreenRoot
 import com.devdroid07.storeapp.auth.presentation.register.RegisterAction
@@ -98,23 +99,23 @@ fun NavGraphBuilder.auth(
     navController: NavHostController
 ) {
     navigation(
-        startDestination = "intro",
+        startDestination = RoutesScreens.Intro.route,
         route = RoutesScreens.Auth.route
     ) {
         composable(
-            route = "intro"
+            route = RoutesScreens.Intro.route
         ) {
             IntroScreenRoot(
                 onSignUpClick = {
-                    navController.navigate("register")
+                    navController.navigate(RoutesScreens.Register.route)
                 },
                 onSignInClick = {
-                    navController.navigate("login")
+                    navController.navigate(RoutesScreens.Login.route)
                 }
             )
         }
         composable(
-            route = "login"
+            route = RoutesScreens.Login.route
         ) {
             LoginScreenRoot(
                 onLoginSuccess = {
@@ -125,8 +126,8 @@ fun NavGraphBuilder.auth(
                     }
                 },
                 onRegisterClick = {
-                    navController.navigate("register") {
-                        popUpTo("login") {
+                    navController.navigate(RoutesScreens.Register.route) {
+                        popUpTo(RoutesScreens.Login.route) {
                             inclusive = true
                             saveState = true
                         }
@@ -136,7 +137,7 @@ fun NavGraphBuilder.auth(
             )
         }
         composable(
-            route = "register"
+            route = RoutesScreens.Register.route
         ) {
 
             val viewModel: RegisterViewModel = hiltViewModel()
@@ -148,8 +149,8 @@ fun NavGraphBuilder.auth(
                 onAction = {action ->
                     when(action){
                         RegisterAction.OnLoginClick -> {
-                            navController.navigate("login") {
-                                popUpTo("register") {
+                            navController.navigate(RoutesScreens.Login.route) {
+                                popUpTo(RoutesScreens.Register.route) {
                                     inclusive = true
                                     saveState = true
                                 }
@@ -175,7 +176,7 @@ fun NavGraphBuilder.auth(
                         keyboardController?.hide()
                         Toast.makeText(
                             context,
-                            "Cuenta registrada con exito",
+                            context.getString(R.string.account_create_success),
                             Toast.LENGTH_LONG
                         ).show()
                         navController.navigate(RoutesScreens.Store.route) {

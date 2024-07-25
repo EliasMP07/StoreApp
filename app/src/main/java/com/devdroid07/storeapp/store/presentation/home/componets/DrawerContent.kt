@@ -105,6 +105,7 @@ internal fun HomeDrawerScreens(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
+    navigateMyCart:() -> Unit,
     navigateToSettings: () -> Unit
 ) {
 
@@ -135,6 +136,7 @@ internal fun HomeDrawerScreens(
 
                 val viewModel: HomeViewModel = hiltViewModel()
                 val state by viewModel.state.collectAsStateWithLifecycle()
+                val onAction = viewModel::onAction
 
                 HomeScreenRoot(
                     state = state,
@@ -146,9 +148,12 @@ internal fun HomeDrawerScreens(
                             is HomeAction.OnProductDetailScreen -> {
                                 navigateToDetailProduct(action.idProduct)
                             }
+                            HomeAction.OnMyCartClick -> {
+                                navigateMyCart()
+                            }
                             else -> Unit
                         }
-                        viewModel.onAction(action)
+                        onAction(action)
                     }
                 )
             }

@@ -27,7 +27,12 @@ import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
+import com.devdroid07.storeapp.navigation.util.slideInAnimation
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeDrawerScreens
+import com.devdroid07.storeapp.store.presentation.myCart.MyCartAction
+import com.devdroid07.storeapp.store.presentation.myCart.MyCartScreenRoot
+import com.devdroid07.storeapp.store.presentation.myCart.MyCartState
+import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRootScreenRoot
 
 @Composable
@@ -59,7 +64,28 @@ fun NavGraphBuilder.store(
                 navigateToSettings = {},
                 navigateToDetailProduct = {
                     navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                },
+                navigateMyCart = {
+                    navController.navigate(RoutesScreens.Cart.route)
                 }
+            )
+        }
+        composable(
+            route = RoutesScreens.Cart.route
+        ){
+            val viewModel: MyCartViewModel = hiltViewModel()
+            val onAction = viewModel::onAction
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
+            MyCartScreenRoot(
+                state = state,
+                onAction = {action ->
+                    when(action){
+                        MyCartAction.OnBackClick -> navController.navigateBack()
+                            else -> Unit
+                    }
+                    onAction(action)
+                },
             )
         }
         composable(

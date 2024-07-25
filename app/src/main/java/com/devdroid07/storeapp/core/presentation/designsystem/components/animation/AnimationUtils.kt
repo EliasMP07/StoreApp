@@ -1,8 +1,15 @@
 package com.devdroid07.storeapp.core.presentation.designsystem.components.animation
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.EaseInBounce
+import androidx.compose.animation.core.EaseInElastic
+import androidx.compose.animation.core.EaseInOutBounce
+import androidx.compose.animation.core.EaseOutBounce
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
@@ -16,6 +23,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -35,14 +43,35 @@ fun Modifier.animateOffset(): Modifier {
 }
 
 @Composable
-fun Modifier.animateAttention(): Modifier {
-    val animatable = remember { Animatable(0.1f) }
+fun Modifier.animateEnter(
+    targetValue: Float = 0f,
+    durationMillis: Int = 1000,
+): Modifier {
+    val animatable = remember { Animatable(1000f) }
+
     LaunchedEffect(animatable) {
         animatable.animateTo(
-            targetValue = 0.9f,
+            targetValue = targetValue,
+            animationSpec = tween(
+                durationMillis = durationMillis
+            )
+        )
+    }
+
+    return this.offset { IntOffset(animatable.value.toInt(), 0) }
+}
+
+@Composable
+fun Modifier.animateAttention(
+    targetValue: Float = 1f,
+): Modifier {
+    val animatable = remember { Animatable(0.1f) }
+    LaunchedEffect(Unit) {
+        animatable.animateTo(
+            targetValue = targetValue,
             animationSpec = tween(
                 durationMillis = 1000,
-                easing = LinearEasing
+                easing = EaseOutBounce
             )
         )
     }

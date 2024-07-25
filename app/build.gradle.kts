@@ -33,6 +33,13 @@ android {
             )
         }
     }
+    flavorDimensions += "env"
+    productFlavors {
+        create("develop") {
+            dimension = "env"
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.83:3000/v1/\"")
+        }
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -43,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"

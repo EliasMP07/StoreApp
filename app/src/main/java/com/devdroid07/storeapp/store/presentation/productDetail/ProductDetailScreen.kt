@@ -1,6 +1,7 @@
 @file:OptIn(
-    ExperimentalGlideComposeApi::class, ExperimentalSharedTransitionApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalGlideComposeApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalGlideComposeApi::class
 )
 
 package com.devdroid07.storeapp.store.presentation.productDetail

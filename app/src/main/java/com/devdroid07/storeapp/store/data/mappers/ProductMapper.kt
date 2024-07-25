@@ -7,7 +7,7 @@ fun ProductDto.toProduct(): Product{
     return Product(
         id = id,
         title = title,
-        price = price,
+        price = price.toDouble(),
         description = description,
         category = category,
         image = image,

@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp.core.di
 
+import com.devdroid07.storeapp.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,9 +16,8 @@ object CoreNetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl(url)
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
 }
-val url = "http://192.168.1.83:3000/v1/"

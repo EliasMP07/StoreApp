@@ -1,6 +1,7 @@
 package com.devdroid07.storeapp.store.di
 
-import com.devdroid07.storeapp.store.data.remote.FakeStoreApi
+import com.devdroid07.storeapp.core.domain.SessionStorage
+import com.devdroid07.storeapp.store.data.remote.StoreApiService
 import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
@@ -21,26 +22,29 @@ object StoreModule {
 
     @Provides
     @Singleton
-    fun provideFakeStoreApi(): FakeStoreApi{
-        return Retrofit.Builder()
-            .baseUrl(FakeStoreApi.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(FakeStoreApi::class.java)
+    fun provideStoreApiService(
+        retrofit: Retrofit
+    ): StoreApiService {
+        return retrofit.create(StoreApiService::class.java)
     }
 
     @Provides
     @Singleton
     fun provideStoreRepository(
-        api: FakeStoreApi
+        api: StoreApiService,
+        sessionStorage: SessionStorage
     ): StoreRepository {
-        return StoreRepositoryImpl(api)
+        return StoreRepositoryImpl(
+            api = api,
+            sessionStorage = sessionStorage
+        )
     }
 
     @Provides
     @Singleton
     fun provideStoreUseCase(
         repository: StoreRepository
-    ): StoreUseCases{
+    ): StoreUseCases {
         return StoreUseCases(
             getAllProducts = GetAllProducts(repository),
             getSingleProduct = GetSingleProduct(repository)

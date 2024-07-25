@@ -114,7 +114,7 @@ private fun HomeScreen(
                         )
                     },
                     onClick = {
-
+                        onAction(HomeAction.OnMyCartClick)
                     },
                     expanded = lazyGridState.isScrolled()
                 )

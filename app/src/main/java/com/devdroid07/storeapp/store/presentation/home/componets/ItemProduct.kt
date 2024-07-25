@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
+import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.store.domain.model.Product
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -30,7 +31,7 @@ fun ItemProduct(
     onClick : (idProduct: String) -> Unit
 ) {
     Card(
-        modifier = Modifier.padding(5.dp),
+        modifier = Modifier.padding(5.dp).animateAttention(),
         onClick = {
             onClick(product.id.toString())
         }

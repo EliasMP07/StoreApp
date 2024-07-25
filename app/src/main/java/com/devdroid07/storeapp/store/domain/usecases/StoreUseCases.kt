@@ -4,5 +4,6 @@ data class StoreUseCases(
     val getAllProducts: GetAllProducts,
     val getSingleProduct: GetSingleProduct,
     val getMyCartUseCase: GetMyCartUseCase,
-    val addMyCartUseCase: AddMyCartUseCase
+    val addMyCartUseCase: AddMyCartUseCase,
+    val removeProductMyCartUseCase: RemoveProductMyCartUseCase
 )

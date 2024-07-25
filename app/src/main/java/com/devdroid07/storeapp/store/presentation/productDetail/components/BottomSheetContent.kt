@@ -37,16 +37,17 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.store.domain.model.Product
+import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailAction
+import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailState
 import com.devdroid07.storeapp.store.presentation.productDetail.SelectableItemCard
 import com.devdroid07.storeapp.store.presentation.productDetail.StarRating
 
 @Composable
 fun BottomSheetContent(
-    product: Product,
-    isExpanded: Boolean,
-    onExpandedClick: () -> Unit
+    state: ProductDetailState,
+    onAction: (ProductDetailAction) -> Unit
 ) {
-    var cutText by remember(product.description) { mutableStateOf<String?>(null) }
+    var cutText by remember(state.product.description) { mutableStateOf<String?>(null) }
 
     val textLayoutResultState = remember { mutableStateOf<TextLayoutResult?>(null) }
     val seeMoreSizeState = remember { mutableStateOf<IntSize?>(null) }
@@ -56,13 +57,21 @@ fun BottomSheetContent(
     val seeMoreSize = seeMoreSizeState.value
     val seeMoreOffset = seeMoreOffsetState.value
 
-    LaunchedEffect(product.description, isExpanded, textLayoutResult, seeMoreSize) {
+    LaunchedEffect(
+        state.product.description,
+        state.isExpanded,
+        textLayoutResult,
+        seeMoreSize
+    ) {
         val lastLineIndex = 5 - 1
-        if (!isExpanded && textLayoutResult != null && seeMoreSize != null
+        if (!state.isExpanded && textLayoutResult != null && seeMoreSize != null
             && lastLineIndex + 1 == textLayoutResult.lineCount
             && textLayoutResult.isLineEllipsized(lastLineIndex)
         ) {
-            var lastCharIndex = textLayoutResult.getLineEnd(lastLineIndex, visibleEnd = true) + 1
+            var lastCharIndex = textLayoutResult.getLineEnd(
+                lastLineIndex,
+                visibleEnd = true
+            ) + 1
             var charRect: Rect
             do {
                 lastCharIndex -= 1
@@ -70,8 +79,14 @@ fun BottomSheetContent(
             } while (
                 charRect.left > textLayoutResult.size.width - seeMoreSize.width
             )
-            seeMoreOffsetState.value = Offset(charRect.left, charRect.bottom - seeMoreSize.height)
-            cutText = product.description.substring(startIndex = 0, endIndex = lastCharIndex)
+            seeMoreOffsetState.value = Offset(
+                charRect.left,
+                charRect.bottom - seeMoreSize.height
+            )
+            cutText = state.product.description.substring(
+                startIndex = 0,
+                endIndex = lastCharIndex
+            )
         }
     }
 
@@ -90,15 +105,15 @@ fun BottomSheetContent(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = product.title,
+                    text = state.product.title,
                     style = MaterialTheme.typography.titleLarge.copy(
                         textAlign = TextAlign.Justify
                     ),
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 StarRating(
-                    rating = product.ratingRate,
-                    valueReview = product.ratingCount.toString()
+                    rating = state.product.ratingRate,
+                    valueReview = state.product.ratingCount.toString()
                 ) {
 
                 }
@@ -107,7 +122,15 @@ fun BottomSheetContent(
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                SelectableItemCard()
+                SelectableItemCard(
+                    onAdd = {
+                        onAction(ProductDetailAction.OnAddProductClick)
+                    },
+                    quantity = state.quantity,
+                    onRemove = {
+                        onAction(ProductDetailAction.OnRemoveProductClick)
+                    }
+                )
                 Text(
                     text = "Available in stock",
                     style = MaterialTheme.typography.labelMedium
@@ -124,15 +147,15 @@ fun BottomSheetContent(
             )
             Box {
                 Text(
-                    text = cutText ?: product.description,
-                    maxLines = if (isExpanded) Int.MAX_VALUE else 5,
+                    text = cutText ?: state.product.description,
+                    maxLines = if (state.isExpanded) Int.MAX_VALUE else 5,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         textAlign = TextAlign.Justify
                     ),
                     onTextLayout = { textLayoutResultState.value = it },
                 )
-                if (!isExpanded) {
+                if (!state.isExpanded) {
                     val density = LocalDensity.current
                     Text(
                         "... See more",
@@ -152,7 +175,7 @@ fun BottomSheetContent(
                                     Modifier
                             )
                             .clickable {
-                                onExpandedClick()
+                                onAction(ProductDetailAction.OnMoreInfoClick)
                                 cutText = null
                             }
                             .alpha(if (seeMoreOffset != null) 1f else 0f)
@@ -178,17 +201,22 @@ fun BottomSheetContent(
                     )
                 )
                 Text(
-                    text = "$${product.price}",
+                    text = "$${state.product.price}",
                     style = MaterialTheme.typography.titleLarge
                 )
             }
             StoreActionButton(
                 modifier = Modifier.weight(1f),
                 text = "Add to Cart",
-                isLoading = false,
+                isLoading = state.isLoading,
                 icon = Icons.Rounded.ShoppingCart
             ) {
-
+                onAction(
+                    ProductDetailAction.OnAddMyCart(
+                        idProduct = state.product.id.toString(),
+                        quantity = 2
+                    )
+                )
             }
         }
     }

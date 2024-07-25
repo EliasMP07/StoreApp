@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,10 +31,13 @@ import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
 import com.devdroid07.storeapp.navigation.util.slideInAnimation
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeDrawerScreens
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartAction
+import com.devdroid07.storeapp.store.presentation.myCart.MyCartEvent
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartScreenRoot
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartState
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
+import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailEvent
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRootScreenRoot
+import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailViewModel
 
 @Composable
 fun NavigationRoot(
@@ -45,12 +49,19 @@ fun NavigationRoot(
         navController = navController,
         startDestination = if (isLoggedIn) RoutesScreens.Store.route else RoutesScreens.Auth.route
     ) {
-        auth(context, navController)
-        store(navController)
+        auth(
+            context,
+            navController
+        )
+        store(
+            navController = navController,
+            context = context
+        )
     }
 }
 
 fun NavGraphBuilder.store(
+    context: Context,
     navController: NavHostController
 ) {
     navigation(
@@ -59,7 +70,7 @@ fun NavGraphBuilder.store(
     ) {
         composable(
             route = RoutesScreens.HomeDrawerRoute.route
-        ){
+        ) {
             HomeDrawerScreens(
                 navigateToSettings = {},
                 navigateToDetailProduct = {
@@ -72,20 +83,19 @@ fun NavGraphBuilder.store(
         }
         composable(
             route = RoutesScreens.Cart.route
-        ){
+        ) {
             val viewModel: MyCartViewModel = hiltViewModel()
             val onAction = viewModel::onAction
             val state by viewModel.state.collectAsStateWithLifecycle()
 
             MyCartScreenRoot(
                 state = state,
-                onAction = {action ->
-                    when(action){
-                        MyCartAction.OnBackClick -> navController.navigateBack()
-                            else -> Unit
-                    }
-                    onAction(action)
+                context = context,
+                viewModel = viewModel,
+                onBack = {
+                    navController.navigateBack()
                 },
+                onAction = onAction,
             )
         }
         composable(
@@ -99,7 +109,15 @@ fun NavGraphBuilder.store(
             arguments = listOf(navArgument(NavArgs.ProductID.key) { type = NavType.StringType })
 
         ) {
+            val viewModel: ProductDetailViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            val onAction = viewModel::onAction
+
             ProductDetailRootScreenRoot(
+                state = state,
+                context = context,
+                viewModel = viewModel,
+                onAction = onAction,
                 onBack = {
                     navController.navigateBack()
                 }
@@ -161,8 +179,8 @@ fun NavGraphBuilder.auth(
 
             RegisterScreenRoot(
                 state = state,
-                onAction = {action ->
-                    when(action){
+                onAction = { action ->
+                    when (action) {
                         RegisterAction.OnLoginClick -> {
                             navController.navigate(RoutesScreens.Login.route) {
                                 popUpTo(RoutesScreens.Register.route) {

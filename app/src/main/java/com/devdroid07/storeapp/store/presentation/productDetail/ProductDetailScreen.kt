@@ -6,6 +6,8 @@
 
 package com.devdroid07.storeapp.store.presentation.productDetail
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,15 +57,40 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorCo
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
+import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
+import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
 import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetContent
 import com.devdroid07.storeapp.store.presentation.productDetail.components.ProductDetailShimmerEffect
 
 @Composable
 fun ProductDetailRootScreenRoot(
-    onBack: () -> Unit,
-    viewModel: ProductDetailViewModel = hiltViewModel()
+    state: ProductDetailState,
+    context: Context,
+    viewModel: ProductDetailViewModel,
+    onAction: (ProductDetailAction) -> Unit,
+    onBack: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(flow = viewModel.events) { event ->
+        when (event) {
+            is ProductDetailEvent.Error -> {
+                Toast.makeText(
+                    context,
+                    event.error.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is ProductDetailEvent.Success -> {
+                Toast.makeText(
+                    context,
+                    event.message.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+
     ProductDetailScreen(
         state = state,
         onAction = { action ->
@@ -71,7 +98,7 @@ fun ProductDetailRootScreenRoot(
                 ProductDetailAction.OnBackClick -> onBack()
                 else -> Unit
             }
-            viewModel.onAction(action)
+            onAction(action)
         }
     )
 }
@@ -121,7 +148,9 @@ private fun ProductDetailScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Box(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                 ) {
                     GlideImage(
                         modifier = Modifier
@@ -152,9 +181,7 @@ private fun ProductDetailScreen(
                     elevation = CardDefaults.elevatedCardElevation(50.dp),
                     shape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
                 ) {
-                    BottomSheetContent(product = state.product, isExpanded = state.isExpanded, onExpandedClick = {
-                        onAction(ProductDetailAction.OnMoreInfoClick)
-                    })
+                    BottomSheetContent(state = state, onAction = onAction)
                 }
             }
         }
@@ -175,7 +202,9 @@ private fun ProductDetailRootScreenPreview() {
 
 @Composable
 fun SelectableItemCard(
-    item: String = "1"
+    onAdd :() -> Unit = {},
+    onRemove: () -> Unit = {},
+    quantity: Int = 1,
 ) {
     Row(
         modifier = Modifier
@@ -183,11 +212,11 @@ fun SelectableItemCard(
             .background(Color.Gray.copy(alpha = 0.3f)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = onAdd) {
             Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add item")
         }
-        Text(text = item)
-        IconButton(onClick = { /*TODO*/ }) {
+        Text(text = quantity.toString())
+        IconButton(onClick = onRemove ) {
             Icon(imageVector = Icons.Rounded.Remove, contentDescription = "Remove item")
         }
     }

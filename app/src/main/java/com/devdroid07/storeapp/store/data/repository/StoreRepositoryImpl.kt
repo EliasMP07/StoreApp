@@ -112,4 +112,15 @@ class StoreRepositoryImpl(
         }
     }
 
+    override suspend fun removeProductCart(idProduct: Int): EmptyResult<DataError.Network> {
+        val result = safeCall2 {
+            api.removeProductMyCart(
+                token = sessionStorage.get()?.token.orEmpty(),
+                idUser = sessionStorage.get()?.id.orEmpty(),
+                idProduct = idProduct.toString()
+            )
+        }
+        return result.asEmptyDataResult()
+    }
+
 }

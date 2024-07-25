@@ -8,6 +8,7 @@ import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
 import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
+import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.Module
 import dagger.Provides
@@ -51,7 +52,8 @@ object StoreModule {
             getAllProducts = GetAllProducts(repository),
             getSingleProduct = GetSingleProduct(repository),
             getMyCartUseCase = GetMyCartUseCase(repository),
-            addMyCartUseCase = AddMyCartUseCase(repository)
+            addMyCartUseCase = AddMyCartUseCase(repository),
+            removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository)
         )
     }
 

@@ -6,9 +6,12 @@ import com.devdroid07.storeapp.store.data.remote.dto.CartRequest
 import com.devdroid07.storeapp.store.data.remote.dto.ProductDto
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface StoreApiService {
 
@@ -21,7 +24,7 @@ interface StoreApiService {
         @Path("id_product") idProduct: String
     ): Response<StoreResponse<ProductDto>>
 
-    @GET("cart/insert")
+    @POST("cart/insert")
     suspend fun addMyCart(
         @Header("Authorization") token: String,
         @Body cartRequest: CartRequest
@@ -32,4 +35,11 @@ interface StoreApiService {
         @Header("Authorization") token: String,
         @Path("id_user") idUser: String
     ): Response<StoreResponse<List<CartDto>>>
+
+    @DELETE("cart/deleteProduct/remove")
+    suspend fun removeProductMyCart(
+        @Header("Authorization") token: String,
+        @Query("id_user") idUser: String,
+        @Query("id_product") idProduct: String
+    ): Response<StoreResponse<String>>
 }

@@ -44,5 +44,10 @@
     <string name="settings">Configuraciónes</string>
     <string name="account">Mi cuenta</string>
     <string name="search">Buscar</string>
+    <string name="success_add_cart">Se agrego exitosamente al carrito.</string>
+    <string name="error_add_cart">Hubo un error al agregar al carrito.</string>
+    <string name="error_remove_cart">Hubo un error al remover el product</string>
+    <string name="success_remove_cart">Producto removido de tu carrito</string>
+    <string name="my_cart_title_screen">Mi carrito</string>
 
 </resources>

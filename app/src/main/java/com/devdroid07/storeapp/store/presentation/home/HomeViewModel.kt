@@ -4,7 +4,7 @@ package com.devdroid07.storeapp.store.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.core.domain.SessionStorage
-import com.devdroid07.storeapp.store.domain.model.Response
+import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,32 +36,27 @@ class HomeViewModel @Inject constructor(
 
     private fun loadProducts() {
         viewModelScope.launch {
-            storeUseCases.getAllProducts().collect { response ->
-                when (response) {
-                    is Response.Failure -> {
+            _state.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
+            storeUseCases.getAllProducts().collect { result ->
+                when(result){
+                    is Result.Error -> {
                         _state.update {
                             it.copy(
-                                error = response.exception?.message ?: "Error desconocido",
+                                error = result.error.name,
                                 isLoading = false
                             )
                         }
                     }
-
-                    Response.Loading -> {
+                    is Result.Success -> {
                         _state.update {
                             it.copy(
                                 error = null,
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Response.Success -> {
-                        _state.update {
-                            it.copy(
-                                error = null,
-                                products = response.data,
-                                productRecomended = response.data.first {
+                                products = result.data,
+                                productRecomended = result.data.first {
                                     it.ratingRate >= 4.0
                                 },
                                 isLoading = false

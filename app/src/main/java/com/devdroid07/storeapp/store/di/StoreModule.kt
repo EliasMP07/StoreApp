@@ -4,7 +4,9 @@ import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.store.data.remote.StoreApiService
 import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
+import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
+import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.Module
@@ -47,7 +49,10 @@ object StoreModule {
     ): StoreUseCases {
         return StoreUseCases(
             getAllProducts = GetAllProducts(repository),
-            getSingleProduct = GetSingleProduct(repository)
+            getSingleProduct = GetSingleProduct(repository),
+            getMyCartUseCase = GetMyCartUseCase(repository),
+            addMyCartUseCase = AddMyCartUseCase(repository)
         )
     }
+
 }

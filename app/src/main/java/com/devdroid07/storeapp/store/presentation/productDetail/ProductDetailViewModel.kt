@@ -3,8 +3,8 @@ package com.devdroid07.storeapp.store.presentation.productDetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.navigation.util.NavArgs
-import com.devdroid07.storeapp.store.domain.model.Response
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,15 +40,15 @@ class ProductDetailViewModel @Inject constructor(
                 productId
             )
             when(result){
-                is Response.Failure -> {
+                is Result.Error -> {
                     _state.update {
                         it.copy(
-                            error = result.exception?.message?:"Error desconocido",
+                            error = result.error.name,
                             isLoading = false
                         )
                     }
                 }
-                is Response.Success -> {
+                is Result.Success -> {
                     _state.update {
                         it.copy(
                             error = null,
@@ -57,7 +57,6 @@ class ProductDetailViewModel @Inject constructor(
                         )
                     }
                 }
-                else -> Unit
             }
         }
     }

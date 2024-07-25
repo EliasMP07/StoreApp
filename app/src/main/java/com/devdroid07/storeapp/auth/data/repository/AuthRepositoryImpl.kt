@@ -6,6 +6,7 @@ import com.devdroid07.storeapp.auth.data.remote.dto.RegisterRequest
 import com.devdroid07.storeapp.auth.domain.repository.AuthRepository
 import com.devdroid07.storeapp.core.data.mappers.toUser
 import com.devdroid07.storeapp.core.data.network.safeCall
+import com.devdroid07.storeapp.core.data.network.safeCall2
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.User
 import com.devdroid07.storeapp.core.domain.util.DataError
@@ -22,7 +23,7 @@ class AuthRepositoryImpl(
         email: String,
         password: String
     ): EmptyResult<DataError.Network> {
-        val result = safeCall {
+        val result = safeCall2 {
             api.login(
                 LoginRequest(
                     email = email,

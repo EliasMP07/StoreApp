@@ -21,18 +21,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.ui.UiText
 
-@Preview
+
 @Composable
 fun ErrorContent(
-    error: String = "eLIAS",
+    error: UiText,
     onRetry: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding()
-            .background(MaterialTheme.colorScheme.background).systemBarsPadding(),
+            .background(MaterialTheme.colorScheme.background)
+            .systemBarsPadding(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -42,7 +44,7 @@ fun ErrorContent(
             painter = painterResource(id = R.drawable.server_down_image),
             contentDescription = null
         )
-        Text(text = parseErrorText(error = error), style = MaterialTheme.typography.titleMedium.copy(
+        Text(text = error.asString(), style = MaterialTheme.typography.titleMedium.copy(
             textAlign = TextAlign.Center
         ))
         Spacer(modifier = Modifier.weight(1f))
@@ -53,14 +55,5 @@ fun ErrorContent(
             onClick = onRetry
         )
         Spacer(modifier = Modifier.height(20.dp))
-    }
-}
-
-@Composable
-private fun parseErrorText(error: String): String {
-    return when{
-        error.contains("No Internet Connection") -> stringResource(id = R.string.error_internet_connection)
-        error.contains("Network Error") -> stringResource(id = R.string.error_timeout_connection)
-        else -> stringResource(id = R.string.error_unknown)
     }
 }

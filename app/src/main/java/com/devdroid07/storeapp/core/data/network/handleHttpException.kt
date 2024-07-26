@@ -5,11 +5,12 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import kotlinx.serialization.SerializationException
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import java.nio.channels.UnresolvedAddressException
 import kotlin.coroutines.cancellation.CancellationException
 
 fun <T> handleHttpException(e: HttpException): Result<T, DataError.Network> {
-    return when(e.code()){
+    return when (e.code()) {
         401 -> Result.Error(DataError.Network.UNAUTHORIZED)
         408 -> Result.Error(DataError.Network.REQUEST_TIMEOUT)
         404 -> Result.Error(DataError.Network.NOT_FOUND)
@@ -27,11 +28,11 @@ suspend inline fun <T> safeCall(crossinline apiCall: suspend () -> T): Result<T,
         Result.Success(result)
     } catch (e: HttpException) {
         handleHttpException(e)
-    }catch(e: UnresolvedAddressException) {
+    } catch (e: UnresolvedAddressException) {
         e.printStackTrace()
         return Result.Error(DataError.Network.NO_INTERNET)
-    }  catch(e: Exception) {
-        if(e is CancellationException) throw e
+    } catch (e: Exception) {
+        if (e is CancellationException) throw e
         e.printStackTrace()
         return Result.Error(DataError.Network.UNKNOWN)
     }
@@ -42,14 +43,17 @@ inline fun <reified T> safeCall2(execute: () -> Response<T>): Result<T, DataErro
 
     val response = try {
         execute()
-    } catch(e: UnresolvedAddressException) {
+    } catch (e: UnresolvedAddressException) {
+        e.printStackTrace()
+        return Result.Error(DataError.Network.NO_INTERNET)
+    } catch (e: IOException) {
         e.printStackTrace()
         return Result.Error(DataError.Network.NO_INTERNET)
     } catch (e: SerializationException) {
         e.printStackTrace()
         return Result.Error(DataError.Network.SERIALIZATION)
-    } catch(e: Exception) {
-        if(e is CancellationException) throw e
+    } catch (e: Exception) {
+        if (e is CancellationException) throw e
         e.printStackTrace()
         return Result.Error(DataError.Network.UNKNOWN)
     }
@@ -60,7 +64,7 @@ inline fun <reified T> safeCall2(execute: () -> Response<T>): Result<T, DataErro
 
 
 inline fun <reified T> responseToResult(response: Response<T>): Result<T, DataError.Network> {
-    return when(response.code()) {
+    return when (response.code()) {
         in 200..299 -> Result.Success(response.body()!!)
         401 -> Result.Error(DataError.Network.UNAUTHORIZED)
         408 -> Result.Error(DataError.Network.REQUEST_TIMEOUT)

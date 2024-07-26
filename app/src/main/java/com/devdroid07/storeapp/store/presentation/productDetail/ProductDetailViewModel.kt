@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
+import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,7 +52,7 @@ class ProductDetailViewModel @Inject constructor(
                 is Result.Error -> {
                     _state.update {
                         it.copy(
-                            error = result.error.name,
+                            error = result.error.asUiText(),
                             isLoading = false
                         )
                     }

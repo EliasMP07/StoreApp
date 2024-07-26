@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
+import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
-import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,7 +71,8 @@ class MyCartViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { currentState ->
                 currentState.copy(
-                    isLoading = true
+                    isLoading = true,
+                    error = null
                 )
             }
             storeUseCases.getMyCartUseCase().collectLatest { result ->
@@ -80,7 +81,7 @@ class MyCartViewModel @Inject constructor(
                         _state.update { currentState ->
                             currentState.copy(
                                 isLoading = false,
-                                error = result.error.name
+                                error = result.error.asUiText()
                             )
                         }
                     }

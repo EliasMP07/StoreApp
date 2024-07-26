@@ -58,6 +58,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIc
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
+import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
 import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetContent
 import com.devdroid07.storeapp.store.presentation.productDetail.components.ProductDetailShimmerEffect
@@ -106,7 +107,7 @@ fun ProductDetailRootScreenRoot(
 @Composable
 private fun handleResultProduct(
     isLoading: Boolean,
-    error: String?,
+    error: UiText?,
     retry: () -> Unit,
     paddingValues: PaddingValues
 ): Boolean {

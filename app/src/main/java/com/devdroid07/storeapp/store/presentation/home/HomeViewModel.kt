@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.Result
+import com.devdroid07.storeapp.core.presentation.ui.asUiText
+import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +48,7 @@ class HomeViewModel @Inject constructor(
                     is Result.Error -> {
                         _state.update {
                             it.copy(
-                                error = result.error.name,
+                                error = result.error.asUiText(),
                                 isLoading = false
                             )
                         }
@@ -56,9 +58,9 @@ class HomeViewModel @Inject constructor(
                             it.copy(
                                 error = null,
                                 products = result.data,
-                                productRecomended = result.data.first {
-                                    it.ratingRate >= 4.0
-                                },
+                                productRecomended = result.data.firstOrNull { product ->
+                                    product.ratingRate > 4.0
+                                }?: Product(),
                                 isLoading = false
                             )
                         }

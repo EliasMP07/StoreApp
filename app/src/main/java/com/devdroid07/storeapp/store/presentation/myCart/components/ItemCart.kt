@@ -2,18 +2,14 @@
 
 package com.devdroid07.storeapp.store.presentation.myCart.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
@@ -34,12 +30,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.ExpandLessIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.ExpandMoreIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnter
 import com.devdroid07.storeapp.store.domain.model.Cart
-import com.devdroid07.storeapp.store.presentation.productDetail.SelectableItemCard
 
 @Composable
 fun ItemCard(

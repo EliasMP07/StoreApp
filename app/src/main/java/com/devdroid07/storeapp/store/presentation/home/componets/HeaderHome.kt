@@ -54,7 +54,9 @@ fun HeaderHome(
             )
         )
         Spacer(modifier = Modifier.height(30.dp))
-        ItemCardRecomendation(product = product, onProductClick = onProductClick)
-        Spacer(modifier = Modifier.height(30.dp))
+        if (product.ratingRate != 0.0){
+            ItemCardRecomendation(product = product, onProductClick = onProductClick)
+            Spacer(modifier = Modifier.height(30.dp))
+        }
     }
 }

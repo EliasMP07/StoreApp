@@ -30,7 +30,9 @@ import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
+import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.isScrolled
+import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.store.presentation.home.componets.HeaderHome
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeShimmerEffect
 import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
@@ -47,31 +49,6 @@ fun HomeScreenRoot(
         onAction = onAction
     )
 }
-
-@Composable
-private fun handleResult(
-    isLoading: Boolean,
-    error: String?,
-    retry: () -> Unit,
-    paddingValues: PaddingValues
-): Boolean {
-    return when {
-        isLoading -> {
-            HomeShimmerEffect(
-                paddingValues = paddingValues
-            )
-            false
-        }
-
-        error != null -> {
-            ErrorContent(error = error, onRetry = retry)
-            false
-        }
-
-        else -> true
-    }
-}
-
 
 @Composable
 private fun HomeScreen(
@@ -120,10 +97,14 @@ private fun HomeScreen(
                 )
             }
         }
-    ) {
-        val result = handleResult(
+    ) {paddingValue ->
+        val result = handleResultView(
             isLoading = state.isLoading,
-            paddingValues = it,
+            contentLoading = {
+                HomeShimmerEffect(
+                    paddingValues = paddingValue
+                )
+            },
             error = state.error,
             retry = {
                 onAction(HomeAction.RetryClick)
@@ -135,7 +116,7 @@ private fun HomeScreen(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
+                    .padding(paddingValue)
                     .padding(horizontal = 20.dp),
                 contentPadding = PaddingValues(10.dp)
             ) {

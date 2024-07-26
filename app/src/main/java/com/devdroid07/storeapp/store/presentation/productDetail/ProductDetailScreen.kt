@@ -8,7 +8,11 @@ package com.devdroid07.storeapp.store.presentation.productDetail
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,8 +51,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
@@ -59,7 +61,6 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreSc
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.core.presentation.ui.UiText
-import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
 import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetContent
 import com.devdroid07.storeapp.store.presentation.productDetail.components.ProductDetailShimmerEffect
 
@@ -120,7 +121,10 @@ private fun handleResultProduct(
         }
 
         error != null -> {
-            ErrorContent(error = error, onRetry = retry)
+            ErrorContent(
+                error = error,
+                onRetry = retry
+            )
             false
         }
 
@@ -160,14 +164,36 @@ private fun ProductDetailScreen(
                         model = state.product.image,
                         contentDescription = "ImageProduct"
                     )
-                    StoreIconButtonFavorite(
+                    this@Column.AnimatedVisibility(
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .padding(10.dp),
-                        isFavorite = false,
-                        onClick = {
-                        }
-                    )
+                        visible = !state.product.isFavorite,
+                        exit = scaleOut(),
+                        enter = scaleIn(animationSpec = spring(Spring.DampingRatioHighBouncy))
+                    ) {
+                        StoreIconButtonFavorite(
+                            isFavorite = false,
+                            onClick = {
+                                onAction(ProductDetailAction.AddFavoriteClick(state.product.id.toString()))
+                            }
+                        )
+                    }
+                    this@Column.AnimatedVisibility(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(10.dp),
+                        visible = state.product.isFavorite,
+                        exit = scaleOut(),
+                        enter = scaleIn(animationSpec = spring(Spring.DampingRatioHighBouncy))
+                    ) {
+                        StoreIconButtonFavorite(
+                            isFavorite = true,
+                            onClick = {
+                                onAction(ProductDetailAction.RemoveFavoriteClick(state.product.id.toString()))
+                            }
+                        )
+                    }
                     StoreIconButtonBack(
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -180,15 +206,22 @@ private fun ProductDetailScreen(
                 ElevatedCard(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.elevatedCardElevation(50.dp),
-                    shape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
+                    shape = RoundedCornerShape(
+                        topEnd = 25.dp,
+                        topStart = 25.dp
+                    ),
                 ) {
-                    BottomSheetContent(state = state, onAction = onAction)
+                    BottomSheetContent(
+                        state = state,
+                        onAction = onAction
+                    )
                 }
             }
         }
     }
 
 }
+
 @Preview
 @Composable
 private fun ProductDetailRootScreenPreview() {
@@ -203,7 +236,7 @@ private fun ProductDetailRootScreenPreview() {
 
 @Composable
 fun SelectableItemCard(
-    onAdd :() -> Unit = {},
+    onAdd: () -> Unit = {},
     onRemove: () -> Unit = {},
     quantity: Int = 1,
 ) {
@@ -214,11 +247,17 @@ fun SelectableItemCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onAdd) {
-            Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add item")
+            Icon(
+                imageVector = Icons.Rounded.Add,
+                contentDescription = "Add item"
+            )
         }
         Text(text = quantity.toString())
-        IconButton(onClick = onRemove ) {
-            Icon(imageVector = Icons.Rounded.Remove, contentDescription = "Remove item")
+        IconButton(onClick = onRemove) {
+            Icon(
+                imageVector = Icons.Rounded.Remove,
+                contentDescription = "Remove item"
+            )
         }
     }
 }
@@ -270,7 +309,10 @@ fun StarRating(
             }
         }
         if (valueReview != null) {
-            Text(text = "($valueReview Reviews)", style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = "($valueReview Reviews)",
+                style = MaterialTheme.typography.labelMedium
+            )
         }
     }
 }

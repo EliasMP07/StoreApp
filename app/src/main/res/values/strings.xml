@@ -49,5 +49,10 @@
     <string name="error_remove_cart">Hubo un error al remover el product</string>
     <string name="success_remove_cart">Producto removido de tu carrito</string>
     <string name="my_cart_title_screen">Mi carrito</string>
+    <string name="success_add_favorite">Se agrego a tus favoritos</string>
+    <string name="my_favorite">Mis favoritos</string>
+    <string name="success_delete_favorite">Se elimino de tus favoritos</string>
+    <string name="cart_empty">Tu carrito esta vacio</string>
+    <string name="empty_favorite">No tienes productos favoritos.</string>
 
 </resources>

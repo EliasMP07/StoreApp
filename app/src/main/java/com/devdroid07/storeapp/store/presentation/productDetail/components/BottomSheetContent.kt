@@ -36,7 +36,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
-import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailAction
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailState
 import com.devdroid07.storeapp.store.presentation.productDetail.SelectableItemCard

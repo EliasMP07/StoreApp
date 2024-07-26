@@ -1,7 +1,12 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.devdroid07.storeapp.store.presentation.home
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,12 +32,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.isScrolled
-import com.devdroid07.storeapp.core.presentation.ui.UiText
+import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.store.presentation.home.componets.HeaderHome
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeShimmerEffect
 import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
@@ -40,9 +44,31 @@ import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
 @Composable
 fun HomeScreenRoot(
     state: HomeState,
+    context: Context,
+    viewModel: HomeViewModel,
     openDrawer: () -> Unit,
     onAction: (HomeAction) -> Unit
 ) {
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is HomeEvent.Error -> {
+                Toast.makeText(
+                    context,
+                    event.error.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is HomeEvent.Success -> {
+                Toast.makeText(
+                    context,
+                    event.message.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
     HomeScreen(
         state = state,
         openDrawer = openDrawer,
@@ -97,7 +123,7 @@ private fun HomeScreen(
                 )
             }
         }
-    ) {paddingValue ->
+    ) { paddingValue ->
         val result = handleResultView(
             isLoading = state.isLoading,
             contentLoading = {
@@ -121,20 +147,34 @@ private fun HomeScreen(
                 contentPadding = PaddingValues(10.dp)
             ) {
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                    HeaderHome(product = state.productRecomended, onSearchClick = {
+                    HeaderHome(
+                        product = state.productRecomended,
+                        onSearchClick = {
 
-                    }, onProductClick = {
-                        onAction(HomeAction.OnProductDetailScreen(it.id.toString()))
-                    })
+                        },
+                        onProductClick = {
+                            onAction(HomeAction.OnProductDetailClick(it.id.toString()))
+                        })
                 }
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                    Text(text = "All products", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = "All products",
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
-                items(state.products, key ={it.id}) { product ->
+                items(
+                    state.products,
+                    key = { it.id }) { product ->
                     ItemProduct(
                         product = product,
                         onClick = { idProduct ->
-                            onAction(HomeAction.OnProductDetailScreen(idProduct))
+                            onAction(HomeAction.OnProductDetailClick(idProduct))
+                        },
+                        addFavorite = {
+                            onAction(HomeAction.AddFavoriteClick(it))
+                        },
+                        removeFavorite = {
+                            onAction(HomeAction.RemoveFavoriteClick(it))
                         }
                     )
                 }

@@ -23,10 +23,10 @@ import javax.inject.Inject
 class ProductDetailViewModel @Inject constructor(
     private val storeUseCases: StoreUseCases,
     private val savedStateHandle: SavedStateHandle,
-): ViewModel(){
+) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductDetailState())
-    val state:  StateFlow<ProductDetailState> get() = _state.asStateFlow()
+    val state: StateFlow<ProductDetailState> get() = _state.asStateFlow()
 
 
     private val eventChannel = Channel<ProductDetailEvent>()
@@ -37,7 +37,53 @@ class ProductDetailViewModel @Inject constructor(
         getProduct(productId = productId)
     }
 
-    private fun getProduct(productId: String){
+    fun onAction(action: ProductDetailAction) {
+        when (action) {
+            ProductDetailAction.OnMoreInfoClick -> {
+                _state.update {
+                    it.copy(
+                        isExpanded = !_state.value.isExpanded
+                    )
+                }
+            }
+            is ProductDetailAction.OnAddMyCart -> {
+                addMyCart(
+                    idProduct = action.idProduct,
+                    _state.value.quantity
+                )
+            }
+            ProductDetailAction.OnAddProductClick -> {
+                _state.update { currentState ->
+                    var cout = currentState.quantity
+                    cout++
+                    currentState.copy(
+                        quantity = cout
+                    )
+                }
+            }
+            ProductDetailAction.OnRemoveProductClick -> {
+                _state.update { currentState ->
+                    var cout = currentState.quantity
+                    if (currentState.quantity >= 1) {
+                        cout--
+                    }
+                    currentState.copy(
+                        quantity = cout
+                    )
+                }
+            }
+            is ProductDetailAction.AddFavoriteClick -> {
+                addFavorite(action.productId)
+            }
+            is ProductDetailAction.RemoveFavoriteClick -> {
+                removeFavorite(action.productId)
+            }
+            else -> Unit
+        }
+    }
+
+
+    private fun getProduct(productId: String) {
         viewModelScope.launch {
             _state.update {
                 it.copy(
@@ -48,7 +94,7 @@ class ProductDetailViewModel @Inject constructor(
             val result = storeUseCases.getSingleProduct(
                 productId
             )
-            when(result){
+            when (result) {
                 is Result.Error -> {
                     _state.update {
                         it.copy(
@@ -70,12 +116,18 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-    private fun addMyCart(idProduct: String, quantity: Int){
+    private fun addMyCart(
+        idProduct: String,
+        quantity: Int
+    ) {
         viewModelScope.launch {
 
-            val result = storeUseCases.addMyCartUseCase(idProduct, quantity)
+            val result = storeUseCases.addMyCartUseCase(
+                idProduct,
+                quantity
+            )
 
-            when(result){
+            when (result) {
                 is Result.Error -> {
                     eventChannel.send(ProductDetailEvent.Error(UiText.StringResource(R.string.error_add_cart)))
                 }
@@ -86,39 +138,58 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-    fun onAction(action: ProductDetailAction){
-        when(action){
-            ProductDetailAction.OnMoreInfoClick -> {
-                _state.update {
-                    it.copy(
-                        isExpanded = !_state.value.isExpanded
+    private fun addFavorite(idProduct: String) {
+        viewModelScope.launch {
+            val result = storeUseCases.addFavoriteProductUseCase(idProduct)
+
+            when (result) {
+                is Result.Error -> {
+                    eventChannel.send(
+                        ProductDetailEvent.Error(result.error.asUiText())
                     )
                 }
-            }
-            is ProductDetailAction.OnAddMyCart -> {
-                addMyCart(idProduct = action.idProduct, _state.value.quantity)
-            }
-            ProductDetailAction.OnAddProductClick -> {
-                _state.update {currentState ->
-                    var cout = currentState.quantity
-                    cout++
-                    currentState.copy(
-                        quantity = cout
-                    )
-                }
-            }
-            ProductDetailAction.OnRemoveProductClick -> {
-                _state.update {currentState ->
-                    var cout = currentState.quantity
-                    if (currentState.quantity >= 1){
-                        cout--
+                is Result.Success -> {
+                    _state.update { currentState ->
+                        val updatedProducts = currentState.product.copy(
+                            isFavorite = true
+                        )
+                        currentState.copy(
+                            product = updatedProducts
+                        )
                     }
-                    currentState.copy(
-                        quantity = cout
+                    eventChannel.send(
+                        ProductDetailEvent.Success(UiText.StringResource(R.string.success_add_favorite))
                     )
                 }
             }
-            else -> Unit
+        }
+    }
+
+    private fun removeFavorite(idProduct: String) {
+        viewModelScope.launch {
+
+            val result = storeUseCases.removeFavoriteProductUseCase(idProduct)
+
+            when (result) {
+                is Result.Error -> {
+                    eventChannel.send(
+                        ProductDetailEvent.Error(result.error.asUiText())
+                    )
+                }
+                is Result.Success -> {
+                    _state.update { currentState ->
+                        val updatedProducts = currentState.product.copy(
+                            isFavorite = false
+                        )
+                        currentState.copy(
+                            product = updatedProducts
+                        )
+                    }
+                    eventChannel.send(
+                        ProductDetailEvent.Success(UiText.StringResource(R.string.success_delete_favorite))
+                    )
+                }
+            }
         }
     }
 }

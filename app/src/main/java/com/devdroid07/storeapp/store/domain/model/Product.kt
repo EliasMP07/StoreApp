@@ -6,6 +6,7 @@ data class Product(
     val price: Double = 0.0,
     val description: String = "",
     val category: String = "",
+    var isFavorite: Boolean = false,
     val image: String = "",
     val ratingCount: Int =  0,
     val ratingRate: Double = 0.0

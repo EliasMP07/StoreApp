@@ -19,4 +19,10 @@ interface StoreRepository {
 
    suspend fun removeProductCart(idProduct: Int): EmptyResult<DataError.Network>
 
+   suspend fun addMyFavorite(productId: String): Result<String, DataError.Network>
+
+   fun getMyFavorites(): Flow<Result<List<Product>, DataError.Network>>
+
+   suspend fun removeProductFavorite(idProduct: String): EmptyResult<DataError.Network>
+
 }

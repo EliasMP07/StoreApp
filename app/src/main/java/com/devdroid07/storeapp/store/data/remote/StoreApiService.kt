@@ -1,7 +1,7 @@
 package com.devdroid07.storeapp.store.data.remote
 
-import com.devdroid07.storeapp.store.data.remote.dto.CartDto
 import com.devdroid07.storeapp.auth.data.remote.response.StoreResponse
+import com.devdroid07.storeapp.store.data.remote.dto.CartDto
 import com.devdroid07.storeapp.store.data.remote.dto.CartRequest
 import com.devdroid07.storeapp.store.data.remote.dto.ProductDto
 import retrofit2.Response
@@ -15,8 +15,11 @@ import retrofit2.http.Query
 
 interface StoreApiService {
 
-    @GET("products/getAll")
-    suspend fun getAllProducts(@Header("Authorization") token: String): Response<StoreResponse<List<ProductDto>>>
+    @GET("products/getAll/{id_user}")
+    suspend fun getAllProducts(
+        @Header("Authorization") token: String,
+        @Path("id_user") idUser: String
+    ): Response<StoreResponse<List<ProductDto>>>
 
     @GET("products/{id_product}")
     suspend fun getSingleProduct(
@@ -42,4 +45,27 @@ interface StoreApiService {
         @Query("id_user") idUser: String,
         @Query("id_product") idProduct: String
     ): Response<StoreResponse<String>>
+
+
+    @POST("favorite/insert")
+    suspend fun addMyFavorites(
+        @Header("Authorization") token: String,
+        @Query("id_user") idUser: String,
+        @Query("id_product") idProduct: String
+    ): Response<StoreResponse<String>>
+
+    @GET("favorite/getFavorites/{id_user}")
+    suspend fun getMyFavorites(
+        @Header("Authorization") token: String,
+        @Path("id_user") idUser: String
+    ): Response<StoreResponse<List<ProductDto>>>
+
+    @DELETE("favorite/remove")
+    suspend fun removeProductMyFavorite(
+        @Header("Authorization") token: String,
+        @Query("id_user") idUser: String,
+        @Query("id_product") idProduct: String
+    ): Response<StoreResponse<String>>
+
+
 }

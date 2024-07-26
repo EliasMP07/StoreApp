@@ -7,6 +7,7 @@ data class ProductDto(
     @SerializedName("title") val title: String,
     @SerializedName("price") val price: String,
     @SerializedName("description") val description: String,
+    @SerializedName("is_favorite") val isFavorite: Boolean,
     @SerializedName("category") val category: String,
     @SerializedName("image") val image: String,
     @SerializedName("rating") val  rating: RatingDto

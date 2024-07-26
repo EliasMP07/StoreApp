@@ -1,5 +1,6 @@
-package com.devdroid07.storeapp.store.presentation.myCart.components
+package com.devdroid07.storeapp.core.presentation.designsystem.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,10 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.devdroid07.storeapp.R
 
 @Composable
-fun EmptyMyCartScreen(
+fun EmptyListScreen(
+    text: String,
+    @DrawableRes  image: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -28,11 +30,11 @@ fun EmptyMyCartScreen(
         Spacer(modifier = Modifier.weight(1f))
         Image(
             modifier = Modifier.size(200.dp),
-            painter = painterResource(id = R.drawable.empty_cart),
+            painter = painterResource(id = image),
             contentDescription = null
         )
         Text(
-            text = "Tu carrito esta vacio",
+            text = text,
             style = MaterialTheme.typography.titleMedium.copy(
                 textAlign = TextAlign.Center
             )

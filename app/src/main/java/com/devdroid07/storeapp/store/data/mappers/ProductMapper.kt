@@ -11,6 +11,7 @@ fun ProductDto.toProduct(): Product{
         description = description,
         category = category,
         image = image,
+        isFavorite = isFavorite,
         ratingCount = rating.count,
         ratingRate = rating.rate
     )

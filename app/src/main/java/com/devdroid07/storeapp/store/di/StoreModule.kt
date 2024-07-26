@@ -4,18 +4,20 @@ import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.store.data.remote.StoreApiService
 import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
+import com.devdroid07.storeapp.store.domain.usecases.AddFavoriteProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
+import com.devdroid07.storeapp.store.domain.usecases.GetFavoritesProductsUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
 import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyCartUseCase
+import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyFavoritesUseCase
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -53,7 +55,10 @@ object StoreModule {
             getSingleProduct = GetSingleProduct(repository),
             getMyCartUseCase = GetMyCartUseCase(repository),
             addMyCartUseCase = AddMyCartUseCase(repository),
-            removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository)
+            removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository),
+            removeFavoriteProductUseCase = RemoveProductMyFavoritesUseCase(repository),
+            addFavoriteProductUseCase = AddFavoriteProductUseCase(repository),
+            getFavoritesProductsUseCase = GetFavoritesProductsUseCase(repository)
         )
     }
 

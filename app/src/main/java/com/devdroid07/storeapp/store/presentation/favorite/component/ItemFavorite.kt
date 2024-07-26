@@ -1,6 +1,4 @@
-@file:OptIn(ExperimentalGlideComposeApi::class)
-
-package com.devdroid07.storeapp.store.presentation.myCart.components
+package com.devdroid07.storeapp.store.presentation.favorite.component
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -17,10 +15,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,22 +24,22 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnter
-import com.devdroid07.storeapp.store.domain.model.Cart
+import com.devdroid07.storeapp.store.domain.model.Product
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ItemCard(
-    cart: Cart
+fun ItemFavorite(
+    product: Product,
+    onDetailProduct: (String) -> Unit
 ) {
-    var isExpand by rememberSaveable {
-        mutableStateOf(false)
-    }
+
     ElevatedCard(
         elevation = CardDefaults.cardElevation(20.dp),
         modifier = Modifier
             .clip(RoundedCornerShape(30.dp))
             .animateEnter()
             .animateContentSize(),
-        onClick = { /*TODO*/ }
+        onClick = { onDetailProduct(product.id.toString()) }
     ) {
         Row(
             modifier = Modifier
@@ -66,7 +60,7 @@ fun ItemCard(
                     .clip(RoundedCornerShape(12.dp))
                     .size(80.dp)
                     .background(Color.White),
-                model = cart.image,
+                model = product.image,
                 contentScale = ContentScale.Fit,
                 contentDescription = ""
             )
@@ -74,23 +68,14 @@ fun ItemCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = cart.title,
+                    text = product.title,
                     style = MaterialTheme.typography.titleSmall
                 )
                 Text(
-                    text = cart.category,
+                    text = product.category,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Text(
-                    text = "$${(cart.price.toDouble() * cart.quantity)}",
-                    style = MaterialTheme.typography.titleMedium
-                )
             }
-            Spacer(modifier = Modifier.weight(0.1f))
-            Text(
-                text = cart.quantity.toString(),
-                style = MaterialTheme.typography.titleMedium
-            )
             Spacer(modifier = Modifier.weight(0.1f))
         }
         HorizontalDivider()

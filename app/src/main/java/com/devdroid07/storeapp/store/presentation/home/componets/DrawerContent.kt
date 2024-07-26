@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp.store.presentation.home.componets
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -101,10 +102,12 @@ internal fun DrawerContent(
 
 @Composable
 internal fun HomeDrawerScreens(
+    context: Context,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
+    navigateFavorites: () -> Unit,
     navigateMyCart:() -> Unit,
     navigateToSettings: () -> Unit
 ) {
@@ -120,6 +123,10 @@ internal fun HomeDrawerScreens(
                     currentRoute = currentDrawerRoute,
                 ) { route ->
                     //navController.navigateToSingleTop(route)
+                    when(route){
+                        RoutesScreens.Favorite -> navigateFavorites()
+                        else -> Unit
+                    }
                     currentDrawerRoute = route
                     coroutineScope.launch { drawerState.close() }
                 }
@@ -140,12 +147,14 @@ internal fun HomeDrawerScreens(
 
                 HomeScreenRoot(
                     state = state,
+                    context = context,
+                    viewModel = viewModel,
                     openDrawer = {
                         coroutineScope.launch { drawerState.open() }
                     },
                     onAction = { action ->
                         when (action) {
-                            is HomeAction.OnProductDetailScreen -> {
+                            is HomeAction.OnProductDetailClick -> {
                                 navigateToDetailProduct(action.idProduct)
                             }
                             HomeAction.OnMyCartClick -> {

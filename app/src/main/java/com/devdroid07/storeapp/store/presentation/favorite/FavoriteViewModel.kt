@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.store.presentation.myCart
+package com.devdroid07.storeapp.store.presentation.favorite
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +7,7 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
+import com.devdroid07.storeapp.store.presentation.home.HomeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,67 +20,42 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MyCartViewModel @Inject constructor(
+class FavoriteViewModel @Inject constructor(
     private val storeUseCases: StoreUseCases
-) : ViewModel() {
+): ViewModel() {
 
-    private val _state = MutableStateFlow(MyCartState())
-    val state: StateFlow<MyCartState> get() = _state.asStateFlow()
+    private val _state = MutableStateFlow(FavoriteState())
+    val state: StateFlow<FavoriteState> get() = _state.asStateFlow()
 
-    private val eventChannel = Channel<MyCartEvent>()
+    private val eventChannel = Channel<FavoriteEvent>()
     val events = eventChannel.receiveAsFlow()
 
     init {
-        getMyCart()
+        getAllFavorites()
     }
 
     fun onAction(
-        action: MyCartAction
-    ) {
-        when (action) {
-            is MyCartAction.OnRemoveProduct -> onRemoveProduct(action.idProduct)
-            MyCartAction.OnRetryClick -> getMyCart()
+        action: FavoriteAction
+    ){
+        when(action){
+            is FavoriteAction.RemoveFavoriteSlide -> removeFavorite(action.productId)
+            FavoriteAction.RetryClick -> getAllFavorites()
             else -> Unit
         }
     }
 
-    private fun onRemoveProduct(idProduct: Int) {
+    private fun getAllFavorites(){
         viewModelScope.launch {
-            val result = storeUseCases.removeProductMyCartUseCase(idProduct)
-
-            when (result) {
-                is Result.Error -> {
-                    eventChannel.send(MyCartEvent.Error(UiText.StringResource(R.string.error_remove_cart)))
-                }
-                is Result.Success -> {
-                    val newCart = _state.value.myCart.toMutableList()
-                    newCart.removeIf {
-                        it.idProduct == idProduct.toString()
-                    }
-                    _state.update { currentState ->
-                        currentState.copy(
-                            myCart = newCart
-                        )
-                    }
-                    eventChannel.send(MyCartEvent.Success(UiText.StringResource(R.string.success_remove_cart)))
-                }
-            }
-        }
-    }
-
-    private fun getMyCart() {
-        viewModelScope.launch {
-            _state.update { currentState ->
+            _state.update {currentState ->
                 currentState.copy(
                     isLoading = true,
                     error = null
                 )
             }
-            storeUseCases.getMyCartUseCase().collectLatest { result ->
+            storeUseCases.getFavoritesProductsUseCase().collectLatest { result ->
                 _state.update { currentState ->
                     when (result) {
                         is Result.Error -> {
-
                             currentState.copy(
                                 isLoading = false,
                                 error = result.error.asUiText()
@@ -88,13 +64,30 @@ class MyCartViewModel @Inject constructor(
                         }
                         is Result.Success -> {
                             currentState.copy(
-                                myCart = result.data,
+                                productFavorites = result.data,
                                 isLoading = false,
                                 error = null
                             )
-
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun removeFavorite(idProduct: String) {
+        viewModelScope.launch {
+
+            when (val result = storeUseCases.removeFavoriteProductUseCase(idProduct)) {
+                is Result.Error -> {
+                    eventChannel.send(
+                        FavoriteEvent.Error(result.error.asUiText())
+                    )
+                }
+                is Result.Success -> {
+                    eventChannel.send(
+                        FavoriteEvent.Success(UiText.StringResource(R.string.success_delete_favorite))
+                    )
                 }
             }
         }

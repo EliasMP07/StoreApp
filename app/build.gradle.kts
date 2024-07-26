@@ -68,8 +68,7 @@ dependencies {
 
     //Serialization
     implementation(libs.kotlinx.serialization.json)
-
-
+    
     implementation(libs.commons.io)
 
     implementation(libs.androidx.core.splashscreen)

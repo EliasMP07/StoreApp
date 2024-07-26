@@ -20,8 +20,6 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
-import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.CamaraIcon
 
 @Composable

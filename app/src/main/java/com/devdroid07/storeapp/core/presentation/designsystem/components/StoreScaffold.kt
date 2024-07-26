@@ -13,15 +13,12 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
-import com.devdroid07.storeapp.core.presentation.ui.connectivityState
-import com.devdroid07.storeapp.core.presentation.ui.util.ConnectionState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Composable

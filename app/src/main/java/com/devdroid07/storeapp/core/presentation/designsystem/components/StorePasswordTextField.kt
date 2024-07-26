@@ -20,7 +20,6 @@ import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.TextObfuscationMode
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Icon
@@ -48,6 +47,7 @@ import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LookCloseIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.LookOpenIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
+
 @Composable
 fun StorePasswordTextField(
     state: TextFieldState,

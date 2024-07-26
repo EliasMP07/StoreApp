@@ -3,13 +3,10 @@ package com.devdroid07.storeapp.core.presentation.ui.util
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Base64
 import androidx.core.content.FileProvider
 import com.devdroid07.storeapp.R
 import org.apache.commons.io.FileUtils
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream

@@ -1,6 +1,5 @@
 package com.devdroid07.storeapp.core.presentation.designsystem.components.utils
 
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf

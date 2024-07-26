@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,16 +25,14 @@ import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
+import com.devdroid07.storeapp.navigation.util.navigateTo
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
-import com.devdroid07.storeapp.navigation.util.slideInAnimation
+import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
+import com.devdroid07.storeapp.store.presentation.favorite.FavoriteViewModel
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeDrawerScreens
-import com.devdroid07.storeapp.store.presentation.myCart.MyCartAction
-import com.devdroid07.storeapp.store.presentation.myCart.MyCartEvent
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartScreenRoot
-import com.devdroid07.storeapp.store.presentation.myCart.MyCartState
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
-import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailEvent
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRootScreenRoot
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailViewModel
 
@@ -72,15 +69,42 @@ fun NavGraphBuilder.store(
             route = RoutesScreens.HomeDrawerRoute.route
         ) {
             HomeDrawerScreens(
+                context = context,
                 navigateToSettings = {},
                 navigateToDetailProduct = {
                     navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                },
+                navigateFavorites = {
+                    navController.navigate(RoutesScreens.Favorite.route)
                 },
                 navigateMyCart = {
                     navController.navigate(RoutesScreens.Cart.route)
                 }
             )
         }
+
+        composable(
+            route = RoutesScreens.Favorite.route
+        ){
+
+            val viewModel: FavoriteViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            val onAction = viewModel::onAction
+
+            FavoriteScreenRoot(
+                context = context,
+                state = state,
+                navigateBack = {
+                    navController.navigateBack()
+                },
+                navigateDetailProduct = {
+                    navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                },
+                onAction = onAction,
+                viewModel = viewModel
+            )
+        }
+
         composable(
             route = RoutesScreens.Cart.route
         ) {
@@ -92,7 +116,7 @@ fun NavGraphBuilder.store(
                 state = state,
                 context = context,
                 viewModel = viewModel,
-                onBack = {
+                navigateBack = {
                     navController.navigateBack()
                 },
                 onAction = onAction,

@@ -1,26 +1,25 @@
 package com.devdroid07.storeapp.core.presentation.designsystem.components.animation
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.EaseInBounce
-import androidx.compose.animation.core.EaseInElastic
-import androidx.compose.animation.core.EaseInOutBounce
 import androidx.compose.animation.core.EaseOutBounce
-import androidx.compose.animation.core.Easing
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -58,7 +57,14 @@ fun Modifier.animateEnter(
         )
     }
 
-    return this.offset { IntOffset(animatable.value.toInt(), 0) }
+    return this
+        .offset {
+            IntOffset(
+                animatable.value.toInt(),
+                0
+            )
+        }
+        .clip(RoundedCornerShape(30.dp))
 }
 
 @Composable
@@ -79,6 +85,35 @@ fun Modifier.animateAttention(
         scaleX = animatable.value
         scaleY = animatable.value
     }
+}
+
+@Composable
+fun Modifier.animateFavorite(): Modifier {
+    val isClicked = remember { mutableStateOf(false) }
+    val animatable = remember { Animatable(0.1f) }
+
+    LaunchedEffect(isClicked.value) {
+        if (isClicked.value) {
+            animatable.snapTo(0.1f) // Reiniciar la animación
+            animatable.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(
+                    durationMillis = 1000,
+                    easing = EaseOutBounce
+                )
+            )
+            isClicked.value = false // Reset the click state
+        }
+    }
+
+    return this
+        .clickable {
+            isClicked.value = true
+        }
+        .graphicsLayer {
+            scaleX = animatable.value
+            scaleY = animatable.value
+        }
 }
 
 

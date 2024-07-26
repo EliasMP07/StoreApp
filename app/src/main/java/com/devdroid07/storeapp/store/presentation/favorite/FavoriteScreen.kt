@@ -1,14 +1,11 @@
-@file:OptIn(ExperimentalMaterial3Api::class,
-            ExperimentalMaterial3Api::class
-)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.devdroid07.storeapp.store.presentation.myCart
+package com.devdroid07.storeapp.store.presentation.favorite
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,59 +24,58 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreTo
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
+import com.devdroid07.storeapp.store.presentation.favorite.component.FavoriteShimmerEffect
+import com.devdroid07.storeapp.store.presentation.favorite.component.ItemFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
-import com.devdroid07.storeapp.store.presentation.myCart.components.FooterMyCart
-import com.devdroid07.storeapp.store.presentation.myCart.components.ItemCard
-import com.devdroid07.storeapp.store.presentation.myCart.components.MyCartShimmerEffect
 import kotlinx.coroutines.launch
 
 @Composable
-fun MyCartScreenRoot(
-    state: MyCartState,
+fun FavoriteScreenRoot(
     context: Context,
-    viewModel: MyCartViewModel,
+    state: FavoriteState,
+    viewModel: FavoriteViewModel,
     navigateBack: () -> Unit,
-    onAction: (MyCartAction) -> Unit
+    navigateDetailProduct: (String) -> Unit,
+    onAction: (FavoriteAction) -> Unit
 ) {
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    ObserveAsEvents(flow = viewModel.events) { event ->
+    ObserveAsEvents(viewModel.events) { event ->
         when (event) {
-            is MyCartEvent.Error -> {
+            is FavoriteEvent.Error -> {
                 scope.launch {
-                    snackbarHostState.showSnackbar(message = event.error.asString(context))
+                    snackbarHostState.showSnackbar(event.error.asString(context))
                 }
             }
-            is MyCartEvent.Success -> {
+            is FavoriteEvent.Success -> {
                 scope.launch {
-                    snackbarHostState.showSnackbar(message = event.message.asString(context))
+                    snackbarHostState.showSnackbar(event.message.asString(context))
                 }
             }
         }
-
     }
-
-    MyCartScreen(
+    FavoriteScreen(
         state = state,
-        snackbarHostState = snackbarHostState,
         onAction = { action ->
             when (action) {
-                MyCartAction.OnBackClick -> navigateBack()
+                FavoriteAction.OnBackClick -> navigateBack()
+                is FavoriteAction.OnProductDetailClick -> navigateDetailProduct(action.idProduct)
                 else -> Unit
             }
             onAction(action)
-        }
+        },
+        snackbarHostState = snackbarHostState
     )
 
 }
 
 @Composable
-private fun MyCartScreen(
-    state: MyCartState,
+private fun FavoriteScreen(
+    state: FavoriteState,
+    onAction: (FavoriteAction) -> Unit,
     snackbarHostState: SnackbarHostState,
-    onAction: (MyCartAction) -> Unit
 ) {
     Scaffold(
         snackbarHost = {
@@ -87,11 +83,11 @@ private fun MyCartScreen(
         },
         topBar = {
             StoreToolbar(
-                title = stringResource(R.string.my_cart_title_screen),
+                title = stringResource(R.string.my_favorite),
                 isMenu = false,
                 isProfile = false,
                 onBack = {
-                    onAction(MyCartAction.OnBackClick)
+                    onAction(FavoriteAction.OnBackClick)
                 },
                 openDrawer = { /*TODO*/ }
             )
@@ -101,18 +97,18 @@ private fun MyCartScreen(
         val result = handleResultView(
             isLoading = state.isLoading,
             contentLoading = {
-                MyCartShimmerEffect(paddingValues = paddingValue)
+                FavoriteShimmerEffect(paddingValues = paddingValue)
             },
-            isEmpty = state.myCart.isEmpty(),
+            isEmpty = state.productFavorites.isEmpty(),
             contentEmpty = {
                 EmptyListScreen(
-                    text = stringResource(id = R.string.cart_empty),
-                    image = R.drawable.empty_cart
+                    text = stringResource(id = R.string.empty_favorite),
+                    image = R.drawable.empty_data
                 )
             },
             error = state.error,
             retry = {
-                onAction(MyCartAction.OnRetryClick)
+                onAction(FavoriteAction.RetryClick)
             }
         )
 
@@ -125,30 +121,22 @@ private fun MyCartScreen(
 
                 LazyColumn(
                     modifier = Modifier
-                        .padding(horizontal = 10.dp)
-                        .weight(1f),
+                        .padding(horizontal = 10.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(state.myCart) { cart ->
+                    items(state.productFavorites) { product ->
                         SwipeToDeleteContainer(
-                            item = cart,
+                            item = product,
                             onDelete = {
-                                onAction(MyCartAction.OnRemoveProduct(it.idProduct.toInt()))
+                                onAction(FavoriteAction.RemoveFavoriteSlide(it.id.toString()))
                             }
                         ) {
-                            ItemCard(
-                                cart = cart
-                            )
+                            ItemFavorite(
+                                product = product,
+                                onDetailProduct = { onAction(FavoriteAction.OnProductDetailClick(it)) })
                         }
                     }
                 }
-
-                FooterMyCart(
-                    state = state,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.3f),
-                )
 
             }
         }

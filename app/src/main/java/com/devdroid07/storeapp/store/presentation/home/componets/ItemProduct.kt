@@ -1,10 +1,15 @@
 package com.devdroid07.storeapp.store.presentation.home.componets
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -26,20 +31,24 @@ import com.devdroid07.storeapp.store.domain.model.Product
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ItemProduct(
-    isFavorite: Boolean = false,
     product: Product,
-    onClick : (idProduct: String) -> Unit
+    addFavorite :(String) -> Unit ={},
+    removeFavorite :(String) -> Unit ={},
+    onClick: (idProduct: String) -> Unit
 ) {
     Card(
-        modifier = Modifier.padding(5.dp).animateAttention(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateAttention(),
         onClick = {
             onClick(product.id.toString())
         }
     ) {
         Box(
-        ){
+            contentAlignment = Alignment.Center
+        ) {
             Column(
-                modifier = Modifier,
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 GlideImage(
@@ -48,21 +57,53 @@ fun ItemProduct(
                         .height(200.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color.White),
-                    model = product.image, contentDescription = null
+                    model = product.image,
+                    contentDescription = null
                 )
-                Text(text = product.title, style = MaterialTheme.typography.titleMedium.copy(
-                    textAlign = TextAlign.Center
-                ))
-                Text(text = product.category, style = MaterialTheme.typography.bodyMedium)
-                Text(text = "$${product.price}", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = product.title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        textAlign = TextAlign.Center
+                    )
+                )
+                Text(
+                    text = product.category,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = "$${product.price}",
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
-            StoreIconButtonFavorite(
-                modifier = Modifier.align(Alignment.TopEnd),
-                isFavorite = false,
-                onClick = {
+            this@Card.AnimatedVisibility(
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
+                visible = !product.isFavorite,
+                exit = scaleOut(),
+                enter = scaleIn(animationSpec = spring(Spring.DampingRatioHighBouncy))
+            ) {
+                StoreIconButtonFavorite(
+                    isFavorite = false,
+                    onClick = {
+                        addFavorite(product.id.toString())
+                    }
+                )
+            }
+            this@Card.AnimatedVisibility(
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
+                visible = product.isFavorite,
+                exit = scaleOut(),
+                enter = scaleIn(animationSpec = spring(Spring.DampingRatioHighBouncy))
+            ) {
+                StoreIconButtonFavorite(
+                    isFavorite = true,
+                    onClick = {
+                        removeFavorite(product.id.toString())
+                    }
+                )
+            }
 
-                }
-            )
         }
     }
 }

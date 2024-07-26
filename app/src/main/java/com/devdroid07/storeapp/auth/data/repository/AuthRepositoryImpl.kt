@@ -8,7 +8,6 @@ import com.devdroid07.storeapp.core.data.mappers.toUser
 import com.devdroid07.storeapp.core.data.network.safeCall
 import com.devdroid07.storeapp.core.data.network.safeCall2
 import com.devdroid07.storeapp.core.domain.SessionStorage
-import com.devdroid07.storeapp.core.domain.User
 import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.Result

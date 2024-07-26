@@ -1,6 +1,5 @@
 package com.devdroid07.storeapp.core.presentation.designsystem.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

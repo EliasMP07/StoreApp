@@ -14,6 +14,13 @@ val ExpandLessIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.ic_expand_less)
 
+val CartIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_cart)
+
+val RemoveIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_remove_cart)
 
 val Logo : ImageVector
     @Composable

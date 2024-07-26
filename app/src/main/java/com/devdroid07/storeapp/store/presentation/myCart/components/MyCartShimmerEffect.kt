@@ -1,6 +1,7 @@
 package com.devdroid07.storeapp.store.presentation.myCart.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,23 +21,38 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.animati
 @Composable
 fun MyCartShimmerEffect(
     paddingValues: PaddingValues
-){
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .padding(20.dp),
-        contentPadding = PaddingValues(10.dp)
-    ) {
-        items(4){
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(110.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .shimmerEffect()
-            )
-            Spacer(modifier = Modifier.height(30.dp))
-        }
+) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = paddingValues.calculateTopPadding())
+        ) {
+            items(5) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(110.dp)
+                        .padding(horizontal = 20.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .shimmerEffect()
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+            }
+            item(
+
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = 30.dp,
+                                topEnd = 30.dp
+                            )
+                        )
+                        .shimmerEffect()
+                )
+            }
     }
 }

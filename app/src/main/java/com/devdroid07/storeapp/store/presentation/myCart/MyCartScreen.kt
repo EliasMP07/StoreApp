@@ -6,22 +6,38 @@ import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.CartIcon
+import com.devdroid07.storeapp.core.presentation.designsystem.CloseIcon
+import com.devdroid07.storeapp.core.presentation.designsystem.Logo
+import com.devdroid07.storeapp.core.presentation.designsystem.RemoveIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
@@ -50,12 +66,12 @@ fun MyCartScreenRoot(
         when (event) {
             is MyCartEvent.Error -> {
                 scope.launch {
-                    snackbarHostState.showSnackbar( event.error.asString(context),)
+                    snackbarHostState.showSnackbar(message = event.error.asString(context))
                 }
             }
             is MyCartEvent.Success -> {
                 scope.launch {
-                    snackbarHostState.showSnackbar( event.message.asString(context),)
+                    snackbarHostState.showSnackbar(message = event.message.asString(context))
                 }
             }
         }
@@ -98,6 +114,7 @@ private fun MyCartScreen(
             )
         }
     ) { paddingValue ->
+
         val result = handleResultView(
             isLoading = state.isLoading,
             contentLoading = {
@@ -112,12 +129,14 @@ private fun MyCartScreen(
                 onAction(MyCartAction.OnRetryClick)
             }
         )
+
         if (result) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValue)
             ) {
+
                 LazyColumn(
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
@@ -132,18 +151,21 @@ private fun MyCartScreen(
                             }
                         ) {
                             ItemCard(
-                                cart
+                                cart = cart
                             )
                         }
                     }
                 }
+
                 FooterMyCart(
                     state = state,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(0.3f),
                 )
+
             }
         }
+
     }
 }

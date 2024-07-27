@@ -20,19 +20,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.store.presentation.favorite.component.FavoriteShimmerEffect
 import com.devdroid07.storeapp.store.presentation.favorite.component.ItemFavorite
-import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
 import kotlinx.coroutines.launch
 
 @Composable
 fun FavoriteScreenRoot(
     context: Context,
     state: FavoriteState,
+    openDrawer : () -> Unit,
     viewModel: FavoriteViewModel,
     navigateBack: () -> Unit,
     navigateDetailProduct: (String) -> Unit,
@@ -60,6 +61,7 @@ fun FavoriteScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
+                FavoriteAction.OpenDrawer -> openDrawer()
                 FavoriteAction.OnBackClick -> navigateBack()
                 is FavoriteAction.OnProductDetailClick -> navigateDetailProduct(action.idProduct)
                 else -> Unit
@@ -84,12 +86,11 @@ private fun FavoriteScreen(
         topBar = {
             StoreToolbar(
                 title = stringResource(R.string.my_favorite),
-                isMenu = false,
+                isMenu = true,
                 isProfile = false,
-                onBack = {
-                    onAction(FavoriteAction.OnBackClick)
-                },
-                openDrawer = { /*TODO*/ }
+                openDrawer = {
+                    onAction(FavoriteAction.OpenDrawer)
+                }
             )
         }
     ) { paddingValue ->

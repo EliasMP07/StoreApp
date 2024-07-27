@@ -1,16 +1,13 @@
 package com.devdroid07.storeapp.store.presentation.search
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +22,18 @@ import com.devdroid07.storeapp.store.presentation.search.components.SearchTextFi
 @Composable
 fun SearchScreenRoot(
     state: SearchState,
+    navigateDetailProduct: (String) -> Unit,
     onAction: (SearchAction) -> Unit
 ) {
     SearchScreen(
         state = state,
-        onAction = onAction
+        onAction = { action ->
+            when (action) {
+                is SearchAction.OnProductDetailClick -> navigateDetailProduct(action.idProduct)
+                else -> Unit
+            }
+            onAction(action)
+        }
     )
 }
 
@@ -64,7 +68,10 @@ fun SearchScreen(
         val result = handleResultView(
             isLoading = state.isSearching,
             contentLoading = {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
                     CircularProgressIndicator()
                 }
             },
@@ -78,11 +85,18 @@ fun SearchScreen(
             error = state.error,
             retry = {}
         )
-        if(result){
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.products) { product ->
+        if (result) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = spacing.spaceSmall),
+                verticalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
+            ) {
+                items(
+                    state.products,
+                    key = { it.id }) { product ->
                     ItemProduct(product = product) {
-
+                        onAction(SearchAction.OnProductDetailClick(it))
                     }
                 }
             }

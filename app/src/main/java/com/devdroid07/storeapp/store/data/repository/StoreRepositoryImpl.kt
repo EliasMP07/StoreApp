@@ -1,6 +1,5 @@
 package com.devdroid07.storeapp.store.data.repository
 
-import android.util.Log
 import com.devdroid07.storeapp.core.data.network.safeCall2
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.DataError

@@ -39,7 +39,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
+import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
+import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
+import com.devdroid07.storeapp.store.presentation.favorite.FavoriteViewModel
 import com.devdroid07.storeapp.store.presentation.home.HomeAction
 import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
 import com.devdroid07.storeapp.store.presentation.home.HomeViewModel
@@ -108,9 +111,8 @@ internal fun HomeDrawerScreens(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
-    navigateFavorites: () -> Unit,
     navigateSearch: () -> Unit,
-    navigateMyCart:() -> Unit,
+    navigateMyCart: () -> Unit,
     navigateToSettings: () -> Unit
 ) {
 
@@ -125,9 +127,10 @@ internal fun HomeDrawerScreens(
                     currentRoute = currentDrawerRoute,
                 ) { route ->
                     currentDrawerRoute = route
-                    when(route){
+                    when (route) {
+                        RoutesScreens.Home -> navController.navigateToSingleTop(route)
                         RoutesScreens.Search -> navigateSearch()
-                        RoutesScreens.Favorite -> navigateFavorites()
+                        RoutesScreens.Favorite -> navController.navigateToSingleTop(route)
                         else -> Unit
                     }
                     coroutineScope.launch { drawerState.close() }
@@ -151,33 +154,41 @@ internal fun HomeDrawerScreens(
                     state = state,
                     context = context,
                     viewModel = viewModel,
+                    navigateToDetailProduct = navigateToDetailProduct,
+                    navigateToSearch = navigateSearch,
+                    navigateToCart = navigateMyCart,
                     openDrawer = {
                         coroutineScope.launch { drawerState.open() }
                     },
-                    onAction = { action ->
-                        when (action) {
-                            is HomeAction.OnProductDetailClick -> {
-                                navigateToDetailProduct(action.idProduct)
-                            }
-                            HomeAction.OnSearchClick -> navigateSearch()
-                            HomeAction.OnMyCartClick -> {
-                                navigateMyCart()
-                            }
-                            else -> Unit
-                        }
-                        onAction(action)
-                    }
+                    onAction = onAction
                 )
+
             }
 
-            //            calculatorRoute(
-            //                openDrawer = { coroutineScope.launch { drawerState.open() } },
-            //                navigateToSettings = navigateToSettings
-            //            )
-            //
-            //            historyRoute(
-            //                openDrawer = { coroutineScope.launch { drawerState.open() } }
-            //            )
+            composable(
+                route = RoutesScreens.Favorite.route
+            ) {
+
+                val viewModel: FavoriteViewModel = hiltViewModel()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+                val onAction = viewModel::onAction
+
+                FavoriteScreenRoot(
+                    context = context,
+                    state = state,
+                    navigateBack = {
+                        navController.navigateBack()
+                    },
+                    openDrawer = { coroutineScope.launch { drawerState.open() } },
+                    navigateDetailProduct = {
+                        navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                    },
+                    onAction = onAction,
+                    viewModel = viewModel
+                )
+
+            }
+
         }
     }
 }

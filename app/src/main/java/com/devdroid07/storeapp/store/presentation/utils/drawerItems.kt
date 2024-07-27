@@ -9,7 +9,7 @@ val drawerItems = listOf(
     DrawerItem(
         title = R.string.home,
         icon = R.drawable.ic_home,
-        route = RoutesScreens.Favorite
+        route = RoutesScreens.Home
     ),
     DrawerItem(
         title = R.string.search,

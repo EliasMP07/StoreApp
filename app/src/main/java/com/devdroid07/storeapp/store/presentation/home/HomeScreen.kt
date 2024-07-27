@@ -45,6 +45,9 @@ import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
 fun HomeScreenRoot(
     state: HomeState,
     context: Context,
+    navigateToDetailProduct: (String) -> Unit,
+    navigateToSearch: () -> Unit,
+    navigateToCart :() -> Unit,
     viewModel: HomeViewModel,
     openDrawer: () -> Unit,
     onAction: (HomeAction) -> Unit
@@ -72,7 +75,19 @@ fun HomeScreenRoot(
     HomeScreen(
         state = state,
         openDrawer = openDrawer,
-        onAction = onAction
+        onAction = { action ->
+            when (action) {
+                is HomeAction.OnProductDetailClick -> {
+                    navigateToDetailProduct(action.idProduct)
+                }
+                HomeAction.OnSearchClick -> navigateToSearch()
+                HomeAction.OnMyCartClick -> {
+                    navigateToCart()
+                }
+                else -> Unit
+            }
+            onAction(action)
+        }
     )
 }
 

@@ -25,7 +25,6 @@ import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
-import com.devdroid07.storeapp.navigation.util.navigateTo
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
@@ -79,36 +78,10 @@ fun NavGraphBuilder.store(
                 navigateSearch = {
                     navController.navigate(RoutesScreens.Search.route)
                 },
-                navigateFavorites = {
-                    navController.navigate(RoutesScreens.Favorite.route)
-                },
                 navigateMyCart = {
                     navController.navigate(RoutesScreens.Cart.route)
                 }
             )
-        }
-
-        composable(
-            route = RoutesScreens.Favorite.route
-        ){
-
-            val viewModel: FavoriteViewModel = hiltViewModel()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            val onAction = viewModel::onAction
-
-            FavoriteScreenRoot(
-                context = context,
-                state = state,
-                navigateBack = {
-                    navController.navigateBack()
-                },
-                navigateDetailProduct = {
-                    navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
-                },
-                onAction = onAction,
-                viewModel = viewModel
-            )
-
         }
 
         composable(
@@ -141,6 +114,9 @@ fun NavGraphBuilder.store(
 
             SearchScreenRoot(
                 state = state,
+                navigateDetailProduct = {
+                    navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                },
                 onAction = onAction
             )
 

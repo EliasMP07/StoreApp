@@ -31,6 +31,7 @@ class SearchViewModel @Inject constructor(
                 }
             }
             SearchAction.OnSearch -> searchProduct()
+            else -> Unit
         }
     }
 

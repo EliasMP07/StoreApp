@@ -54,5 +54,6 @@
     <string name="success_delete_favorite">Se elimino de tus favoritos</string>
     <string name="cart_empty">Tu carrito esta vacio</string>
     <string name="empty_favorite">No tienes productos favoritos.</string>
+    <string name="products_search_empty">No se encontraron resultado.</string>
 
 </resources>

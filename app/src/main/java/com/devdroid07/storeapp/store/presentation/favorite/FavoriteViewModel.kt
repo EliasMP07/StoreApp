@@ -85,6 +85,15 @@ class FavoriteViewModel @Inject constructor(
                     )
                 }
                 is Result.Success -> {
+                    val newProductsFavorites = _state.value.productFavorites.toMutableList()
+                    newProductsFavorites.removeIf {
+                        it.id.toString() == idProduct
+                    }
+                    _state.update { currentState ->
+                        currentState.copy(
+                            productFavorites = newProductsFavorites
+                        )
+                    }
                     eventChannel.send(
                         FavoriteEvent.Success(UiText.StringResource(R.string.success_delete_favorite))
                     )

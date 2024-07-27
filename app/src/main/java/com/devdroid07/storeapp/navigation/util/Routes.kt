@@ -13,6 +13,7 @@ sealed class RoutesScreens(val route: String){
 
     data object Home: RoutesScreens("home")
     data object HomeDrawerRoute: RoutesScreens("home_drawer")
+    data object Search: RoutesScreens("search")
     data  object DetailProduct: RoutesScreens("product_detail/{${NavArgs.ProductID.key}}"){
         fun createRoute(productId: String) = "product_detail/$productId"
     }

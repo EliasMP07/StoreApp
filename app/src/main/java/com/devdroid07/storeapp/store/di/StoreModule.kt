@@ -12,6 +12,7 @@ import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
 import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyFavoritesUseCase
+import com.devdroid07.storeapp.store.domain.usecases.SearchProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import dagger.Module
 import dagger.Provides
@@ -53,6 +54,7 @@ object StoreModule {
         return StoreUseCases(
             getAllProducts = GetAllProducts(repository),
             getSingleProduct = GetSingleProduct(repository),
+            searchProductUseCase = SearchProductUseCase(repository),
             getMyCartUseCase = GetMyCartUseCase(repository),
             addMyCartUseCase = AddMyCartUseCase(repository),
             removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository),

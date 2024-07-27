@@ -150,7 +150,7 @@ private fun HomeScreen(
                     HeaderHome(
                         product = state.productRecomended,
                         onSearchClick = {
-
+                            onAction(HomeAction.OnSearchClick)
                         },
                         onProductClick = {
                             onAction(HomeAction.OnProductDetailClick(it.id.toString()))

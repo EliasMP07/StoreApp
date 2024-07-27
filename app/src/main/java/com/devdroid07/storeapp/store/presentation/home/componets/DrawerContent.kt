@@ -39,6 +39,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
+import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
 import com.devdroid07.storeapp.store.presentation.home.HomeAction
 import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
 import com.devdroid07.storeapp.store.presentation.home.HomeViewModel
@@ -108,6 +109,7 @@ internal fun HomeDrawerScreens(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
     navigateFavorites: () -> Unit,
+    navigateSearch: () -> Unit,
     navigateMyCart:() -> Unit,
     navigateToSettings: () -> Unit
 ) {
@@ -122,12 +124,12 @@ internal fun HomeDrawerScreens(
                     drawerItems = drawerItems,
                     currentRoute = currentDrawerRoute,
                 ) { route ->
-                    //navController.navigateToSingleTop(route)
+                    currentDrawerRoute = route
                     when(route){
+                        RoutesScreens.Search -> navigateSearch()
                         RoutesScreens.Favorite -> navigateFavorites()
                         else -> Unit
                     }
-                    currentDrawerRoute = route
                     coroutineScope.launch { drawerState.close() }
                 }
             }
@@ -157,6 +159,7 @@ internal fun HomeDrawerScreens(
                             is HomeAction.OnProductDetailClick -> {
                                 navigateToDetailProduct(action.idProduct)
                             }
+                            HomeAction.OnSearchClick -> navigateSearch()
                             HomeAction.OnMyCartClick -> {
                                 navigateMyCart()
                             }

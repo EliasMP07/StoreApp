@@ -35,6 +35,8 @@ import com.devdroid07.storeapp.store.presentation.myCart.MyCartScreenRoot
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRootScreenRoot
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailViewModel
+import com.devdroid07.storeapp.store.presentation.search.SearchScreenRoot
+import com.devdroid07.storeapp.store.presentation.search.SearchViewModel
 
 @Composable
 fun NavigationRoot(
@@ -74,6 +76,9 @@ fun NavGraphBuilder.store(
                 navigateToDetailProduct = {
                     navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
                 },
+                navigateSearch = {
+                    navController.navigate(RoutesScreens.Search.route)
+                },
                 navigateFavorites = {
                     navController.navigate(RoutesScreens.Favorite.route)
                 },
@@ -103,11 +108,13 @@ fun NavGraphBuilder.store(
                 onAction = onAction,
                 viewModel = viewModel
             )
+
         }
 
         composable(
             route = RoutesScreens.Cart.route
         ) {
+
             val viewModel: MyCartViewModel = hiltViewModel()
             val onAction = viewModel::onAction
             val state by viewModel.state.collectAsStateWithLifecycle()
@@ -121,6 +128,22 @@ fun NavGraphBuilder.store(
                 },
                 onAction = onAction,
             )
+
+        }
+
+        composable(
+            route = RoutesScreens.Search.route
+        ){
+
+            val viewModel: SearchViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            val onAction = viewModel::onAction
+
+            SearchScreenRoot(
+                state = state,
+                onAction = onAction
+            )
+
         }
         composable(
             enterTransition = {
@@ -133,6 +156,7 @@ fun NavGraphBuilder.store(
             arguments = listOf(navArgument(NavArgs.ProductID.key) { type = NavType.StringType })
 
         ) {
+
             val viewModel: ProductDetailViewModel = hiltViewModel()
             val state by viewModel.state.collectAsStateWithLifecycle()
             val onAction = viewModel::onAction
@@ -146,6 +170,7 @@ fun NavGraphBuilder.store(
                     navController.navigateBack()
                 }
             )
+
         }
     }
 }

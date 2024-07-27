@@ -14,7 +14,7 @@ val drawerItems = listOf(
     DrawerItem(
         title = R.string.search,
         icon = R.drawable.ic_search,
-        route = RoutesScreens.Favorite
+        route = RoutesScreens.Search
     ),
     DrawerItem(
         title = R.string.favorite,

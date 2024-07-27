@@ -25,4 +25,6 @@ interface StoreRepository {
 
    suspend fun removeProductFavorite(idProduct: String): EmptyResult<DataError.Network>
 
+   suspend fun searchProduct(query: String): Result<List<Product>, DataError.Network>
+
 }

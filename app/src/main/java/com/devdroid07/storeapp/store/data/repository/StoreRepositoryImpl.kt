@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp.store.data.repository
 
+import android.util.Log
 import com.devdroid07.storeapp.core.data.network.safeCall2
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.DataError
@@ -162,6 +163,30 @@ class StoreRepositoryImpl(
             )
         }
         return result.asEmptyDataResult()
+    }
+
+    override suspend fun searchProduct(query: String): Result<List<Product>, DataError.Network> {
+        val result = safeCall2 {
+            api.searchProduct(
+                token = sessionStorage.get()?.token.orEmpty(),
+                query = query
+            )
+        }
+        return when (result) {
+            is Result.Error -> {
+                Result.Error(
+                    result.error
+                )
+            }
+            is Result.Success -> {
+                val products = result.data.data?.map {
+                    it.toProduct()
+                }
+                Result.Success(
+                    products?: emptyList()
+                )
+            }
+        }
     }
 
 }

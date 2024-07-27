@@ -68,4 +68,11 @@ interface StoreApiService {
     ): Response<StoreResponse<String>>
 
 
+    @GET("products/search/{query}")
+    suspend fun searchProduct(
+        @Header("Authorization") token: String,
+        @Path("query") query: String
+    ): Response<StoreResponse<List<ProductDto>>>
+
+
 }

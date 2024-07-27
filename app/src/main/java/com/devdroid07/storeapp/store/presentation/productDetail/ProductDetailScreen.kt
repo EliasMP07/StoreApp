@@ -38,6 +38,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,7 +58,6 @@ import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreIconButtonBack
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
-import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreScaffold
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.core.presentation.ui.UiText
@@ -138,7 +138,7 @@ private fun ProductDetailScreen(
     state: ProductDetailState,
     onAction: (ProductDetailAction) -> Unit
 ) {
-    StoreScaffold {
+    Scaffold{
         val result = handleResultProduct(
             isLoading = state.isLoading,
             error = state.error,

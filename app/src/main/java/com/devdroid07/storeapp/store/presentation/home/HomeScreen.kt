@@ -47,6 +47,7 @@ fun HomeScreenRoot(
     context: Context,
     navigateToDetailProduct: (String) -> Unit,
     navigateToSearch: () -> Unit,
+    navigateToAccount: () -> Unit,
     navigateToCart :() -> Unit,
     viewModel: HomeViewModel,
     openDrawer: () -> Unit,
@@ -80,6 +81,7 @@ fun HomeScreenRoot(
                 is HomeAction.OnProductDetailClick -> {
                     navigateToDetailProduct(action.idProduct)
                 }
+                HomeAction.OnAccountClick -> navigateToAccount()
                 HomeAction.OnSearchClick -> navigateToSearch()
                 HomeAction.OnMyCartClick -> {
                     navigateToCart()
@@ -108,6 +110,9 @@ private fun HomeScreen(
             StoreToolbar(
                 openDrawer = openDrawer,
                 isMenu = true,
+                onAccountClick = {
+                    onAction(HomeAction.OnAccountClick)
+                },
                 profile = state.user?.image.orEmpty(),
                 scrollBehavior = scrollBehavior
             )

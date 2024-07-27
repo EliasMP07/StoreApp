@@ -41,6 +41,8 @@ import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
+import com.devdroid07.storeapp.store.presentation.AccountViewModel
+import com.devdroid07.storeapp.store.presentation.account.AccountScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteViewModel
 import com.devdroid07.storeapp.store.presentation.home.HomeAction
@@ -128,6 +130,7 @@ internal fun HomeDrawerScreens(
                 ) { route ->
                     currentDrawerRoute = route
                     when (route) {
+                        RoutesScreens.Account -> navController.navigateToSingleTop(route)
                         RoutesScreens.Home -> navController.navigateToSingleTop(route)
                         RoutesScreens.Search -> navigateSearch()
                         RoutesScreens.Favorite -> navController.navigateToSingleTop(route)
@@ -155,6 +158,9 @@ internal fun HomeDrawerScreens(
                     context = context,
                     viewModel = viewModel,
                     navigateToDetailProduct = navigateToDetailProduct,
+                    navigateToAccount = {
+                        navController.navigateToSingleTop(RoutesScreens.Account)
+                    },
                     navigateToSearch = navigateSearch,
                     navigateToCart = navigateMyCart,
                     openDrawer = {
@@ -163,6 +169,21 @@ internal fun HomeDrawerScreens(
                     onAction = onAction
                 )
 
+            }
+
+            composable(
+                route = RoutesScreens.Account.route
+            ) {
+
+                val viewModel: AccountViewModel = hiltViewModel()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+
+                AccountScreenRoot(
+                    state = state,
+                    openDrawer = {
+                        coroutineScope.launch { drawerState.open() }
+                    }
+                )
             }
 
             composable(

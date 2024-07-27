@@ -103,7 +103,6 @@ fun NavGraphBuilder.store(
             )
 
         }
-
         composable(
             route = RoutesScreens.Search.route
         ){

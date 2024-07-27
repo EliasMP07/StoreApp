@@ -9,6 +9,7 @@ package com.devdroid07.storeapp.core.presentation.designsystem.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -42,6 +43,7 @@ fun StoreToolbar(
     isMenu: Boolean = true,
     profile: String = "",
     title: String = "",
+    onAccountClick: () -> Unit = {},
     openDrawer: () -> Unit,
     isProfile: Boolean = true,
     onBack: () -> Unit = {},
@@ -85,7 +87,9 @@ fun StoreToolbar(
                                 MaterialTheme.colorScheme.onBackground
                             ),
                             CircleShape
-                        ),
+                        ).clickable {
+                            onAccountClick()
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     GlideImage(

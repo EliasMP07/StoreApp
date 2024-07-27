@@ -5,6 +5,7 @@ sealed interface HomeAction {
     data object OnSearchClick: HomeAction
     data object RetryClick: HomeAction
     data object OnMyCartClick: HomeAction
+    data object OnAccountClick: HomeAction
     data class AddFavoriteClick(val productId: String): HomeAction
     data class RemoveFavoriteClick(val productId: String): HomeAction
 }

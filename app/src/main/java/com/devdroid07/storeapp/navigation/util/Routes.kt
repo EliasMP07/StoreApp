@@ -7,6 +7,7 @@ sealed class RoutesScreens(val route: String){
     data object Intro: RoutesScreens("intro")
     data object Store: RoutesScreens("store")
     data object Cart: RoutesScreens("cart")
+    data object Account: RoutesScreens("account")
 
     data object Favorite: RoutesScreens("favorite")
     data object Settings: RoutesScreens("settings")

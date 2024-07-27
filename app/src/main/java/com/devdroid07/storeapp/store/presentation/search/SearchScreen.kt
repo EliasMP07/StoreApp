@@ -59,9 +59,6 @@ fun SearchScreen(
             shouldShowHint = false,
             onSearch = {
                 onAction(SearchAction.OnSearch)
-            },
-            onFocusChanged = {
-
             }
         )
 
@@ -83,7 +80,9 @@ fun SearchScreen(
                 )
             },
             error = state.error,
-            retry = {}
+            retry = {
+                onAction(SearchAction.OnRetry)
+            }
         )
         if (result) {
             LazyColumn(

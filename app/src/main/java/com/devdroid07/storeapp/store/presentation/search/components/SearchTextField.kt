@@ -26,6 +26,7 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,9 +43,9 @@ fun SearchTextField(
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
     hint: String = stringResource(id = R.string.search),
-    shouldShowHint: Boolean = false,
-    onFocusChanged: (FocusState) -> Unit
+    shouldShowHint: Boolean = false
 ) {
+    val focus = LocalFocusManager.current
     val spacing = LocalSpacing.current
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -64,6 +65,7 @@ fun SearchTextField(
             keyboardActions = KeyboardActions(
                 onSearch = {
                     keyboardController?.hide()
+                    focus.clearFocus()
                     onSearch()
                     defaultKeyboardAction(ImeAction.Search)
                 }
@@ -83,7 +85,6 @@ fun SearchTextField(
                 .fillMaxWidth()
                 .padding(spacing.spaceMedium)
                 .padding(end = spacing.spaceMedium)
-                .onFocusChanged { onFocusChanged(it) }
         )
         if(shouldShowHint) {
             Text(

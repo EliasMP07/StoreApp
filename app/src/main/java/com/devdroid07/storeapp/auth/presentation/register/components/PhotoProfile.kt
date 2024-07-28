@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -25,12 +26,13 @@ import com.devdroid07.storeapp.core.presentation.designsystem.CamaraIcon
 @Composable
 fun PhotoProfile(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    size: Dp = 100.dp,
+    onClick: () -> Unit = {},
     image: String = ""
 ) {
     Box(
         modifier = modifier
-            .size(100.dp)
+            .size(size)
             .clip(CircleShape)
             .border(
                 BorderStroke(

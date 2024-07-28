@@ -1,9 +1,14 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.devdroid07.storeapp.store.presentation.productDetail
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
@@ -14,6 +19,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,6 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel()
 class ProductDetailViewModel @Inject constructor(
+    private val sessionStorage: SessionStorage,
     private val storeUseCases: StoreUseCases,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -33,6 +41,22 @@ class ProductDetailViewModel @Inject constructor(
     val events = eventChannel.receiveAsFlow()
 
     init {
+        viewModelScope.launch {
+            _state.update { productDetailState ->
+                productDetailState.copy(
+                    user = sessionStorage.get()
+                )
+            }
+        }
+        _state.value.comment.textAsFlow()
+            .onEach { comment ->
+                _state.update { currentState ->
+                    currentState.copy(
+                        canReview = comment.isNotEmpty() && !currentState.isEvaluating,
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
         val productId = savedStateHandle[NavArgs.ProductID.key] ?: "1"
         getProduct(productId = productId)
     }
@@ -72,6 +96,13 @@ class ProductDetailViewModel @Inject constructor(
                     )
                 }
             }
+            ProductDetailAction.OnToggleModalBottomSheet -> {
+                _state.update { productDetailState ->
+                    productDetailState.copy(
+                        showBottomSheet = !productDetailState.showBottomSheet
+                    )
+                }
+            }
             is ProductDetailAction.AddFavoriteClick -> {
                 addFavorite(action.productId)
             }
@@ -81,7 +112,6 @@ class ProductDetailViewModel @Inject constructor(
             else -> Unit
         }
     }
-
 
     private fun getProduct(productId: String) {
         viewModelScope.launch {

@@ -35,14 +35,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StarRating
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailAction
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailState
-import com.devdroid07.storeapp.store.presentation.productDetail.SelectableItemCard
-import com.devdroid07.storeapp.store.presentation.productDetail.StarRating
 
 @Composable
-fun BottomSheetContent(
+fun FooterProductDetail(
     state: ProductDetailState,
     onAction: (ProductDetailAction) -> Unit
 ) {
@@ -114,7 +113,7 @@ fun BottomSheetContent(
                     rating = state.product.ratingRate,
                     valueReview = state.product.ratingCount.toString()
                 ) {
-
+                    onAction(ProductDetailAction.OnToggleModalBottomSheet)
                 }
             }
             Spacer(modifier = Modifier.width(20.dp))

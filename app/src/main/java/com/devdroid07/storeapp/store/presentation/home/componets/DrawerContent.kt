@@ -45,7 +45,6 @@ import com.devdroid07.storeapp.store.presentation.AccountViewModel
 import com.devdroid07.storeapp.store.presentation.account.AccountScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteViewModel
-import com.devdroid07.storeapp.store.presentation.home.HomeAction
 import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
 import com.devdroid07.storeapp.store.presentation.home.HomeViewModel
 import com.devdroid07.storeapp.store.presentation.utils.DrawerItem
@@ -202,7 +201,7 @@ internal fun HomeDrawerScreens(
                     },
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
                     navigateDetailProduct = {
-                        navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                        navigateToDetailProduct(it)
                     },
                     onAction = onAction,
                     viewModel = viewModel

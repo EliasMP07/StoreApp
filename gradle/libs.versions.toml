@@ -1,28 +1,28 @@
 [versions]
-agp = "8.4.1"
+agp = "8.4.2"
 coreSplashscreen = "1.0.1"
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-kotlinxSerializationJson = "1.6.3"
-lifecycleRuntimeKtx = "2.8.1"
-activityCompose = "1.9.0"
-composeBom = "2024.05.00"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+kotlinxSerializationJson = "1.7.1"
+lifecycleRuntimeKtx = "2.8.4"
+activityCompose = "1.9.1"
+composeBom = "2024.06.00"
 hilt-navigation = "1.2.0"
 hilt_version = "2.51.1"
 datastore_version = "1.1.1"
 logging_interceptor_version = "5.0.0-alpha.2"
 retrofit_version = "2.11.0"
 glide_version = "1.0.0-beta01"
-icons_dependency = "1.6.7"
-ksp = "1.9.22-1.0.17"
-composeAnimation = "1.7.0-alpha07"
+icons_dependency = "1.6.8"
+ksp = "1.9.23-1.0.20"
+composeAnimation = "1.7.0-beta06"
 navigationCompose = "2.7.7"
-desugar_jdk_libs = "2.0.3"
+desugar_jdk_libs = "2.0.4"
 commonsIo = "2.13.0"
-serialization_version = "1.8.0"
+serialization_version = "2.0.0"
 converterGson = "2.11.0"
 
 [libraries]
@@ -57,7 +57,9 @@ logging-interceptor = {group = "com.squareup.okhttp3", name = "logging-intercept
 glide-compose = {group = "com.github.bumptech.glide", name ="compose", version.ref = "glide_version"}
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commonsIo" }
+
 [plugins]
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

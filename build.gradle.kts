@@ -5,4 +5,5 @@ plugins {
     alias(libs.plugins.android.hilt.plugin) apply false
     alias(libs.plugins.android.serialization) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }

@@ -56,5 +56,8 @@
     <string name="empty_favorite">No tienes productos favoritos.</string>
     <string name="products_search_empty">No se encontraron resultado.</string>
     <string name="profile_title_screen">Mi cuenta</string>
+    <string name="text_btn_review">Calificar!</string>
+    <string name="text_comment">Tu commentario</string>
+    <string name="text_calification">Calificación</string>
 
 </resources>

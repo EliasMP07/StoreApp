@@ -14,6 +14,7 @@ data class ProductDetailState(
     val quantity: Int = 1,
     val user: User? = null,
     val comment: TextFieldState = TextFieldState(),
+    val ranting: Double = 0.0,
     val canReview: Boolean = false,
     val isEvaluating: Boolean = false,
     val isExpanded: Boolean = false,

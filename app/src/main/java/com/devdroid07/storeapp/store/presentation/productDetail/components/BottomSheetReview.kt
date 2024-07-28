@@ -89,9 +89,7 @@ fun BottomSheetReview(
                 }
                 StarRating(
                     iconSize = 40.dp,
-                ) {
-
-                }
+                ) { onAction(ProductDetailAction.OnRantingChange(it)) }
                 StoreTextField(
                     state = state.comment,
                     startIcon = null,
@@ -103,9 +101,7 @@ fun BottomSheetReview(
                     enabled = state.canReview,
                     text = stringResource(R.string.text_btn_review),
                     isLoading = state.isEvaluating
-                ) {
-
-                }
+                ) { onAction(ProductDetailAction.OnReviewProductClick) }
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }

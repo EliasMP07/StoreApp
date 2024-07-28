@@ -7,6 +7,8 @@ sealed interface ProductDetailAction {
     data object OnMoreInfoClick: ProductDetailAction
     data object OnToggleModalBottomSheet: ProductDetailAction
     data class OnAddMyCart(val idProduct: String, val quantity: Int): ProductDetailAction
+    data class OnRantingChange(val rating: Double) : ProductDetailAction
+    data object OnReviewProductClick: ProductDetailAction
     data object OnAddProductClick: ProductDetailAction
     data object OnRemoveProductClick: ProductDetailAction
     data class AddFavoriteClick(val productId: String): ProductDetailAction

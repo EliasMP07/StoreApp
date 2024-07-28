@@ -3,6 +3,7 @@
 package com.devdroid07.storeapp.store.presentation.productDetail
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -100,6 +101,16 @@ class ProductDetailViewModel @Inject constructor(
                 _state.update { productDetailState ->
                     productDetailState.copy(
                         showBottomSheet = !productDetailState.showBottomSheet
+                    )
+                }
+            }
+            ProductDetailAction.OnReviewProductClick ->{
+                addReviewProduct()
+            }
+            is ProductDetailAction.OnRantingChange -> {
+                _state.update {productDetailState ->
+                    productDetailState.copy(
+                        ranting = action.rating
                     )
                 }
             }
@@ -217,6 +228,45 @@ class ProductDetailViewModel @Inject constructor(
                     }
                     eventChannel.send(
                         ProductDetailEvent.Success(UiText.StringResource(R.string.success_delete_favorite))
+                    )
+                }
+            }
+        }
+    }
+
+    private fun addReviewProduct(){
+        viewModelScope.launch {
+            _state.update {productDetailState ->
+                productDetailState.copy(
+                    isEvaluating = true
+                )
+            }
+            val result = storeUseCases.addReviewProductUseCase(
+                productId = state.value.product.id.toString(),
+                rating = state.value.ranting,
+                comment = state.value.comment.text.toString()
+            )
+            _state.update {productDetailState ->
+                productDetailState.copy(
+                    isEvaluating = false
+                )
+            }
+            when(result){
+                is Result.Error -> {
+                    eventChannel.send(
+                        ProductDetailEvent.Error(result.error.asUiText())
+                    )
+                }
+                is Result.Success -> {
+                    _state.update { productDetailState ->
+                        productDetailState.copy(
+                            showBottomSheet = !productDetailState.showBottomSheet,
+                            comment = TextFieldState(""),
+                            ranting = 0.0
+                        )
+                    }
+                    eventChannel.send(
+                        ProductDetailEvent.Success(UiText.StringResource(R.string.success_add_review))
                     )
                 }
             }

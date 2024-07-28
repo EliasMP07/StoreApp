@@ -13,6 +13,8 @@ interface StoreRepository {
 
    suspend fun getSingleProduct(idProduct: String): Result<Product, DataError.Network>
 
+   suspend fun addReviewProduct(productId: String, rating: Double, comment: String?): EmptyResult<DataError.Network>
+
    suspend fun addMyCart(productId: String, quantity: Int): Result<String, DataError.Network>
 
    fun getMyCart(): Flow<Result<List<Cart>, DataError.Network>>

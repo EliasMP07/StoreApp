@@ -10,6 +10,7 @@ import com.devdroid07.storeapp.store.data.mappers.toCart
 import com.devdroid07.storeapp.store.data.mappers.toProduct
 import com.devdroid07.storeapp.store.data.remote.StoreApiService
 import com.devdroid07.storeapp.store.data.remote.dto.CartRequest
+import com.devdroid07.storeapp.store.data.remote.dto.ReviewRequest
 import com.devdroid07.storeapp.store.domain.model.Cart
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
@@ -59,6 +60,28 @@ class StoreRepositoryImpl(
             }
         }
     }
+
+    override suspend fun addReviewProduct(
+        productId: String,
+        rating: Double,
+        comment: String?
+    ): EmptyResult<DataError.Network> {
+
+        val result = safeCall2 {
+            api.addReviewProduct(
+                token = sessionStorage.get()?.token.orEmpty(),
+                reviewRequest = ReviewRequest(
+                    productId = productId,
+                    rating = rating,
+                    comment = comment,
+                    userId = sessionStorage.get()?.id.orEmpty(),
+                )
+            )
+        }
+
+        return result.asEmptyDataResult()
+    }
+
 
     override suspend fun addMyCart(
         productId: String,

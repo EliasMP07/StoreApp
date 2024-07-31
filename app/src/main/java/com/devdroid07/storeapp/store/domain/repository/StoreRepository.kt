@@ -5,6 +5,7 @@ import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.store.domain.model.Cart
 import com.devdroid07.storeapp.store.domain.model.Product
+import com.devdroid07.storeapp.store.domain.model.Review
 import kotlinx.coroutines.flow.Flow
 
 interface StoreRepository {
@@ -14,6 +15,8 @@ interface StoreRepository {
    suspend fun getSingleProduct(idProduct: String): Result<Product, DataError.Network>
 
    suspend fun addReviewProduct(productId: String, rating: Double, comment: String?): EmptyResult<DataError.Network>
+
+   fun getReviewsProduct(productId: String): Flow<Result<List<Review>, DataError.Network>>
 
    suspend fun addMyCart(productId: String, quantity: Int): Result<String, DataError.Network>
 

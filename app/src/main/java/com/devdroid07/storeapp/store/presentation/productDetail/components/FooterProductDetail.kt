@@ -43,7 +43,8 @@ import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailSta
 @Composable
 fun FooterProductDetail(
     state: ProductDetailState,
-    onAction: (ProductDetailAction) -> Unit
+    onAction: (ProductDetailAction) -> Unit,
+    onClickReview: () -> Unit
 ) {
     var cutText by remember(state.product.description) { mutableStateOf<String?>(null) }
 
@@ -110,11 +111,14 @@ fun FooterProductDetail(
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 StarRating(
+                    isClickable = false,
                     rating = state.product.ratingRate,
+                    onClickReview = {
+                        onAction(ProductDetailAction.OnReviewsClick)
+                        onClickReview()
+                    },
                     valueReview = state.product.ratingCount.toString()
-                ) {
-                    onAction(ProductDetailAction.OnToggleModalBottomSheet)
-                }
+                )
             }
             Spacer(modifier = Modifier.width(20.dp))
             Column(

@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun EmptyListScreen(
-    text: String,
-    @DrawableRes  image: Int,
     modifier: Modifier = Modifier,
+    text: String,
+    @DrawableRes  image: Int
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

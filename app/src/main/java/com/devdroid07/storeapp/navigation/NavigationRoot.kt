@@ -24,6 +24,7 @@ import com.devdroid07.storeapp.auth.presentation.register.RegisterViewModel
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
+import com.devdroid07.storeapp.navigation.util.lifecycleIsResumed
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
@@ -68,18 +69,24 @@ fun NavGraphBuilder.store(
     ) {
         composable(
             route = RoutesScreens.HomeDrawerRoute.route
-        ) {
+        ) {navBackEntry ->
             HomeDrawerScreens(
                 context = context,
                 navigateToSettings = {},
                 navigateToDetailProduct = {
-                    navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                    if (navBackEntry.lifecycleIsResumed()){
+                        navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                    }
                 },
                 navigateSearch = {
-                    navController.navigate(RoutesScreens.Search.route)
+                    if (navBackEntry.lifecycleIsResumed()){
+                        navController.navigate(RoutesScreens.Search.route)
+                    }
                 },
                 navigateMyCart = {
-                    navController.navigate(RoutesScreens.Cart.route)
+                    if (navBackEntry.lifecycleIsResumed()){
+                        navController.navigate(RoutesScreens.Cart.route)
+                    }
                 }
             )
         }

@@ -8,12 +8,14 @@
 package com.devdroid07.storeapp.store.presentation.productDetail
 
 import android.content.Context
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,29 +23,37 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreIconButtonBack
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
-import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetReview
+import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetReviews
 import com.devdroid07.storeapp.store.presentation.productDetail.components.FooterProductDetail
 import com.devdroid07.storeapp.store.presentation.productDetail.components.ProductDetailShimmerEffect
 import kotlinx.coroutines.launch
@@ -59,6 +69,21 @@ fun ProductDetailRootScreenRoot(
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = false
+        )
+    )
+
+    BackHandler {
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded ){
+            scope.launch {
+                scaffoldState.bottomSheetState.hide()
+            }
+        }else{
+            onBack()
+        }
+    }
 
     ObserveAsEvents(flow = viewModel.events) { event ->
         when (event) {
@@ -72,6 +97,9 @@ fun ProductDetailRootScreenRoot(
             }
             is ProductDetailEvent.Success -> {
                 scope.launch {
+                    if (scaffoldState.bottomSheetState.isVisible){
+                        scaffoldState.bottomSheetState.hide()
+                    }
                     snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short
@@ -91,7 +119,8 @@ fun ProductDetailRootScreenRoot(
                 else -> Unit
             }
             onAction(action)
-        }
+        },
+        scaffoldState = scaffoldState
     )
 
 }
@@ -99,16 +128,29 @@ fun ProductDetailRootScreenRoot(
 @Composable
 private fun ProductDetailScreen(
     state: ProductDetailState,
+    scaffoldState: BottomSheetScaffoldState,
     snackbarHostState: SnackbarHostState,
     onAction: (ProductDetailAction) -> Unit
 ) {
 
-    Scaffold(
+    val scope = rememberCoroutineScope()
+
+    val spacing = LocalSpacing.current
+
+
+    BottomSheetScaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
-        }
-    ) { paddingValue ->
-
+        },
+        sheetPeekHeight =0.dp,
+        scaffoldState = scaffoldState,
+        sheetContent = {
+            BottomSheetReviews(
+                state = state,
+                spacing = spacing,
+                onAction = onAction
+            )
+        }) { paddingValue ->
         val result = handleResultView(
             isLoading = state.isLoading,
             contentLoading = {
@@ -121,7 +163,6 @@ private fun ProductDetailScreen(
                 onAction(ProductDetailAction.OnRetry)
             },
         )
-
         if (result) {
             Column(
                 modifier = Modifier
@@ -197,23 +238,22 @@ private fun ProductDetailScreen(
                 ) {
                     FooterProductDetail(
                         state = state,
-                        onAction = onAction
+                        onAction = onAction,
+                        onClickReview = {
+                            scope.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        }
                     )
                 }
 
-            }
-
-            if (state.showBottomSheet) {
-                BottomSheetReview(
-                    state = state,
-                    onAction = onAction
-                )
             }
 
         }
     }
 
 }
+
 
 @Preview
 @Composable
@@ -222,7 +262,8 @@ private fun ProductDetailRootScreenPreview() {
         ProductDetailScreen(
             state = ProductDetailState(),
             onAction = {},
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scaffoldState = rememberBottomSheetScaffoldState()
         )
     }
 }

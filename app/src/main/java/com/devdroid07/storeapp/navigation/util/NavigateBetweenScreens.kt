@@ -1,5 +1,7 @@
 package com.devdroid07.storeapp.navigation.util
 
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 
 fun NavHostController.navigateTo(route: RoutesScreens) {
@@ -16,3 +18,6 @@ fun NavHostController.navigateToSingleTop(route: RoutesScreens) {
         restoreState = true
     }
 }
+
+fun NavBackStackEntry.lifecycleIsResumed() =
+    this.lifecycle.currentState == Lifecycle.State.RESUMED

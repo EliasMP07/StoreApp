@@ -4,6 +4,7 @@ import com.devdroid07.storeapp.auth.data.remote.response.StoreResponse
 import com.devdroid07.storeapp.store.data.remote.dto.CartDto
 import com.devdroid07.storeapp.store.data.remote.dto.CartRequest
 import com.devdroid07.storeapp.store.data.remote.dto.ProductDto
+import com.devdroid07.storeapp.store.data.remote.dto.ReviewDto
 import com.devdroid07.storeapp.store.data.remote.dto.ReviewRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -33,6 +34,13 @@ interface StoreApiService {
         @Header("Authorization") token: String,
         @Body reviewRequest: ReviewRequest
     ): Response<StoreResponse<String>>
+
+
+    @GET("products/getReviews/{product_id}")
+    suspend fun getReviewProduct(
+        @Header("Authorization") token: String,
+        @Path("product_id") productId: String
+    ): Response<StoreResponse<List<ReviewDto>>>
 
     @POST("cart/insert")
     suspend fun addMyCart(

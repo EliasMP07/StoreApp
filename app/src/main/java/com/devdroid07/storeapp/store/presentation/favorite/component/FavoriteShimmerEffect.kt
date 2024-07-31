@@ -3,7 +3,6 @@ package com.devdroid07.storeapp.store.presentation.favorite.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,14 +16,14 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.animati
 
 @Composable
 fun FavoriteShimmerEffect(
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues
 ) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
             .padding(top = paddingValues.calculateTopPadding())
     ) {
-        items(6) {
+        items(3) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

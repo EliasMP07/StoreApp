@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -27,9 +28,11 @@ import androidx.compose.ui.unit.dp
 fun StarRating(
     rating: Double = 0.0,
     valueReview: String? = null,
+    isClickable: Boolean = true,
+    onClickReview: () -> Unit = {},
     iconSize: Dp = 24.dp,
     maxRating: Int = 5,
-    onRatingChanged: (Double) -> Unit
+    onRatingChanged: (Double) -> Unit = {}
 ) {
     var currentRating by remember { mutableStateOf(rating) }
 
@@ -62,7 +65,9 @@ fun StarRating(
                     tint = tint,
                     modifier = Modifier
                         .size(iconSize)
-                        .clickable {
+                        .clickable(
+                            enabled = isClickable
+                        ) {
                             currentRating = i.toDouble()
                             onRatingChanged(currentRating)
                         }
@@ -71,6 +76,7 @@ fun StarRating(
         }
         if (valueReview != null) {
             Text(
+                modifier = Modifier.clickable { onClickReview() },
                 text = "($valueReview Reviews)",
                 style = MaterialTheme.typography.labelMedium
             )

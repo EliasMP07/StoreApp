@@ -21,6 +21,10 @@ val RemoveIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.ic_remove_cart)
 
+val EditIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_edit)
+
 val Logo : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.logo_splashscreen)

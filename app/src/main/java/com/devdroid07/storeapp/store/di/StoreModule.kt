@@ -10,6 +10,7 @@ import com.devdroid07.storeapp.store.domain.usecases.AddReviewProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
 import com.devdroid07.storeapp.store.domain.usecases.GetFavoritesProductsUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
+import com.devdroid07.storeapp.store.domain.usecases.GetReviewsProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
 import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyFavoritesUseCase
@@ -56,6 +57,7 @@ object StoreModule {
             getAllProducts = GetAllProducts(repository),
             getSingleProduct = GetSingleProduct(repository),
             addReviewProductUseCase = AddReviewProductUseCase(repository),
+            getReviewsProductUseCase = GetReviewsProductUseCase(repository),
             searchProductUseCase = SearchProductUseCase(repository),
             getMyCartUseCase = GetMyCartUseCase(repository),
             addMyCartUseCase = AddMyCartUseCase(repository),

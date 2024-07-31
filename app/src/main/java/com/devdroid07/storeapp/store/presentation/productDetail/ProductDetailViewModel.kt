@@ -4,6 +4,7 @@ package com.devdroid07.storeapp.store.presentation.productDetail
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -62,28 +64,58 @@ class ProductDetailViewModel @Inject constructor(
         getProduct(productId = productId)
     }
 
+    private fun getReviews(productId: String) {
+        viewModelScope.launch {
+            _state.update { productDetailState ->
+                productDetailState.copy(
+                    errorReviews = null,
+                    isLoadingReview = true
+                )
+            }
+            storeUseCases.getReviewsProductUseCase(productId).collectLatest { result ->
+                _state.update { productDetailState ->
+                    when (result) {
+                        is Result.Error -> productDetailState.copy(
+                            isLoadingReview = false,
+                            errorReviews = result.error.asUiText(),
+                            reviewsList = emptyList()
+                        )
+                        is Result.Success -> productDetailState.copy(
+                            isLoadingReview = false,
+                            errorReviews = null,
+                            reviewsList = result.data
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     fun onAction(action: ProductDetailAction) {
         when (action) {
+            ProductDetailAction.OnReviewsClick -> {
+                getReviews(state.value.product.id.toString())
+            }
+            ProductDetailAction.OnRetryReview -> {
+                getReviews(state.value.product.id.toString())
+            }
+            ProductDetailAction.OnRetry -> {
+                getProduct(state.value.product.id.toString())
+            }
             ProductDetailAction.OnMoreInfoClick -> {
-                _state.update {
-                    it.copy(
-                        isExpanded = !_state.value.isExpanded
-                    )
-                }
+                _state.update { it.copy(isExpanded = !state.value.isExpanded) }
             }
             is ProductDetailAction.OnAddMyCart -> {
                 addMyCart(
                     idProduct = action.idProduct,
-                    _state.value.quantity
+                    state.value.quantity
                 )
             }
             ProductDetailAction.OnAddProductClick -> {
                 _state.update { currentState ->
                     var cout = currentState.quantity
                     cout++
-                    currentState.copy(
-                        quantity = cout
-                    )
+                    currentState.copy(quantity = cout)
                 }
             }
             ProductDetailAction.OnRemoveProductClick -> {
@@ -92,27 +124,14 @@ class ProductDetailViewModel @Inject constructor(
                     if (currentState.quantity >= 1) {
                         cout--
                     }
-                    currentState.copy(
-                        quantity = cout
-                    )
+                    currentState.copy(quantity = cout)
                 }
             }
-            ProductDetailAction.OnToggleModalBottomSheet -> {
-                _state.update { productDetailState ->
-                    productDetailState.copy(
-                        showBottomSheet = !productDetailState.showBottomSheet
-                    )
-                }
-            }
-            ProductDetailAction.OnReviewProductClick ->{
+            ProductDetailAction.OnReviewProductClick -> {
                 addReviewProduct()
             }
             is ProductDetailAction.OnRantingChange -> {
-                _state.update {productDetailState ->
-                    productDetailState.copy(
-                        ranting = action.rating
-                    )
-                }
+                _state.update { productDetailState -> productDetailState.copy(ranting = action.rating) }
             }
             is ProductDetailAction.AddFavoriteClick -> {
                 addFavorite(action.productId)
@@ -234,9 +253,9 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-    private fun addReviewProduct(){
+    private fun addReviewProduct() {
         viewModelScope.launch {
-            _state.update {productDetailState ->
+            _state.update { productDetailState ->
                 productDetailState.copy(
                     isEvaluating = true
                 )
@@ -246,28 +265,27 @@ class ProductDetailViewModel @Inject constructor(
                 rating = state.value.ranting,
                 comment = state.value.comment.text.toString()
             )
-            _state.update {productDetailState ->
+            _state.update { productDetailState ->
                 productDetailState.copy(
                     isEvaluating = false
                 )
             }
-            when(result){
+            when (result) {
                 is Result.Error -> {
                     eventChannel.send(
                         ProductDetailEvent.Error(result.error.asUiText())
                     )
                 }
                 is Result.Success -> {
-                    _state.update { productDetailState ->
-                        productDetailState.copy(
-                            showBottomSheet = !productDetailState.showBottomSheet,
-                            comment = TextFieldState(""),
-                            ranting = 0.0
-                        )
-                    }
                     eventChannel.send(
                         ProductDetailEvent.Success(UiText.StringResource(R.string.success_add_review))
                     )
+                    _state.update { productDetailState ->
+                        productDetailState.comment.clearText()
+                        productDetailState.copy(
+                            ranting = 0.0
+                        )
+                    }
                 }
             }
         }

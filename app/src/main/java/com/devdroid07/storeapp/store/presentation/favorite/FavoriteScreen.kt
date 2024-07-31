@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 fun FavoriteScreenRoot(
     context: Context,
     state: FavoriteState,
-    openDrawer : () -> Unit,
+    openDrawer: () -> Unit,
     viewModel: FavoriteViewModel,
     navigateBack: () -> Unit,
     navigateDetailProduct: (String) -> Unit,
@@ -98,7 +98,10 @@ private fun FavoriteScreen(
         val result = handleResultView(
             isLoading = state.isLoading,
             contentLoading = {
-                FavoriteShimmerEffect(paddingValues = paddingValue)
+                FavoriteShimmerEffect(
+                    modifier = Modifier.fillMaxSize(),
+                    paddingValues = paddingValue
+                )
             },
             isEmpty = state.productFavorites.isEmpty(),
             contentEmpty = {

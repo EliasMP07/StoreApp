@@ -8,11 +8,13 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.domain.util.asEmptyDataResult
 import com.devdroid07.storeapp.store.data.mappers.toCart
 import com.devdroid07.storeapp.store.data.mappers.toProduct
+import com.devdroid07.storeapp.store.data.mappers.toReview
 import com.devdroid07.storeapp.store.data.remote.StoreApiService
 import com.devdroid07.storeapp.store.data.remote.dto.CartRequest
 import com.devdroid07.storeapp.store.data.remote.dto.ReviewRequest
 import com.devdroid07.storeapp.store.domain.model.Cart
 import com.devdroid07.storeapp.store.domain.model.Product
+import com.devdroid07.storeapp.store.domain.model.Review
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -82,6 +84,25 @@ class StoreRepositoryImpl(
         return result.asEmptyDataResult()
     }
 
+    override fun getReviewsProduct(productId: String): Flow<Result<List<Review>, DataError.Network>> = flow {
+        val result = safeCall2 {
+            api.getReviewProduct(
+                token = sessionStorage.get()?.token.orEmpty(),
+                productId = productId,
+            )
+
+        }
+        when (result) {
+            is Result.Error -> {
+                emit(Result.Error(result.error))
+            }
+            is Result.Success -> {
+                emit(Result.Success(result.data.data?.map {
+                    it.toReview()
+                }.orEmpty()))
+            }
+        }
+    }
 
     override suspend fun addMyCart(
         productId: String,

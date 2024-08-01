@@ -60,5 +60,15 @@
     <string name="text_comment">Comentar como %s</string>
     <string name="text_calification">Calificación: </string>
     <string name="success_add_review">Gracias por tu calificación.</string>
+    <string name="example_street">Ejemplo: Calle 1 x 8</string>
+    <string name="street">Calle</string>
+    <string name="example_postal_code">Ejemplo: 98932</string>
+    <string name="postal_code">Codigo Postal</string>
+    <string name="state">Estado</string>
+    <string name="mayoralty">Municipio/Alcaldía</string>
+    <string name="example_number">Ejemplo: 9992344343</string>
+    <string name="number_contact">Numero de contacto</string>
+    <string name="example_reference">Ejemplo: Enfrente de una tienda..</string>
+    <string name="reference">Referencias</string>
 
 </resources>

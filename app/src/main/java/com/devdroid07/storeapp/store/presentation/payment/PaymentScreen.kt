@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.devdroid07.storeapp.core.presentation.designsystem.EditIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 
@@ -43,7 +44,7 @@ private fun PaymentScreen(
     }
 }
 
-
+@Preview
 @Composable
 private fun PaymentScreenPreview(){
     StoreAppTheme {

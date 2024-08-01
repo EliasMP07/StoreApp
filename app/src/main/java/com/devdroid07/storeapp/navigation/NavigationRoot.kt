@@ -26,8 +26,10 @@ import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.lifecycleIsResumed
 import com.devdroid07.storeapp.navigation.util.navigateBack
+import com.devdroid07.storeapp.navigation.util.navigateTo
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
+import com.devdroid07.storeapp.store.presentation.address.AddressScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteViewModel
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeDrawerScreens
@@ -93,7 +95,7 @@ fun NavGraphBuilder.store(
 
         composable(
             route = RoutesScreens.Cart.route
-        ) {
+        ) {navBackEntry ->
 
             val viewModel: MyCartViewModel = hiltViewModel()
             val onAction = viewModel::onAction
@@ -103,6 +105,11 @@ fun NavGraphBuilder.store(
                 state = state,
                 context = context,
                 viewModel = viewModel,
+                navigateToPay = {
+                    if (navBackEntry.lifecycleIsResumed()){
+                        navController.navigateTo(RoutesScreens.Address)
+                    }
+                },
                 navigateBack = {
                     navController.navigateBack()
                 },
@@ -126,6 +133,16 @@ fun NavGraphBuilder.store(
                 onAction = onAction
             )
 
+        }
+
+        composable(
+            route = RoutesScreens.Address.route
+        ){
+            AddressScreenRoot(
+                onBack = {
+                    navController.navigateBack()
+                }
+            )
         }
         composable(
             enterTransition = {

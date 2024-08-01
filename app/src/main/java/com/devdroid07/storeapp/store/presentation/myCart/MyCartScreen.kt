@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 fun MyCartScreenRoot(
     state: MyCartState,
     context: Context,
+    navigateToPay: () -> Unit,
     viewModel: MyCartViewModel,
     navigateBack: () -> Unit,
     onAction: (MyCartAction) -> Unit
@@ -67,6 +68,7 @@ fun MyCartScreenRoot(
         onAction = { action ->
             when (action) {
                 MyCartAction.OnBackClick -> navigateBack()
+                MyCartAction.OnContinuePayClick -> navigateToPay()
                 else -> Unit
             }
             onAction(action)
@@ -145,6 +147,7 @@ private fun MyCartScreen(
 
                 FooterMyCart(
                     state = state,
+                    onAction = onAction,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(0.3f),

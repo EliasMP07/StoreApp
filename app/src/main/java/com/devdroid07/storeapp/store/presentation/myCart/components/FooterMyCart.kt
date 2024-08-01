@@ -16,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
+import com.devdroid07.storeapp.store.presentation.myCart.MyCartAction
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartState
 
 @Composable
 fun FooterMyCart(
     state: MyCartState,
+    onAction: (MyCartAction) -> Unit,
     modifier: Modifier,
 ){
     ElevatedCard(
@@ -68,10 +70,10 @@ fun FooterMyCart(
             }
             StoreActionButton(
                 modifier = Modifier.padding(horizontal = 10.dp),
-                text = "Pagar",
+                text = "Continuar para pagar",
                 isLoading = false
             ) {
-
+                onAction(MyCartAction.OnContinuePayClick)
             }
         }
     }

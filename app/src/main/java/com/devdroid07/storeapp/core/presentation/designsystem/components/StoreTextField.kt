@@ -21,8 +21,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text2.BasicTextField2
+import androidx.compose.foundation.text2.input.InputTransformation
 import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.maxLengthInChars
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -44,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,14 +55,18 @@ import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 
 @Composable
 fun StoreTextField(
+    modifier: Modifier = Modifier,
     state: TextFieldState,
     startIcon: ImageVector?,
     endIcon: ImageVector?,
     hint: String,
     title: String?,
-    modifier: Modifier = Modifier,
+    enable: Boolean = true,
     error: String? = null,
+    lineLimits: TextFieldLineLimits = TextFieldLineLimits.SingleLine,
+    inputTransformation: InputTransformation? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction = ImeAction.Next,
 ) {
     var isFocused by remember {
         mutableStateOf(false)
@@ -73,14 +80,14 @@ fun StoreTextField(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if(title != null) {
+            if (title != null) {
                 Text(
                     text = title,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            if(error != null) {
+            if (error != null) {
                 Text(
                     text = error,
                     color = MaterialTheme.colorScheme.error,
@@ -88,16 +95,20 @@ fun StoreTextField(
                 )
             }
         }
+
         Spacer(modifier = Modifier.height(4.dp))
         BasicTextField2(
             state = state,
             textStyle = LocalTextStyle.current.copy(
                 color = MaterialTheme.colorScheme.onBackground
             ),
+            lineLimits = lineLimits,
+            enabled = enable,
             keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType
+                keyboardType = keyboardType,
+                imeAction = imeAction
             ),
-            lineLimits = TextFieldLineLimits.SingleLine,
+            inputTransformation = inputTransformation,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
@@ -107,7 +118,9 @@ fun StoreTextField(
                             alpha = 0.05f
                         )
                     } else {
-                        MaterialTheme.colorScheme.surface
+                        MaterialTheme.colorScheme.primary.copy(
+                            alpha = 0.05f
+                        )
                     }
                 )
                 .border(
@@ -129,7 +142,7 @@ fun StoreTextField(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if(startIcon != null) {
+                    if (startIcon != null) {
                         Icon(
                             imageVector = startIcon,
                             contentDescription = null,
@@ -141,7 +154,7 @@ fun StoreTextField(
                         modifier = Modifier
                             .weight(1f)
                     ) {
-                        if(state.text.isEmpty() && !isFocused) {
+                        if (state.text.isEmpty() && !isFocused) {
                             Text(
                                 text = hint,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
@@ -159,7 +172,7 @@ fun StoreTextField(
                     ) {
                         Spacer(modifier = Modifier.width(16.dp))
                         Icon(
-                            imageVector = endIcon?:Icons.Default.Check,
+                            imageVector = endIcon ?: Icons.Default.Check,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier
@@ -177,7 +190,7 @@ fun StoreTextField(
 @Preview
 @Composable
 private fun RuniqueTextFieldPreview() {
-    StoreAppTheme{
+    StoreAppTheme {
         StoreTextField(
             state = rememberTextFieldState(),
             startIcon = Icons.Default.Email,

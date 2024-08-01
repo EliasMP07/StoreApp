@@ -17,6 +17,10 @@ val CartIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.ic_cart)
 
+val PhoneIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_phone)
+
 val RemoveIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.ic_remove_cart)

@@ -4,6 +4,7 @@ import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.store.domain.model.Cart
+import com.devdroid07.storeapp.store.domain.model.PostalCode
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Review
 import kotlinx.coroutines.flow.Flow
@@ -31,5 +32,7 @@ interface StoreRepository {
    suspend fun removeProductFavorite(idProduct: String): EmptyResult<DataError.Network>
 
    suspend fun searchProduct(query: String): Result<List<Product>, DataError.Network>
+
+   suspend fun getInfoByPostalCode(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>>
 
 }

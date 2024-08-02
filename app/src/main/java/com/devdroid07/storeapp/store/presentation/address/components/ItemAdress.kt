@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.store.presentation.address
+package com.devdroid07.storeapp.store.presentation.address.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

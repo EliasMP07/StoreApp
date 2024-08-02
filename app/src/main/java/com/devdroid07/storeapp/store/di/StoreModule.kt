@@ -1,6 +1,7 @@
 package com.devdroid07.storeapp.store.di
 
 import com.devdroid07.storeapp.core.domain.SessionStorage
+import com.devdroid07.storeapp.store.data.remote.CopomexApi
 import com.devdroid07.storeapp.store.data.remote.StoreApiService
 import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
@@ -9,6 +10,7 @@ import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddReviewProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
 import com.devdroid07.storeapp.store.domain.usecases.GetFavoritesProductsUseCase
+import com.devdroid07.storeapp.store.domain.usecases.GetInfoByPostalCodeUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetReviewsProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
@@ -21,6 +23,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -36,15 +39,29 @@ object StoreModule {
         return retrofit.create(StoreApiService::class.java)
     }
 
+
+    @Provides
+    @Singleton
+    fun provideCopomexApi(): CopomexApi{
+        return Retrofit.Builder().baseUrl("https://api.copomex.com/query/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(CopomexApi::class.java)
+    }
+
+
+
     @Provides
     @Singleton
     fun provideStoreRepository(
         api: StoreApiService,
-        sessionStorage: SessionStorage
+        sessionStorage: SessionStorage,
+        copomexApi: CopomexApi,
     ): StoreRepository {
         return StoreRepositoryImpl(
             api = api,
-            sessionStorage = sessionStorage
+            sessionStorage = sessionStorage,
+            copomexApi = copomexApi
         )
     }
 
@@ -64,7 +81,8 @@ object StoreModule {
             removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository),
             removeFavoriteProductUseCase = RemoveProductMyFavoritesUseCase(repository),
             addFavoriteProductUseCase = AddFavoriteProductUseCase(repository),
-            getFavoritesProductsUseCase = GetFavoritesProductsUseCase(repository)
+            getFavoritesProductsUseCase = GetFavoritesProductsUseCase(repository),
+            getInfoByPostalCodeUseCase = GetInfoByPostalCodeUseCase(repository)
         )
     }
 

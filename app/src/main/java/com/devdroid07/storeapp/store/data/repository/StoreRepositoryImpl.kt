@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp.store.data.repository
 
+import android.util.Log
 import com.devdroid07.storeapp.core.data.network.safeCall2
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.DataError
@@ -7,12 +8,15 @@ import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.domain.util.asEmptyDataResult
 import com.devdroid07.storeapp.store.data.mappers.toCart
+import com.devdroid07.storeapp.store.data.mappers.toPostalCode
 import com.devdroid07.storeapp.store.data.mappers.toProduct
 import com.devdroid07.storeapp.store.data.mappers.toReview
+import com.devdroid07.storeapp.store.data.remote.CopomexApi
 import com.devdroid07.storeapp.store.data.remote.StoreApiService
 import com.devdroid07.storeapp.store.data.remote.dto.CartRequest
 import com.devdroid07.storeapp.store.data.remote.dto.ReviewRequest
 import com.devdroid07.storeapp.store.domain.model.Cart
+import com.devdroid07.storeapp.store.domain.model.PostalCode
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Review
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
@@ -23,7 +27,8 @@ import kotlinx.coroutines.flow.flowOn
 
 class StoreRepositoryImpl(
     private val api: StoreApiService,
-    private val sessionStorage: SessionStorage
+    private val copomexApi: CopomexApi,
+    private val sessionStorage: SessionStorage,
 ) : StoreRepository {
 
     override fun getAllProduct(): Flow<Result<List<Product>, DataError.Network>> = flow {
@@ -66,7 +71,7 @@ class StoreRepositoryImpl(
     override suspend fun addReviewProduct(
         productId: String,
         rating: Double,
-        comment: String?
+        comment: String?,
     ): EmptyResult<DataError.Network> {
 
         val result = safeCall2 {
@@ -106,7 +111,7 @@ class StoreRepositoryImpl(
 
     override suspend fun addMyCart(
         productId: String,
-        quantity: Int
+        quantity: Int,
     ): Result<String, DataError.Network> {
         val result = safeCall2 {
             api.addMyCart(
@@ -226,8 +231,28 @@ class StoreRepositoryImpl(
                     it.toProduct()
                 }
                 Result.Success(
-                    products?: emptyList()
+                    products ?: emptyList()
                 )
+            }
+        }
+    }
+
+    override suspend fun getInfoByPostalCode(postalCode: String):Flow<Result<List<PostalCode>, DataError.Network>> = flow{
+        val result = safeCall2 {
+            copomexApi.getInfoByPostalCode(codigoPostal = postalCode, token = "pruebas")
+        }
+        when (result) {
+            is Result.Error -> {
+                emit(Result.Error(
+                    result.error
+                ))
+            }
+            is Result.Success -> {
+                emit(Result.Success(
+                    result.data.map {
+                        it.postalCodeDto?.toPostalCode()?:PostalCode()
+                    }
+                ))
             }
         }
     }

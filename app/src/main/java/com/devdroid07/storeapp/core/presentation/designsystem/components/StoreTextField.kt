@@ -60,6 +60,7 @@ fun StoreTextField(
     startIcon: ImageVector?,
     endIcon: ImageVector?,
     hint: String,
+    readOnly: Boolean = false,
     title: String?,
     enable: Boolean = true,
     error: String? = null,
@@ -102,6 +103,7 @@ fun StoreTextField(
             textStyle = LocalTextStyle.current.copy(
                 color = MaterialTheme.colorScheme.onBackground
             ),
+            readOnly = readOnly,
             lineLimits = lineLimits,
             enabled = enable,
             keyboardOptions = KeyboardOptions(

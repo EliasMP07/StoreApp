@@ -30,6 +30,7 @@ import com.devdroid07.storeapp.navigation.util.navigateTo
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
 import com.devdroid07.storeapp.store.presentation.address.AddressScreenRoot
+import com.devdroid07.storeapp.store.presentation.address.AddressViewModel
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteViewModel
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeDrawerScreens
@@ -138,7 +139,14 @@ fun NavGraphBuilder.store(
         composable(
             route = RoutesScreens.Address.route
         ){
+
+            val viewModel: AddressViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            val onAction = viewModel::onAction
+
             AddressScreenRoot(
+                state = state,
+                onAction = onAction,
                 onBack = {
                     navController.navigateBack()
                 }

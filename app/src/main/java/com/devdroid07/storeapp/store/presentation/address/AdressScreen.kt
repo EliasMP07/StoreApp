@@ -7,14 +7,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -26,12 +22,15 @@ import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
-import com.devdroid07.storeapp.store.presentation.home.HomeAction
+import com.devdroid07.storeapp.store.presentation.address.components.BottomSheetAddAddress
+import com.devdroid07.storeapp.store.presentation.address.components.ItemAddress
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddressScreenRoot(
+    state: AddressState,
+    onAction: (AddressAction) -> Unit,
     onBack: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -53,15 +52,19 @@ fun AddressScreenRoot(
 
 
     AddressScreen(
+        state = state,
         scope = scope,
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
+        onAction = onAction,
     )
 }
 
 @Composable
 fun AddressScreen(
+    state: AddressState,
     scope: CoroutineScope,
     scaffoldState: BottomSheetScaffoldState,
+    onAction: (AddressAction) -> Unit,
 ) {
 
     BottomSheetScaffold(
@@ -79,7 +82,10 @@ fun AddressScreen(
             )
         },
         sheetContent = {
-            BottomSheetAddAddress()
+            BottomSheetAddAddress(
+                state = state,
+                onAction = onAction
+            )
         }
     ) { paddingValues ->
         Column(

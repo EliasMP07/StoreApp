@@ -8,6 +8,7 @@ import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 import com.devdroid07.storeapp.store.domain.usecases.AddFavoriteProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddReviewProductUseCase
+import com.devdroid07.storeapp.store.domain.usecases.GetAllMyAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
 import com.devdroid07.storeapp.store.domain.usecases.GetFavoritesProductsUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetInfoByPostalCodeUseCase
@@ -82,7 +83,8 @@ object StoreModule {
             removeFavoriteProductUseCase = RemoveProductMyFavoritesUseCase(repository),
             addFavoriteProductUseCase = AddFavoriteProductUseCase(repository),
             getFavoritesProductsUseCase = GetFavoritesProductsUseCase(repository),
-            getInfoByPostalCodeUseCase = GetInfoByPostalCodeUseCase(repository)
+            getInfoByPostalCodeUseCase = GetInfoByPostalCodeUseCase(repository),
+            getAllMyAddressUseCase = GetAllMyAddressUseCase(repository)
         )
     }
 

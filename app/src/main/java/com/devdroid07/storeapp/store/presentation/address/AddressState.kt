@@ -3,10 +3,12 @@ package com.devdroid07.storeapp.store.presentation.address
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.runtime.Stable
+import com.devdroid07.storeapp.store.domain.model.Address
 
 @Stable
 @OptIn(ExperimentalFoundationApi::class)
 data class AddressState(
+    val addressList: List<Address> = emptyList(),
     val street: TextFieldState = TextFieldState(),
     val postalCode: TextFieldState = TextFieldState(),
     val isCorrectPostalCode: Boolean = false,

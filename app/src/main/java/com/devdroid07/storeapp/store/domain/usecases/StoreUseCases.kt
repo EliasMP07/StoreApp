@@ -12,5 +12,6 @@ data class StoreUseCases(
     val removeFavoriteProductUseCase: RemoveProductMyFavoritesUseCase,
     val addFavoriteProductUseCase: AddFavoriteProductUseCase,
     val getFavoritesProductsUseCase: GetFavoritesProductsUseCase,
-    val getInfoByPostalCodeUseCase: GetInfoByPostalCodeUseCase
+    val getInfoByPostalCodeUseCase: GetInfoByPostalCodeUseCase,
+    val getAllMyAddressUseCase: GetAllMyAddressUseCase
 )

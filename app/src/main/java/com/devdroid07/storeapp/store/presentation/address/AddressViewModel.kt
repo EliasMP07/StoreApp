@@ -48,6 +48,7 @@ class AddressViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+        getAllMyAddress()
     }
 
     fun onAction(
@@ -69,6 +70,25 @@ class AddressViewModel @Inject constructor(
         }
     }
 
+    private fun getAllMyAddress(){
+        viewModelScope.launch {
+           val result =  storeRepository.getAllMyAddress()
+            _state.update { addressState ->
+                when(result){
+                    is Result.Error -> {
+                        addressState.copy(
+                            addressList = emptyList()
+                        )
+                    }
+                    is Result.Success ->{
+                        addressState.copy(
+                            addressList = result.data
+                        )
+                    }
+                }
+            }
+        }
+    }
     private fun getInfoByPostalCode(infoCode: String){
         viewModelScope.launch {
             storeRepository.getInfoByPostalCode(infoCode).collect {result ->

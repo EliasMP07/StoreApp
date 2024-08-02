@@ -1,6 +1,7 @@
 package com.devdroid07.storeapp.store.data.remote
 
 import com.devdroid07.storeapp.auth.data.remote.response.StoreResponse
+import com.devdroid07.storeapp.store.data.remote.dto.AddressDto
 import com.devdroid07.storeapp.store.data.remote.dto.CartDto
 import com.devdroid07.storeapp.store.data.remote.dto.CartRequest
 import com.devdroid07.storeapp.store.data.remote.dto.ProductDto
@@ -88,6 +89,13 @@ interface StoreApiService {
         @Header("Authorization") token: String,
         @Path("query") query: String
     ): Response<StoreResponse<List<ProductDto>>>
+
+    @GET("address/getAllAddress/{id_user}")
+    suspend fun getAllMyAddress(
+        @Header("Authorization") token: String,
+        @Path("id_user") userId: String
+    ): Response<StoreResponse<List<AddressDto>>>
+
 
 
 }

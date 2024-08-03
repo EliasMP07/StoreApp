@@ -1,17 +1,19 @@
 package com.devdroid07.storeapp.store.di
 
 import com.devdroid07.storeapp.core.domain.SessionStorage
-import com.devdroid07.storeapp.store.data.remote.CopomexApi
-import com.devdroid07.storeapp.store.data.remote.StoreApiService
+import com.devdroid07.storeapp.store.data.remote.api.CopomexApi
+import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
+import com.devdroid07.storeapp.store.data.repository.AddressRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 import com.devdroid07.storeapp.store.domain.usecases.AddFavoriteProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddReviewProductUseCase
-import com.devdroid07.storeapp.store.domain.usecases.GetAllMyAddressUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.GetAllMyAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
 import com.devdroid07.storeapp.store.domain.usecases.GetFavoritesProductsUseCase
-import com.devdroid07.storeapp.store.domain.usecases.GetInfoByPostalCodeUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.GetInfoByPostalCodeUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetReviewsProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
@@ -19,38 +21,17 @@ import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyFavoritesUseCase
 import com.devdroid07.storeapp.store.domain.usecases.SearchProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
+import com.devdroid07.storeapp.store.domain.usecases.address.AddressUseCases
+import com.devdroid07.storeapp.store.domain.usecases.address.DeleteAddressUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object StoreModule {
-
-
-    @Provides
-    @Singleton
-    fun provideStoreApiService(
-        retrofit: Retrofit
-    ): StoreApiService {
-        return retrofit.create(StoreApiService::class.java)
-    }
-
-
-    @Provides
-    @Singleton
-    fun provideCopomexApi(): CopomexApi{
-        return Retrofit.Builder().baseUrl("https://api.copomex.com/query/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(CopomexApi::class.java)
-    }
-
-
 
     @Provides
     @Singleton
@@ -63,6 +44,34 @@ object StoreModule {
             api = api,
             sessionStorage = sessionStorage,
             copomexApi = copomexApi
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddressRepository(
+        storeApiService: StoreApiService,
+        copomexApi: CopomexApi,
+        sessionStorage: SessionStorage
+    ): AddressRepositoryImpl{
+        return AddressRepositoryImpl(
+            storeApiService = storeApiService,
+            copomexApi = copomexApi,
+            sessionStorage = sessionStorage
+        )
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideAddressUseCases(
+        repository: AddressRepositoryImpl
+    ): AddressUseCases{
+        return AddressUseCases(
+            createAddressUseCase = CreateAddressUseCase(repository),
+            getAllMyAddressUseCase = GetAllMyAddressUseCase(repository),
+            getInfoByPostalCodeUseCase = GetInfoByPostalCodeUseCase(repository),
+            deleteAddressUseCase = DeleteAddressUseCase(repository)
         )
     }
 
@@ -82,9 +91,7 @@ object StoreModule {
             removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository),
             removeFavoriteProductUseCase = RemoveProductMyFavoritesUseCase(repository),
             addFavoriteProductUseCase = AddFavoriteProductUseCase(repository),
-            getFavoritesProductsUseCase = GetFavoritesProductsUseCase(repository),
-            getInfoByPostalCodeUseCase = GetInfoByPostalCodeUseCase(repository),
-            getAllMyAddressUseCase = GetAllMyAddressUseCase(repository)
+            getFavoritesProductsUseCase = GetFavoritesProductsUseCase(repository)
         )
     }
 

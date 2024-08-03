@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.store.data.remote
+package com.devdroid07.storeapp.store.data.remote.api
 
 import com.devdroid07.storeapp.store.data.remote.dto.apomex.CopomexResponse
 import retrofit2.Response

@@ -1,5 +1,9 @@
 package com.devdroid07.storeapp.store.domain.usecases
 
+import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.GetAllMyAddressUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.GetInfoByPostalCodeUseCase
+
 data class StoreUseCases(
     val getAllProducts: GetAllProducts,
     val getSingleProduct: GetSingleProduct,
@@ -11,7 +15,5 @@ data class StoreUseCases(
     val removeProductMyCartUseCase: RemoveProductMyCartUseCase,
     val removeFavoriteProductUseCase: RemoveProductMyFavoritesUseCase,
     val addFavoriteProductUseCase: AddFavoriteProductUseCase,
-    val getFavoritesProductsUseCase: GetFavoritesProductsUseCase,
-    val getInfoByPostalCodeUseCase: GetInfoByPostalCodeUseCase,
-    val getAllMyAddressUseCase: GetAllMyAddressUseCase
+    val getFavoritesProductsUseCase: GetFavoritesProductsUseCase
 )

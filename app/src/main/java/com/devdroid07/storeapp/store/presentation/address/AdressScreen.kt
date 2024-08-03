@@ -2,8 +2,10 @@
 
 package com.devdroid07.storeapp.store.presentation.address
 
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,17 +14,25 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
+import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
+import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.store.presentation.address.components.BottomSheetAddAddress
 import com.devdroid07.storeapp.store.presentation.address.components.ItemAddress
 import kotlinx.coroutines.CoroutineScope
@@ -31,8 +41,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddressScreenRoot(
     state: AddressState,
+    context: Context,
+    viewModel: AddressViewModel,
     onAction: (AddressAction) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -41,6 +53,7 @@ fun AddressScreenRoot(
             skipPartiallyExpanded = false
         )
     )
+
     BackHandler {
         if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
             scope.launch {
@@ -51,13 +64,38 @@ fun AddressScreenRoot(
         }
     }
 
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is AddressEvent.Error -> {
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(event.error.asString(context))
+                }
+            }
+            is AddressEvent.Success -> {
+                scope.launch {
+                    if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
+                        scaffoldState.bottomSheetState.hide()
+                    }
+                    scaffoldState.snackbarHostState.showSnackbar(event.message.asString(context))
+                }
+
+            }
+        }
+    }
 
     AddressScreen(
         state = state,
         scope = scope,
         scaffoldState = scaffoldState,
-        onAction = onAction,
+        onAction = { action ->
+            when (action) {
+                AddressAction.OnBackClick -> onBack()
+                else -> Unit
+            }
+            onAction(action)
+        },
     )
+
 }
 
 @Composable
@@ -68,6 +106,8 @@ fun AddressScreen(
     onAction: (AddressAction) -> Unit,
 ) {
 
+    val spacing = LocalSpacing.current
+
     BottomSheetScaffold(
         sheetPeekHeight = 0.dp,
         scaffoldState = scaffoldState,
@@ -76,16 +116,20 @@ fun AddressScreen(
                 title = "Direccion de entrega",
                 openDrawer = {},
                 onBack = {
-
+                    onAction(AddressAction.OnBackClick)
                 },
                 isProfile = false,
                 isMenu = false,
             )
         },
+        snackbarHost = {
+            SnackbarHost(hostState = scaffoldState.snackbarHostState)
+        },
         sheetContent = {
             BottomSheetAddAddress(
                 state = state,
-                onAction = onAction
+                onAction = onAction,
+                spacing = spacing
             )
         }
     ) { paddingValues ->
@@ -94,34 +138,63 @@ fun AddressScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(state.addressList) {
-                    SwipeToDeleteContainer(
-                        item = it,
-                        onDelete = {
-
-                        }
+            val result = handleResultView(
+                isLoading = state.isLoading,
+                contentLoading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
+                        contentAlignment = Alignment.Center
                     ) {
-                        ItemAddress()
+                        CircularProgressIndicator()
                     }
+                },
+                error = state.error,
+                retry = {
+                    onAction(AddressAction.OnRetryClick)
                 }
-                item {
-                    StoreActionButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "Agregar direccion",
-                        isLoading = false
+            )
+            if (result) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = spacing.spaceMedium,
+                            vertical = spacing.spaceMedium
+                        )
+                        .weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
+                ) {
+                    items(
+                        state.addressList,
+                        key = { it.id }
                     ) {
-                        scope.launch {
-                            scaffoldState.bottomSheetState.expand()
+                        SwipeToDeleteContainer(
+                            item = it,
+                            onDelete = {
+                                onAction(AddressAction.OnDeleteAddress(addressId = it.id))
+                            }
+                        ) { address ->
+                            ItemAddress(
+                                address = address,
+                                spacing = spacing
+                            )
+                        }
+                    }
+                    item {
+                        StoreActionButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = stringResource(R.string.btn_text_add_address),
+                            isLoading = false
+                        ) {
+                            scope.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 }

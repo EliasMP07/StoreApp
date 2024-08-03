@@ -146,6 +146,8 @@ fun NavGraphBuilder.store(
 
             AddressScreenRoot(
                 state = state,
+                context = context,
+                viewModel = viewModel,
                 onAction = onAction,
                 onBack = {
                     navController.navigateBack()

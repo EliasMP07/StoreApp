@@ -4,11 +4,8 @@ package com.devdroid07.storeapp.store.presentation.address.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text2.input.InputTransformation
 import androidx.compose.foundation.text2.input.TextFieldLineLimits
@@ -19,12 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.CheckIcon
+import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.PhoneIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreTextField
@@ -34,13 +30,16 @@ import com.devdroid07.storeapp.store.presentation.address.AddressState
 @Composable
 fun BottomSheetAddAddress(
     state: AddressState,
+    spacing: Dimensions,
     onAction: (AddressAction) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background).padding(horizontal = 12.dp),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = spacing.spaceSmall),
     ) {
+
         StoreTextField(
             state = state.street,
             startIcon = null,
@@ -49,6 +48,7 @@ fun BottomSheetAddAddress(
             title = stringResource(R.string.street),
             imeAction = ImeAction.Next
         )
+
         StoreTextField(
             state = state.postalCode,
             startIcon = null,
@@ -59,6 +59,18 @@ fun BottomSheetAddAddress(
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next
         )
+
+        Text(
+            modifier = Modifier
+                .align(Alignment.End),
+            text = "${state.postalCode.text.length}/5",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                    alpha = 0.4f
+                )
+            )
+        )
+
         StoreTextField(
             state = state.state,
             startIcon = null,
@@ -67,6 +79,7 @@ fun BottomSheetAddAddress(
             enable = false,
             title = stringResource(R.string.state)
         )
+
         StoreTextField(
             state = state.mayoralty,
             startIcon = null,
@@ -75,10 +88,12 @@ fun BottomSheetAddAddress(
             enable = false,
             title = stringResource(R.string.mayoralty)
         )
+
         ExposedDropdownMenuSettlement(
             state = state,
             onAction = onAction
         )
+
         StoreTextField(
             state = state.numberContact,
             startIcon = PhoneIcon,
@@ -89,6 +104,7 @@ fun BottomSheetAddAddress(
             imeAction = ImeAction.Next,
             title = stringResource(R.string.number_contact)
         )
+
         StoreTextField(
             state = state.references,
             startIcon = null,
@@ -102,6 +118,7 @@ fun BottomSheetAddAddress(
             ),
             title = stringResource(R.string.reference)
         )
+
         Text(
             modifier = Modifier
                 .align(Alignment.End),
@@ -112,14 +129,17 @@ fun BottomSheetAddAddress(
                 )
             )
         )
+
         StoreActionButton(
             modifier = Modifier.padding(
-                vertical = 12.dp
+                vertical = spacing.spaceSmall
             ),
-            text = "Agregar",
-            isLoading = false
+            text = stringResource(R.string.add_address),
+            enabled = state.canCreateAddress,
+            isLoading = state.isCreatingAddress
         ) {
-
+            onAction(AddressAction.OnCreateAddress)
         }
+
     }
 }

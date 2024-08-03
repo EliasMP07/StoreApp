@@ -26,7 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreTextField
 import com.devdroid07.storeapp.store.presentation.address.AddressAction
 import com.devdroid07.storeapp.store.presentation.address.AddressState
@@ -58,7 +60,7 @@ fun ExposedDropdownMenuSettlement(
             startIcon = null,
             endIcon = if(state.isExpandedDropdownMenu)Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown ,
             hint = "",
-            title = "Localidad"
+            title = stringResource(R.string.title_settlement)
         )
 
         ExposedDropdownMenu(

@@ -1,6 +1,5 @@
 package com.devdroid07.storeapp.store.data.repository
 
-import android.util.Log
 import com.devdroid07.storeapp.core.data.network.safeCall2
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.DataError
@@ -12,8 +11,9 @@ import com.devdroid07.storeapp.store.data.mappers.toCart
 import com.devdroid07.storeapp.store.data.mappers.toPostalCode
 import com.devdroid07.storeapp.store.data.mappers.toProduct
 import com.devdroid07.storeapp.store.data.mappers.toReview
-import com.devdroid07.storeapp.store.data.remote.CopomexApi
-import com.devdroid07.storeapp.store.data.remote.StoreApiService
+import com.devdroid07.storeapp.store.data.remote.api.CopomexApi
+import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
+import com.devdroid07.storeapp.store.data.remote.dto.AddressRequest
 import com.devdroid07.storeapp.store.data.remote.dto.CartRequest
 import com.devdroid07.storeapp.store.data.remote.dto.ReviewRequest
 import com.devdroid07.storeapp.store.domain.model.Address
@@ -36,7 +36,6 @@ class StoreRepositoryImpl(
     override fun getAllProduct(): Flow<Result<List<Product>, DataError.Network>> = flow {
         val result = safeCall2 {
             api.getAllProducts(
-                token = sessionStorage.get()?.token.orEmpty(),
                 idUser = sessionStorage.get()?.id.orEmpty(),
             )
 
@@ -56,7 +55,6 @@ class StoreRepositoryImpl(
     override suspend fun getSingleProduct(idProduct: String): Result<Product, DataError.Network> {
         val result = safeCall2 {
             api.getSingleProduct(
-                token = sessionStorage.get()?.token.orEmpty(),
                 idProduct = idProduct
             )
         }
@@ -78,7 +76,6 @@ class StoreRepositoryImpl(
 
         val result = safeCall2 {
             api.addReviewProduct(
-                token = sessionStorage.get()?.token.orEmpty(),
                 reviewRequest = ReviewRequest(
                     productId = productId,
                     rating = rating,
@@ -94,7 +91,6 @@ class StoreRepositoryImpl(
     override fun getReviewsProduct(productId: String): Flow<Result<List<Review>, DataError.Network>> = flow {
         val result = safeCall2 {
             api.getReviewProduct(
-                token = sessionStorage.get()?.token.orEmpty(),
                 productId = productId,
             )
 
@@ -117,7 +113,6 @@ class StoreRepositoryImpl(
     ): Result<String, DataError.Network> {
         val result = safeCall2 {
             api.addMyCart(
-                token = sessionStorage.get()?.token.orEmpty(),
                 cartRequest = CartRequest(
                     idUser = sessionStorage.get()?.id.orEmpty(),
                     productId = productId,
@@ -138,7 +133,6 @@ class StoreRepositoryImpl(
     override fun getMyCart(): Flow<Result<List<Cart>, DataError.Network>> = flow {
         val result = safeCall2 {
             api.getMyCart(
-                token = sessionStorage.get()?.token.orEmpty(),
                 idUser = sessionStorage.get()?.id.orEmpty()
             )
         }
@@ -158,7 +152,6 @@ class StoreRepositoryImpl(
     override suspend fun removeProductCart(idProduct: Int): EmptyResult<DataError.Network> {
         val result = safeCall2 {
             api.removeProductMyCart(
-                token = sessionStorage.get()?.token.orEmpty(),
                 idUser = sessionStorage.get()?.id.orEmpty(),
                 idProduct = idProduct.toString()
             )
@@ -169,7 +162,6 @@ class StoreRepositoryImpl(
     override suspend fun addMyFavorite(productId: String): Result<String, DataError.Network> {
         val result = safeCall2 {
             api.addMyFavorites(
-                token = sessionStorage.get()?.token.orEmpty(),
                 idUser = sessionStorage.get()?.id.orEmpty(),
                 idProduct = productId
             )
@@ -187,7 +179,6 @@ class StoreRepositoryImpl(
     override fun getMyFavorites(): Flow<Result<List<Product>, DataError.Network>> = flow {
         val result = safeCall2 {
             api.getMyFavorites(
-                token = sessionStorage.get()?.token.orEmpty(),
                 idUser = sessionStorage.get()?.id.orEmpty()
             )
         }
@@ -206,8 +197,7 @@ class StoreRepositoryImpl(
 
     override suspend fun removeProductFavorite(idProduct: String): EmptyResult<DataError.Network> {
         val result = safeCall2 {
-            api.removeProductMyFavorite(
-                token = sessionStorage.get()?.token.orEmpty(),
+            api.deleteProductMyFavorite(
                 idUser = sessionStorage.get()?.id.orEmpty(),
                 idProduct = idProduct
             )
@@ -218,7 +208,6 @@ class StoreRepositoryImpl(
     override suspend fun searchProduct(query: String): Result<List<Product>, DataError.Network> {
         val result = safeCall2 {
             api.searchProduct(
-                token = sessionStorage.get()?.token.orEmpty(),
                 query = query
             )
         }
@@ -239,49 +228,5 @@ class StoreRepositoryImpl(
         }
     }
 
-    override suspend fun getInfoByPostalCode(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>> =
-        flow {
-            val result = safeCall2 {
-                copomexApi.getInfoByPostalCode(
-                    codigoPostal = postalCode,
-                    token = "pruebas"
-                )
-            }
-            when (result) {
-                is Result.Error -> {
-                    emit(
-                        Result.Error(
-                            result.error
-                        )
-                    )
-                }
-                is Result.Success -> {
-                    emit(Result.Success(
-                        result.data.map {
-                            it.postalCodeDto?.toPostalCode() ?: PostalCode()
-                        }
-                    ))
-                }
-            }
-        }
-
-    override suspend fun getAllMyAddress(): Result<List<Address>, DataError.Network> {
-        val result = safeCall2 {
-            api.getAllMyAddress(
-                token = sessionStorage.get()?.token.orEmpty(),
-                userId = sessionStorage.get()?.id.orEmpty()
-            )
-        }
-        return when (result) {
-            is Result.Error -> {
-                Result.Error(result.error)
-            }
-            is Result.Success -> {
-                Result.Success(result.data.data?.map {
-                    it.toAddress()
-                }.orEmpty())
-            }
-        }
-    }
 
 }

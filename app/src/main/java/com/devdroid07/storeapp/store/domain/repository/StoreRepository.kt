@@ -3,12 +3,9 @@ package com.devdroid07.storeapp.store.domain.repository
 import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.Result
-import com.devdroid07.storeapp.store.domain.model.Address
 import com.devdroid07.storeapp.store.domain.model.Cart
-import com.devdroid07.storeapp.store.domain.model.PostalCode
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Review
-import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.flow.Flow
 
 interface StoreRepository {

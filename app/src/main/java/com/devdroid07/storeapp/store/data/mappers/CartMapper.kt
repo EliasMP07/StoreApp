@@ -1,6 +1,6 @@
 package com.devdroid07.storeapp.store.data.mappers
 
-import com.devdroid07.storeapp.store.data.remote.dto.CartDto
+import com.devdroid07.storeapp.store.data.remote.dto.store.CartDto
 import com.devdroid07.storeapp.store.domain.model.Cart
 
 fun CartDto.toCart(): Cart{

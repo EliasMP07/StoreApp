@@ -4,16 +4,15 @@ import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.store.data.remote.api.CopomexApi
 import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
 import com.devdroid07.storeapp.store.data.repository.AddressRepositoryImpl
+import com.devdroid07.storeapp.store.data.repository.CardRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
+import com.devdroid07.storeapp.store.domain.repository.CardRepository
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 import com.devdroid07.storeapp.store.domain.usecases.AddFavoriteProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddReviewProductUseCase
-import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCase
-import com.devdroid07.storeapp.store.domain.usecases.address.GetAllMyAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
 import com.devdroid07.storeapp.store.domain.usecases.GetFavoritesProductsUseCase
-import com.devdroid07.storeapp.store.domain.usecases.address.GetInfoByPostalCodeUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetReviewsProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
@@ -22,7 +21,13 @@ import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyFavoritesUse
 import com.devdroid07.storeapp.store.domain.usecases.SearchProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import com.devdroid07.storeapp.store.domain.usecases.address.AddressUseCases
+import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.DeleteAddressUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.GetAllMyAddressUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.GetInfoByPostalCodeUseCase
+import com.devdroid07.storeapp.store.domain.usecases.card.CardUseCases
+import com.devdroid07.storeapp.store.domain.usecases.card.CreateCardUseCase
+import com.devdroid07.storeapp.store.domain.usecases.card.GetAllMyCardsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,8 +57,8 @@ object StoreModule {
     fun provideAddressRepository(
         storeApiService: StoreApiService,
         copomexApi: CopomexApi,
-        sessionStorage: SessionStorage
-    ): AddressRepositoryImpl{
+        sessionStorage: SessionStorage,
+    ): AddressRepositoryImpl {
         return AddressRepositoryImpl(
             storeApiService = storeApiService,
             copomexApi = copomexApi,
@@ -61,12 +66,34 @@ object StoreModule {
         )
     }
 
+    @Singleton
+    @Provides
+    fun provideCardRepository(
+        storeApiService: StoreApiService,
+        sessionStorage: SessionStorage,
+    ): CardRepository {
+        return CardRepositoryImpl(
+            sessionStorage = sessionStorage,
+            storeApiService = storeApiService
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideCardUseCases(
+        repository: CardRepository
+    ): CardUseCases{
+        return CardUseCases(
+            getAllMyCardsUseCase = GetAllMyCardsUseCase(repository),
+            createCardUseCase = CreateCardUseCase(repository)
+        )
+    }
 
     @Provides
     @Singleton
     fun provideAddressUseCases(
-        repository: AddressRepositoryImpl
-    ): AddressUseCases{
+        repository: AddressRepositoryImpl,
+    ): AddressUseCases {
         return AddressUseCases(
             createAddressUseCase = CreateAddressUseCase(repository),
             getAllMyAddressUseCase = GetAllMyAddressUseCase(repository),
@@ -78,7 +105,7 @@ object StoreModule {
     @Provides
     @Singleton
     fun provideStoreUseCase(
-        repository: StoreRepository
+        repository: StoreRepository,
     ): StoreUseCases {
         return StoreUseCases(
             getAllProducts = GetAllProducts(repository),

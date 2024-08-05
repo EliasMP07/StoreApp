@@ -44,6 +44,7 @@ fun AddressScreenRoot(
     context: Context,
     viewModel: AddressViewModel,
     onAction: (AddressAction) -> Unit,
+    navigateToPayment: (Int) -> Unit,
     onBack: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -90,6 +91,7 @@ fun AddressScreenRoot(
         onAction = { action ->
             when (action) {
                 AddressAction.OnBackClick -> onBack()
+                is AddressAction.OnPaymentClick -> navigateToPayment(action.addressId)
                 else -> Unit
             }
             onAction(action)
@@ -177,7 +179,10 @@ fun AddressScreen(
                         ) { address ->
                             ItemAddress(
                                 address = address,
-                                spacing = spacing
+                                spacing = spacing,
+                                onClick = {
+                                    onAction(AddressAction.OnPaymentClick(it))
+                                }
                             )
                         }
                     }

@@ -4,7 +4,6 @@ import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.store.domain.model.Address
 import com.devdroid07.storeapp.store.domain.repository.AddressRepository
-import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 
 class CreateAddressUseCase(
     private val repository: AddressRepository

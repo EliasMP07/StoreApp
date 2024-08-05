@@ -79,5 +79,15 @@
     <string name="btn_text_add_address">Agregar direccion</string>
     <string name="add_address">Agregar</string>
     <string name="title_settlement">Localidad</string>
+    <string name="name_headline_card">Nombre del titular</string>
+    <string name="headlinecard">Nombre del titular de la tarjeta</string>
+    <string name="number_tarjet">Numero de tarjeta</string>
+    <string name="cvv">CVV</string>
+    <string name="expires">Expira</string>
+    <string name="payment_title_screen">Elige la forma de pago</string>
+    <string name="content_description_img_logo_issuer">"Icono del emisor de la tarjeta "</string>
+    <string name="text_btn_add_card">Agregar tarjeta</string>
+    <string name="success_create_card">Medio de pago agregado exitosamente.</string>
+    <string name="error_create_card">Hubo un error al agregar el medio de pago</string>
 
 </resources>

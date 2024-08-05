@@ -44,7 +44,7 @@ fun StoreToolbar(
     profile: String = "",
     title: String = "",
     onAccountClick: () -> Unit = {},
-    openDrawer: () -> Unit,
+    openDrawer: () -> Unit = {},
     isProfile: Boolean = true,
     onBack: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),

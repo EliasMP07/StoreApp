@@ -3,21 +3,15 @@ package com.devdroid07.storeapp.store.presentation.address.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
@@ -28,6 +22,7 @@ import com.devdroid07.storeapp.store.domain.model.Address
 @Composable
 fun ItemAddress(
     address: Address,
+    onClick: (Int) -> Unit,
     spacing: Dimensions,
 ) {
     Card(
@@ -40,7 +35,7 @@ fun ItemAddress(
             1.dp,
             MaterialTheme.colorScheme.onBackground
         ),
-        onClick = { /*TODO*/ })
+        onClick = { onClick(address.id) })
     {
         Column(
             modifier = Modifier

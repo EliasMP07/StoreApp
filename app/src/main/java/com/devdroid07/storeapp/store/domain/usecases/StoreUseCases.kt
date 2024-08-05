@@ -1,9 +1,5 @@
 package com.devdroid07.storeapp.store.domain.usecases
 
-import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCase
-import com.devdroid07.storeapp.store.domain.usecases.address.GetAllMyAddressUseCase
-import com.devdroid07.storeapp.store.domain.usecases.address.GetInfoByPostalCodeUseCase
-
 data class StoreUseCases(
     val getAllProducts: GetAllProducts,
     val getSingleProduct: GetSingleProduct,

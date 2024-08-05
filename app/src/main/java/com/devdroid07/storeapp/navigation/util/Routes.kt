@@ -9,6 +9,10 @@ sealed class RoutesScreens(val route: String){
     data object Cart: RoutesScreens("cart")
     data object Account: RoutesScreens("account")
 
+    data object Payment: RoutesScreens("payment/{${NavArgs.AddressID.key}}"){
+        fun createRoute(addressId: String) = "payment/$addressId"
+    }
+
     data object Favorite: RoutesScreens("favorite")
     data object Settings: RoutesScreens("settings")
     data object Address: RoutesScreens("address")
@@ -21,5 +25,6 @@ sealed class RoutesScreens(val route: String){
 }
 
 enum class NavArgs(val key: String){
+    AddressID("addressId"),
     ProductID("productId")
 }

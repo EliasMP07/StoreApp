@@ -62,4 +62,8 @@ val EmailIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.ic_email)
 
+val ArrowLeftIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_arrow_left)
+
 

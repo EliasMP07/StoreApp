@@ -10,7 +10,14 @@ fun NavHostController.navigateTo(route: RoutesScreens) {
         restoreState = true
     }
 }
-
+fun NavHostController.navigateScreen(navBackStackEntry: NavBackStackEntry, route: String){
+    if (navBackStackEntry.lifecycleIsResumed()){
+        navigate(route) {
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+}
 fun NavHostController.navigateToSingleTop(route: RoutesScreens) {
     navigate(route.route) {
         popUpTo(graph.id) { saveState = true }

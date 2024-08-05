@@ -7,4 +7,5 @@ sealed interface AddressAction {
     data class OnDeleteAddress(val addressId: Int): AddressAction
     data object OnRetryClick: AddressAction
     data object OnBackClick: AddressAction
+    data class OnPaymentClick (val addressId: Int): AddressAction
 }

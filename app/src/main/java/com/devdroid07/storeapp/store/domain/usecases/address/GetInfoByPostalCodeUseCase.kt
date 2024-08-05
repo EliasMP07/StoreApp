@@ -4,7 +4,6 @@ import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.store.domain.model.PostalCode
 import com.devdroid07.storeapp.store.domain.repository.AddressRepository
-import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetInfoByPostalCodeUseCase(

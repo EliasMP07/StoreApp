@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.store.data.remote.dto
+package com.devdroid07.storeapp.store.data.remote.dto.store
 
 import com.google.gson.annotations.SerializedName
 

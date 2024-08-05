@@ -3,8 +3,8 @@ package com.devdroid07.storeapp.store.di
 import com.devdroid07.storeapp.BuildConfig
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.store.data.remote.api.CopomexApi
-import com.devdroid07.storeapp.store.data.remote.interceptor.StoreApiInterceptor
 import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
+import com.devdroid07.storeapp.store.data.remote.interceptor.StoreApiInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,6 +1,6 @@
 package com.devdroid07.storeapp.store.data.mappers
 
-import com.devdroid07.storeapp.store.data.remote.dto.ProductDto
+import com.devdroid07.storeapp.store.data.remote.dto.store.ProductDto
 import com.devdroid07.storeapp.store.domain.model.Product
 
 fun ProductDto.toProduct(): Product{

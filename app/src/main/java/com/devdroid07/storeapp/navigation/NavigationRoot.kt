@@ -35,6 +35,8 @@ import com.devdroid07.storeapp.store.presentation.address.AddressViewModel
 import com.devdroid07.storeapp.store.presentation.home.componets.HomeDrawerScreens
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartScreenRoot
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
+import com.devdroid07.storeapp.store.presentation.pay.FinishPayScreenRoot
+import com.devdroid07.storeapp.store.presentation.pay.FinishPayViewModel
 import com.devdroid07.storeapp.store.presentation.payment.PaymentScreenRoot
 import com.devdroid07.storeapp.store.presentation.payment.PaymentViewModel
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRootScreenRoot
@@ -164,7 +166,7 @@ fun NavGraphBuilder.store(
 
         composable(
             route = RoutesScreens.Payment.route
-        ) {navBackEntry ->
+        ) { navBackEntry ->
             val viewModel: PaymentViewModel = hiltViewModel()
 
             PaymentScreenRoot(
@@ -173,8 +175,32 @@ fun NavGraphBuilder.store(
                 onBack = {
                     navController.navigateBack()
                 },
-                navigateToFinishPay = {addressId, cardId ->
-                    navController.navigateScreen(navBackEntry, RoutesScreens.HomeDrawerRoute.route)
+                navigateToFinishPay = { addressId, cardId ->
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.FinishPay.createRoute(
+                            addressId = addressId,
+                            cardId = cardId
+                        )
+                    )
+                }
+            )
+        }
+
+        composable(
+            route = RoutesScreens.FinishPay.route
+        ) { navBackEntry ->
+            val viewModel: FinishPayViewModel = hiltViewModel()
+            FinishPayScreenRoot(
+                viewModel = viewModel,
+                navigateToHome = {
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.HomeDrawerRoute.route
+                    )
+                },
+                navigateToPayment = {
+                    navController.navigateBack()
                 }
             )
         }

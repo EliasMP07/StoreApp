@@ -16,6 +16,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -158,25 +159,27 @@ class AddressViewModel @Inject constructor(
                     error = null
                 )
             }
-            val result = addressUseCases.getAllMyAddressUseCase()
-            _state.update { addressState ->
-                when (result) {
-                    is Result.Error -> {
-                        addressState.copy(
-                            error = result.error.asUiText(),
-                            isLoading = false,
-                            addressList = emptyList()
-                        )
-                    }
-                    is Result.Success -> {
-                        addressState.copy(
-                            isLoading = false,
-                            error = null,
-                            addressList = result.data
-                        )
+            addressUseCases.getAllMyAddressUseCase().collectLatest {result ->
+                _state.update { addressState ->
+                    when (result) {
+                        is Result.Error -> {
+                            addressState.copy(
+                                error = result.error.asUiText(),
+                                isLoading = false,
+                                addressList = emptyList()
+                            )
+                        }
+                        is Result.Success -> {
+                            addressState.copy(
+                                isLoading = false,
+                                error = null,
+                                addressList = result.data
+                            )
+                        }
                     }
                 }
             }
+
         }
     }
 

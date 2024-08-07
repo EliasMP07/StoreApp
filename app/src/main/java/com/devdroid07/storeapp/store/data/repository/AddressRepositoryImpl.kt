@@ -15,6 +15,7 @@ import com.devdroid07.storeapp.store.domain.model.Address
 import com.devdroid07.storeapp.store.domain.model.PostalCode
 import com.devdroid07.storeapp.store.domain.repository.AddressRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 
 class AddressRepositoryImpl (
@@ -48,20 +49,21 @@ class AddressRepositoryImpl (
         }
     }
 
-    override suspend fun getAllMyAddress(): Result<List<Address>, DataError.Network> {
+    override suspend fun getAllMyAddress(): Flow<Result<List<Address>, DataError.Network>> = flow {
         val result = safeCall2 {
             storeApiService.getAllMyAddress(
                 userId = sessionStorage.get()?.id.orEmpty()
             )
         }
-        return when (result) {
+         when (result) {
             is Result.Error -> {
-                Result.Error(result.error)
+                emit( Result.Error(result.error))
+
             }
             is Result.Success -> {
-                Result.Success(result.data.data?.map {
+                emit(  Result.Success(result.data.data?.map {
                     it.toAddress()
-                }.orEmpty())
+                }.orEmpty()))
             }
         }
     }

@@ -11,7 +11,7 @@ interface AddressRepository {
 
     suspend fun getInfoByPostalCode(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>>
 
-    suspend fun getAllMyAddress(): Result<List<Address>, DataError.Network>
+    suspend fun getAllMyAddress(): Flow<Result<List<Address>, DataError.Network>>
 
     suspend fun createAddress(
         street: String,

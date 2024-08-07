@@ -2,18 +2,21 @@ package com.devdroid07.storeapp.store.presentation.payment
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.clearText
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
+import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.store.domain.usecases.card.CardUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
     private val cardUseCases: CardUseCases,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PaymentState())
@@ -32,6 +36,11 @@ class PaymentViewModel @Inject constructor(
     val events = eventChannel.receiveAsFlow()
 
     init {
+        _state.update { paymentState ->
+            paymentState.copy(
+                addressId = savedStateHandle[NavArgs.AddressID.key] ?: "1"
+            )
+        }
         getAllMyCard()
     }
 
@@ -53,24 +62,26 @@ class PaymentViewModel @Inject constructor(
                     error = null
                 )
             }
-            val result = cardUseCases.getAllMyCardsUseCase()
-            _state.update { paymentState ->
-                when (result) {
-                    is Result.Error -> {
-                        paymentState.copy(
-                            isLoading = false,
-                            error = result.error.asUiText()
-                        )
-                    }
-                    is Result.Success -> {
-                        paymentState.copy(
-                            error = null,
-                            isLoading = false,
-                            cards = result.data
-                        )
+            cardUseCases.getAllMyCardsUseCase().collectLatest { result ->
+                _state.update { paymentState ->
+                    when (result) {
+                        is Result.Error -> {
+                            paymentState.copy(
+                                isLoading = false,
+                                error = result.error.asUiText()
+                            )
+                        }
+                        is Result.Success -> {
+                            paymentState.copy(
+                                error = null,
+                                isLoading = false,
+                                cards = result.data
+                            )
+                        }
                     }
                 }
             }
+
 
         }
     }

@@ -84,10 +84,17 @@
     <string name="number_tarjet">Numero de tarjeta</string>
     <string name="cvv">CVV</string>
     <string name="expires">Expira</string>
+    <string name="price">$ %s</string>
     <string name="payment_title_screen">Elige la forma de pago</string>
     <string name="content_description_img_logo_issuer">"Icono del emisor de la tarjeta "</string>
     <string name="text_btn_add_card">Agregar tarjeta</string>
     <string name="success_create_card">Medio de pago agregado exitosamente.</string>
     <string name="error_create_card">Hubo un error al agregar el medio de pago</string>
+    <string name="loading_progresspay_title">El pago esta en progreso</string>
+    <string name="message_progresspay_message">Por favor, espere uno momento</string>
+    <string name="failure_progresspay_title">No pudimos procesar tu pago</string>
+    <string name="failure_progresspay_message">Porfavor cambia tu metodo de pago</string>
+    <string name="success_progresspay_message">Tu pago a sido recibido.</string>
+    <string name="success_progresspay_title">Correcto!</string>
 
 </resources>

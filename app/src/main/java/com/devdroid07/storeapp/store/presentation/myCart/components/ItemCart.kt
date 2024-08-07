@@ -33,7 +33,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.animati
 import com.devdroid07.storeapp.store.domain.model.Cart
 
 @Composable
-fun ItemCard(
+fun ItemCart(
     cart: Cart
 ) {
     var isExpand by rememberSaveable {

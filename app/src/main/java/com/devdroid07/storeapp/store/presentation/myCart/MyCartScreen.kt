@@ -29,7 +29,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeTo
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.store.presentation.myCart.components.FooterMyCart
-import com.devdroid07.storeapp.store.presentation.myCart.components.ItemCard
+import com.devdroid07.storeapp.store.presentation.myCart.components.ItemCart
 import com.devdroid07.storeapp.store.presentation.myCart.components.MyCartShimmerEffect
 import kotlinx.coroutines.launch
 
@@ -138,7 +138,7 @@ private fun MyCartScreen(
                                 onAction(MyCartAction.OnRemoveProduct(it.idProduct.toInt()))
                             }
                         ) {
-                            ItemCard(
+                            ItemCart(
                                 cart = cart
                             )
                         }

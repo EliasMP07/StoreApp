@@ -9,27 +9,31 @@ import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
 import com.devdroid07.storeapp.store.data.remote.dto.store.CardRequest
 import com.devdroid07.storeapp.store.domain.model.Card
 import com.devdroid07.storeapp.store.domain.repository.CardRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-class CardRepositoryImpl (
+class CardRepositoryImpl(
     private val sessionStorage: SessionStorage,
-    private val storeApiService: StoreApiService
-): CardRepository {
+    private val storeApiService: StoreApiService,
+) : CardRepository {
 
-    override suspend fun getAllMyCard(): Result<List<Card>, DataError.Network> {
+    override suspend fun getAllMyCard(): Flow<Result<List<Card>, DataError.Network>> = flow {
         val result = safeCall2 {
             storeApiService.getAllMyCards(
                 sessionStorage.get()?.id.orEmpty()
             )
         }
-        return when(result){
+        when (result) {
             is Result.Error -> {
-                Result.Error(result.error)
+                emit(Result.Error(result.error))
             }
             is Result.Success -> {
-                Result.Success(
-                    result.data.data?.map {
-                        it.toCard()
-                    }?: emptyList()
+                emit(
+                    Result.Success(
+                        result.data.data?.map {
+                            it.toCard()
+                        } ?: emptyList()
+                    )
                 )
             }
         }
@@ -53,12 +57,12 @@ class CardRepositoryImpl (
             )
         }
 
-        return when(result){
+        return when (result) {
             is Result.Error -> {
                 Result.Error(result.error)
             }
             is Result.Success -> {
-                Result.Success(result.data.data?.toCard()?:Card())
+                Result.Success(result.data.data?.toCard() ?: Card())
             }
         }
     }

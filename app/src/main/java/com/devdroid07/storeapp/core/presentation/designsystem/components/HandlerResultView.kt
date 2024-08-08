@@ -8,9 +8,9 @@ fun handleResultView(
     isLoading: Boolean,
     contentLoading:  @Composable () -> Unit,
     isEmpty: Boolean = false,
+    errorContent:  @Composable (UiText) -> Unit,
     contentEmpty: @Composable () -> Unit = {},
-    error: UiText?,
-    retry: () -> Unit,
+    error: UiText?
 ): Boolean {
     return when {
         isLoading -> {
@@ -18,7 +18,7 @@ fun handleResultView(
             false
         }
         error != null -> {
-            ErrorContent(error = error, onRetry = retry)
+            errorContent(error)
             false
         }
         isEmpty -> {

@@ -28,6 +28,7 @@ import com.devdroid07.storeapp.navigation.util.lifecycleIsResumed
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
 import com.devdroid07.storeapp.navigation.util.navigateTo
+import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
 import com.devdroid07.storeapp.store.presentation.address.AddressScreenRoot
@@ -89,6 +90,7 @@ fun NavGraphBuilder.store(
                         navController.navigate(RoutesScreens.Search.route)
                     }
                 },
+                navBackStackEntry = navBackEntry,
                 navigateMyCart = {
                     if (navBackEntry.lifecycleIsResumed()) {
                         navController.navigate(RoutesScreens.Cart.route)
@@ -175,12 +177,13 @@ fun NavGraphBuilder.store(
                 onBack = {
                     navController.navigateBack()
                 },
-                navigateToFinishPay = { addressId, cardId ->
+                navigateToFinishPay = { addressId, cardId, tokenId ->
                     navController.navigateScreen(
                         navBackEntry,
                         RoutesScreens.FinishPay.createRoute(
                             addressId = addressId,
-                            cardId = cardId
+                            cardId = cardId,
+                            tokenId = tokenId
                         )
                     )
                 }
@@ -190,19 +193,22 @@ fun NavGraphBuilder.store(
         composable(
             route = RoutesScreens.FinishPay.route
         ) { navBackEntry ->
+
             val viewModel: FinishPayViewModel = hiltViewModel()
+
             FinishPayScreenRoot(
                 viewModel = viewModel,
                 navigateToHome = {
-                    navController.navigateScreen(
+                    navController.navigateToSingleTop(
                         navBackEntry,
-                        RoutesScreens.HomeDrawerRoute.route
+                        RoutesScreens.HomeDrawerRoute
                     )
                 },
-                navigateToPayment = {
+                onBack = {
                     navController.navigateBack()
                 }
             )
+
         }
         composable(
             enterTransition = {

@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
@@ -153,8 +154,10 @@ fun AddressScreen(
                     }
                 },
                 error = state.error,
-                retry = {
-                    onAction(AddressAction.OnRetryClick)
+                errorContent = {
+                    ErrorContent(
+                        error = it,
+                        onRetry = { onAction(AddressAction.OnRetryClick) })
                 }
             )
             if (result) {

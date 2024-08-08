@@ -11,6 +11,14 @@ interface CardRepository {
         cardNumber: String,
         expireDate: String,
         nameHeadline: String,
-        cvv: String,
+        cvv: String
     ): Result<Card, DataError.Network>
+
+    suspend fun createCardToken(
+        year: String,
+        month: Int,
+        securityCode: String,
+        cardNumber: String,
+        cardHolder: String
+    ): Result<String, DataError.Network>
 }

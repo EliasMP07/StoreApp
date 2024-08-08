@@ -86,6 +86,8 @@ fun StoreActionButtonOutline(
     text: String,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
+    borderColor: Color = MaterialTheme.colorScheme.onBackground,
     enabled: Boolean = true,
     icon: ImageVector? = null,
     onClick: () -> Unit
@@ -98,7 +100,7 @@ fun StoreActionButtonOutline(
         ),
         border = BorderStroke(
             width = 0.5.dp,
-            color = MaterialTheme.colorScheme.onBackground
+            color = borderColor
         ),
         shape = RoundedCornerShape(100f),
         modifier = modifier
@@ -127,6 +129,7 @@ fun StoreActionButtonOutline(
                 }
                 Text(
                     text = text,
+                    color = textColor,
                     modifier = Modifier
                         .padding(start = 10.dp)
                         .alpha(if (isLoading) 0f else 1f),

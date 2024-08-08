@@ -12,8 +12,13 @@ class CreateCardUseCase(
         cardNumber: String,
         expireDate: String,
         nameHeadline: String,
-        cvv: String,
+        cvv: String
     ): Result<Card, DataError.Network>{
-        return repository.createCard(cardNumber, expireDate, nameHeadline, cvv)
+        return repository.createCard(
+            cardNumber = cardNumber,
+            expireDate = expireDate,
+            nameHeadline = nameHeadline,
+            cvv = cvv
+        )
     }
 }

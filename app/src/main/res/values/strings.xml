@@ -84,7 +84,7 @@
     <string name="number_tarjet">Numero de tarjeta</string>
     <string name="cvv">CVV</string>
     <string name="expires">Expira</string>
-    <string name="price">$ %s</string>
+    <string name="price">$ %s MX</string>
     <string name="payment_title_screen">Elige la forma de pago</string>
     <string name="content_description_img_logo_issuer">"Icono del emisor de la tarjeta "</string>
     <string name="text_btn_add_card">Agregar tarjeta</string>
@@ -96,5 +96,20 @@
     <string name="failure_progresspay_message">Porfavor cambia tu metodo de pago</string>
     <string name="success_progresspay_message">Tu pago a sido recibido.</string>
     <string name="success_progresspay_title">Correcto!</string>
+    <string name="date_and_time">Fecha: %s</string>
+    <string name="confirm_pay_title_screen">Confirmar compra</string>
+    <string name="btn_text_confirm_pay">Confirmar compra</string>
+    <string name="pays">Pagas</string>
+    <string name="title_tickepay">Store App, SA DE CV</string>
+    <string name="btn_go_to_orders">Ir a mis pedidos</string>
+    <string name="content_description_navigationBack">Navigation back</string>
+    <string name="thanks_for_you">Gracias por su compra!</string>
+    <string name="content_description_success_pay">Pago exitoso</string>
+    <string name="btn_go_to_home">Ir al inicio</string>
+    <string name="btn_change_other_methot_ay">Cambiar el metodo de pago</string>
+    <string name="content_description_error_image_pay">Error al cargar el pago</string>
+    <string name="change_other_pay_aux_text">**Si desea cambiar el metodo de pago presiona la tarjeta</string>
+    <string name="delivery_address">Direccion de entrega</string>
+    <string name="payment_method">Metodo de pago</string>
 
 </resources>

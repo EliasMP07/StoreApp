@@ -2,11 +2,14 @@ package com.devdroid07.storeapp.store.di
 
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.store.data.remote.api.CopomexApi
+import com.devdroid07.storeapp.store.data.remote.api.MercadoPagoApiService
 import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
 import com.devdroid07.storeapp.store.data.repository.AddressRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.CardRepositoryImpl
+import com.devdroid07.storeapp.store.data.repository.PaymentRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
 import com.devdroid07.storeapp.store.domain.repository.CardRepository
+import com.devdroid07.storeapp.store.domain.repository.PaymentRepository
 import com.devdroid07.storeapp.store.domain.repository.StoreRepository
 import com.devdroid07.storeapp.store.domain.usecases.AddFavoriteProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
@@ -26,8 +29,11 @@ import com.devdroid07.storeapp.store.domain.usecases.address.DeleteAddressUseCas
 import com.devdroid07.storeapp.store.domain.usecases.address.GetAllMyAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.GetInfoByPostalCodeUseCase
 import com.devdroid07.storeapp.store.domain.usecases.card.CardUseCases
+import com.devdroid07.storeapp.store.domain.usecases.card.CreateCardTokenUseCase
 import com.devdroid07.storeapp.store.domain.usecases.card.CreateCardUseCase
 import com.devdroid07.storeapp.store.domain.usecases.card.GetAllMyCardsUseCase
+import com.devdroid07.storeapp.store.domain.usecases.payment.CreatePaymentAndOrderUseCase
+import com.devdroid07.storeapp.store.domain.usecases.payment.PaymentUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,21 +77,44 @@ object StoreModule {
     fun provideCardRepository(
         storeApiService: StoreApiService,
         sessionStorage: SessionStorage,
+        mercadoPagoApiService: MercadoPagoApiService,
     ): CardRepository {
         return CardRepositoryImpl(
             sessionStorage = sessionStorage,
-            storeApiService = storeApiService
+            storeApiService = storeApiService,
+            mercadoPagoApiService = mercadoPagoApiService
         )
     }
 
     @Singleton
     @Provides
+    fun providePaymentRepository(
+        storeApiService: StoreApiService,
+        sessionStorage: SessionStorage,
+    ): PaymentRepository {
+        return PaymentRepositoryImpl(
+            sessionStorage,
+            storeApiService
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providePaymentUseCases(
+        repository: PaymentRepository,
+    ): PaymentUseCases {
+        return PaymentUseCases(createPaymentAndOrderUseCase = CreatePaymentAndOrderUseCase(repository))
+    }
+
+    @Singleton
+    @Provides
     fun provideCardUseCases(
-        repository: CardRepository
-    ): CardUseCases{
+        repository: CardRepository,
+    ): CardUseCases {
         return CardUseCases(
             getAllMyCardsUseCase = GetAllMyCardsUseCase(repository),
-            createCardUseCase = CreateCardUseCase(repository)
+            createCardUseCase = CreateCardUseCase(repository),
+            createCardTokenUseCase = CreateCardTokenUseCase(repository)
         )
     }
 

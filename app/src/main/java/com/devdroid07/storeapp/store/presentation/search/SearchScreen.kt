@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
 import com.devdroid07.storeapp.store.presentation.search.components.SearchTextField
@@ -23,7 +24,7 @@ import com.devdroid07.storeapp.store.presentation.search.components.SearchTextFi
 fun SearchScreenRoot(
     state: SearchState,
     navigateDetailProduct: (String) -> Unit,
-    onAction: (SearchAction) -> Unit
+    onAction: (SearchAction) -> Unit,
 ) {
     SearchScreen(
         state = state,
@@ -40,7 +41,7 @@ fun SearchScreenRoot(
 @Composable
 fun SearchScreen(
     state: SearchState,
-    onAction: (SearchAction) -> Unit
+    onAction: (SearchAction) -> Unit,
 ) {
 
     val spacing = LocalSpacing.current
@@ -80,8 +81,12 @@ fun SearchScreen(
                 )
             },
             error = state.error,
-            retry = {
-                onAction(SearchAction.OnRetry)
+            errorContent = {
+                ErrorContent(
+                    error = it,
+                    onRetry = {
+                        onAction(SearchAction.OnRetry)
+                    })
             }
         )
         if (result) {

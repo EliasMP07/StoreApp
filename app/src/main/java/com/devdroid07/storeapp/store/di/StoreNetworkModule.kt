@@ -3,6 +3,7 @@ package com.devdroid07.storeapp.store.di
 import com.devdroid07.storeapp.BuildConfig
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.store.data.remote.api.CopomexApi
+import com.devdroid07.storeapp.store.data.remote.api.MercadoPagoApiService
 import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
 import com.devdroid07.storeapp.store.data.remote.interceptor.StoreApiInterceptor
 import dagger.Module
@@ -21,7 +22,7 @@ object StoreNetworkModule {
     @Provides
     @Singleton
     fun provideStoreApiInterceptor(
-        sessionStorage: SessionStorage
+        sessionStorage: SessionStorage,
     ): StoreApiInterceptor {
         return StoreApiInterceptor(sessionStorage)
     }
@@ -29,11 +30,19 @@ object StoreNetworkModule {
     @Provides
     @Singleton
     fun provideHttpClient(
-        storeApiInterceptor: StoreApiInterceptor
+        storeApiInterceptor: StoreApiInterceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(storeApiInterceptor)
             .build()
+    }
+
+    @Provides
+    fun provideMercadoPagoApiService(
+        retrofit: Retrofit,
+    ): MercadoPagoApiService {
+        return retrofit.newBuilder().baseUrl("https://api.mercadopago.com/")
+            .addConverterFactory(GsonConverterFactory.create()).build().create(MercadoPagoApiService::class.java)
     }
 
 
@@ -41,7 +50,7 @@ object StoreNetworkModule {
     @Singleton
     fun provideStoreApiService(
         retrofit: Retrofit,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ): StoreApiService {
         return retrofit.newBuilder().client(okHttpClient).baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build().create(StoreApiService::class.java)

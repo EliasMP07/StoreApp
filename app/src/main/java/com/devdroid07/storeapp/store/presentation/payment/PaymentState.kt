@@ -7,6 +7,7 @@ import com.devdroid07.storeapp.store.domain.model.Card
 
 @OptIn(ExperimentalFoundationApi::class)
 data class PaymentState(
+    val isGetTokenId: Boolean = false,
     val addressId: String = "",
     val cards: List<Card> = emptyList(),
     val isLoading: Boolean = false,

@@ -10,6 +10,7 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.navigation.util.NavArgs
+import com.devdroid07.storeapp.store.domain.model.Card
 import com.devdroid07.storeapp.store.domain.usecases.card.CardUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -50,6 +51,9 @@ class PaymentViewModel @Inject constructor(
         when (action) {
             PaymentAction.OnCreateCardClick -> createCard()
             PaymentAction.OnRetryClick -> getAllMyCard()
+            is PaymentAction.OnCardSelectedClick -> {
+                generateTokenCard(action.card)
+            }
             else -> Unit
         }
     }
@@ -129,6 +133,64 @@ class PaymentViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun generateTokenCard(
+        card: Card,
+    ) {
+        viewModelScope.launch {
+
+            _state.update { paymentState ->
+                paymentState.copy(
+                    isGetTokenId = true
+                )
+            }
+
+            val date = card.expireDate.replace(
+                "/",
+                ""
+            )
+
+            val year = "20${date.takeLast(2)}"
+
+            val month = date.take(2)
+
+            val result = cardUseCases.createCardTokenUseCase.invoke(
+                year = year,
+                month = month.toInt(),
+                cardNumber = card.cardNumber,
+                cardHolder = card.nameHeadline,
+                securityCode = card.cvv,
+            )
+
+            when (result) {
+                is Result.Error -> {
+                    _state.update { paymentState ->
+                        paymentState.copy(
+                            isGetTokenId = false
+                        )
+                    }
+                    eventChannel.send(
+                        PaymentEvent.Error(result.error.asUiText())
+                    )
+                }
+                is Result.Success -> {
+                    _state.update { paymentState ->
+                        paymentState.copy(
+                            isGetTokenId = false
+                        )
+                    }
+                    eventChannel.send(
+                        PaymentEvent.SuccessCreateToken(
+                            addressId = state.value.addressId,
+                            tokenId = result.data,
+                            cardId = card.id.toString()
+                        )
+                    )
+                }
+            }
+
         }
     }
 

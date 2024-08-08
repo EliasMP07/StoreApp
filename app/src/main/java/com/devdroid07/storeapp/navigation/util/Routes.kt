@@ -13,8 +13,8 @@ sealed class RoutesScreens(val route: String){
         fun createRoute(addressId: String) = "payment/$addressId"
     }
 
-    data object FinishPay: RoutesScreens("finish_payment/{${NavArgs.AddressID.key}}/{${NavArgs.CardID.key}}"){
-        fun createRoute(addressId: String, cardId: String) = "finish_payment/$addressId/$cardId"
+    data object FinishPay: RoutesScreens("finish_payment/{${NavArgs.AddressID.key}}/{${NavArgs.CardID.key}}/{${NavArgs.TokenId.key}}"){
+        fun createRoute(addressId: String, cardId: String, tokenId: String) = "finish_payment/$addressId/$cardId/$tokenId"
     }
 
     data object Favorite: RoutesScreens("favorite")
@@ -31,5 +31,6 @@ sealed class RoutesScreens(val route: String){
 enum class NavArgs(val key: String){
     AddressID("addressId"),
     ProductID("productId"),
-    CardID("cardId")
+    CardID("cardId"),
+    TokenId("tokenId")
 }

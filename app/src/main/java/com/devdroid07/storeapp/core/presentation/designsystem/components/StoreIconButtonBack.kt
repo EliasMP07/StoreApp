@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.core.presentation.designsystem
+package com.devdroid07.storeapp.core.presentation.designsystem.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIosNew

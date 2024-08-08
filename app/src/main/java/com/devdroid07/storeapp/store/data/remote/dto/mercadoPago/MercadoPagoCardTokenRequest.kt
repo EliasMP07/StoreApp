@@ -1,9 +1,9 @@
 package com.devdroid07.storeapp.store.data.remote.dto.mercadoPago
 
-import com.devdroid07.storeapp.store.data.Cardholder
+import com.devdroid07.storeapp.store.data.remote.dto.mercadoPago.Cardholder
 import com.google.gson.annotations.SerializedName
 
-class MercadoPagoCardTokenBody(
+class MercadoPagoCardTokenRequest(
     @SerializedName("security_code") val securityCode: String,
     @SerializedName("expiration_year") val expirationYear: String,
     @SerializedName("expiration_month") val expirationMonth: Int,

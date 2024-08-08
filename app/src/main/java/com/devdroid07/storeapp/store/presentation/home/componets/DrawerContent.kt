@@ -33,6 +33,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -109,6 +110,7 @@ internal fun DrawerContent(
 internal fun HomeDrawerScreens(
     context: Context,
     navController: NavHostController = rememberNavController(),
+    navBackStackEntry: NavBackStackEntry,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
@@ -129,10 +131,10 @@ internal fun HomeDrawerScreens(
                 ) { route ->
                     currentDrawerRoute = route
                     when (route) {
-                        RoutesScreens.Account -> navController.navigateToSingleTop(route)
-                        RoutesScreens.Home -> navController.navigateToSingleTop(route)
+                        RoutesScreens.Account -> navController.navigateToSingleTop(navBackStackEntry, route)
+                        RoutesScreens.Home -> navController.navigateToSingleTop(navBackStackEntry, route)
                         RoutesScreens.Search -> navigateSearch()
-                        RoutesScreens.Favorite -> navController.navigateToSingleTop(route)
+                        RoutesScreens.Favorite -> navController.navigateToSingleTop(navBackStackEntry, route)
                         else -> Unit
                     }
                     coroutineScope.launch { drawerState.close() }
@@ -158,7 +160,7 @@ internal fun HomeDrawerScreens(
                     viewModel = viewModel,
                     navigateToDetailProduct = navigateToDetailProduct,
                     navigateToAccount = {
-                        navController.navigateToSingleTop(RoutesScreens.Account)
+                        navController.navigateToSingleTop(navBackStackEntry, RoutesScreens.Account)
                     },
                     navigateToSearch = navigateSearch,
                     navigateToCart = navigateMyCart,

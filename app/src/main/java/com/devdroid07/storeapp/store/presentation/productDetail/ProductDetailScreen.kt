@@ -44,7 +44,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
-import com.devdroid07.storeapp.core.presentation.designsystem.StoreIconButtonBack
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonBack
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
@@ -60,7 +61,7 @@ fun ProductDetailRootScreenRoot(
     context: Context,
     viewModel: ProductDetailViewModel,
     onAction: (ProductDetailAction) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -72,11 +73,11 @@ fun ProductDetailRootScreenRoot(
     )
 
     BackHandler {
-        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded ){
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
             scope.launch {
                 scaffoldState.bottomSheetState.hide()
             }
-        }else{
+        } else {
             onBack()
         }
     }
@@ -93,7 +94,7 @@ fun ProductDetailRootScreenRoot(
             }
             is ProductDetailEvent.Success -> {
                 scope.launch {
-                    if (scaffoldState.bottomSheetState.isVisible){
+                    if (scaffoldState.bottomSheetState.isVisible) {
                         scaffoldState.bottomSheetState.hide()
                     }
                     snackbarHostState.showSnackbar(
@@ -126,7 +127,7 @@ private fun ProductDetailScreen(
     state: ProductDetailState,
     scaffoldState: BottomSheetScaffoldState,
     snackbarHostState: SnackbarHostState,
-    onAction: (ProductDetailAction) -> Unit
+    onAction: (ProductDetailAction) -> Unit,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -138,7 +139,7 @@ private fun ProductDetailScreen(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
-        sheetPeekHeight =0.dp,
+        sheetPeekHeight = 0.dp,
         scaffoldState = scaffoldState,
         sheetContent = {
             BottomSheetReviews(
@@ -155,9 +156,12 @@ private fun ProductDetailScreen(
                 )
             },
             error = state.error,
-            retry = {
-                onAction(ProductDetailAction.OnRetry)
-            },
+            errorContent = {
+                ErrorContent(
+                    error = it,
+                    onRetry = { onAction(ProductDetailAction.OnRetry) }
+                )
+            }
         )
         if (result) {
             Column(

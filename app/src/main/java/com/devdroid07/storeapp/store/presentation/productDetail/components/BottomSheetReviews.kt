@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.store.presentation.favorite.component.FavoriteShimmerEffect
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailAction
@@ -24,9 +25,9 @@ import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailSta
 fun BottomSheetReviews(
     state: ProductDetailState,
     spacing: Dimensions,
-    onAction: (ProductDetailAction) -> Unit
-){
-    Column{
+    onAction: (ProductDetailAction) -> Unit,
+) {
+    Column {
         val result = handleResultView(
             isLoading = state.isLoadingReview,
             contentLoading = {
@@ -48,9 +49,11 @@ fun BottomSheetReviews(
                 )
             },
             error = state.errorReviews,
-            retry = {
-                onAction(ProductDetailAction.OnRetryReview)
-            },
+            errorContent = {
+                ErrorContent(
+                    error = it,
+                    onRetry = { onAction(ProductDetailAction.OnRetryReview) })
+            }
         )
 
         if (result) {

@@ -2,70 +2,58 @@
 
 package com.devdroid07.storeapp.store.presentation.pay
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
-import com.devdroid07.storeapp.core.presentation.designsystem.CloseIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.CircularLoading
-import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
-import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
-import com.devdroid07.storeapp.store.domain.model.Address
-import com.devdroid07.storeapp.store.presentation.pay.component.DialogProgressPay
+import com.devdroid07.storeapp.store.presentation.pay.component.ErrorContentPay
+import com.devdroid07.storeapp.store.presentation.pay.component.ErrorPay
 import com.devdroid07.storeapp.store.presentation.pay.component.FinishPayContent
-import com.devdroid07.storeapp.store.presentation.payment.components.ItemCard
+import com.devdroid07.storeapp.store.presentation.pay.component.TicketSuccessPay
+import com.devdroid07.storeapp.store.presentation.pay.component.utils.ProgressPay
 
 @Composable
 fun FinishPayScreenRoot(
     viewModel: FinishPayViewModel,
-    navigateToPayment: () -> Unit,
     navigateToHome: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    ObserveAsEvents(viewModel.events) { event ->
-        when (event) {
-            FinishPayEvent.Success -> {
-                navigateToHome()
-            }
+    BackHandler {
+        when(state.pay){
+            ProgressPay.FAILURE -> onBack()
+            ProgressPay.SUCCESS -> navigateToHome()
+            else -> onBack()
         }
     }
+
     FinishPayScreen(
         state = state,
         onAction = { action ->
             when (action) {
+                FinishPayAction.GoToChangePaymentMethodClick -> onBack()
                 FinishPayAction.OnBackClick -> onBack()
-                FinishPayAction.OnChangeOtherCardClick -> navigateToPayment()
+                FinishPayAction.OnNavigateHomeClick -> navigateToHome()
                 else -> Unit
             }
             viewModel.onAction(action)
         }
     )
+
 }
 
 @Composable
@@ -79,7 +67,7 @@ private fun FinishPayScreen(
     Scaffold(
         topBar = {
             StoreToolbar(
-                title = "Confirmar compra",
+                title = stringResource(R.string.confirm_pay_title_screen),
                 openDrawer = {},
                 onBack = {
                     onAction(FinishPayAction.OnBackClick)
@@ -89,17 +77,24 @@ private fun FinishPayScreen(
             )
         }
     ) { paddingValue ->
+
         val result = handleResultView(
             isLoading = state.isLoading,
             contentLoading = {
                 CircularLoading()
             },
             error = state.error,
-            retry = {
-                onAction(FinishPayAction.OnRetryClick)
-            }
+            errorContent = {
+                ErrorContentPay(
+                    error = it,
+                    onHomeClick = {
+                        onAction(FinishPayAction.OnNavigateHomeClick)
+                    }
+                )
+            },
         )
-        if (result){
+
+        if (result) {
             FinishPayContent(
                 modifier = Modifier.padding(paddingValue),
                 state = state,
@@ -109,35 +104,29 @@ private fun FinishPayScreen(
         }
 
         if (state.isPaying) {
-            DialogProgressPay(
-                progress = state.pay,
-                onAction = onAction
-            )
+            CircularLoading()
         }
-    }
-}
 
-@Composable
-fun ItemConfirmAddress(
-    address: Address,
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    }
+    AnimatedVisibility(
+        visible = state.pay == ProgressPay.FAILURE,
+        enter = scaleIn(
+            animationSpec = tween(1000)
+        )
     ) {
-        Icon(
-            imageVector = Icons.Rounded.LocationOn,
-            contentDescription = null
+        ErrorPay(
+            onAction = onAction
         )
-        Text(
-            text = stringResource(
-                id = R.string.item_adreess_template,
-                address.postalCode,
-                address.state,
-                address.mayoralty
-            ),
-            style = MaterialTheme.typography.bodyMedium
+    }
+    AnimatedVisibility(
+        visible = state.pay == ProgressPay.SUCCESS,
+        enter = scaleIn(
+            animationSpec = tween(1000)
         )
-        Text(text = address.phoneNumber)
+    ) {
+         TicketSuccessPay(
+             state = state,
+             onAction = onAction
+         )
     }
 }

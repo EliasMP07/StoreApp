@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.isScrolled
@@ -48,10 +49,10 @@ fun HomeScreenRoot(
     navigateToDetailProduct: (String) -> Unit,
     navigateToSearch: () -> Unit,
     navigateToAccount: () -> Unit,
-    navigateToCart :() -> Unit,
+    navigateToCart: () -> Unit,
     viewModel: HomeViewModel,
     openDrawer: () -> Unit,
-    onAction: (HomeAction) -> Unit
+    onAction: (HomeAction) -> Unit,
 ) {
 
     ObserveAsEvents(viewModel.events) { event ->
@@ -97,7 +98,7 @@ fun HomeScreenRoot(
 private fun HomeScreen(
     openDrawer: () -> Unit,
     state: HomeState,
-    onAction: (HomeAction) -> Unit
+    onAction: (HomeAction) -> Unit,
 ) {
     val topAppBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -153,8 +154,13 @@ private fun HomeScreen(
                 )
             },
             error = state.error,
-            retry = {
-                onAction(HomeAction.RetryClick)
+            errorContent = {
+                ErrorContent(
+                    error = it,
+                    onRetry = {
+                        onAction(HomeAction.RetryClick)
+                    }
+                )
             }
         )
         if (result) {

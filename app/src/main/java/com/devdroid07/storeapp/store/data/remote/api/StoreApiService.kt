@@ -7,6 +7,7 @@ import com.devdroid07.storeapp.store.data.remote.dto.store.CardDto
 import com.devdroid07.storeapp.store.data.remote.dto.store.CardRequest
 import com.devdroid07.storeapp.store.data.remote.dto.store.CartDto
 import com.devdroid07.storeapp.store.data.remote.dto.store.CartRequest
+import com.devdroid07.storeapp.store.data.remote.dto.store.PaymentRequest
 import com.devdroid07.storeapp.store.data.remote.dto.store.ProductDto
 import com.devdroid07.storeapp.store.data.remote.dto.store.ReviewDto
 import com.devdroid07.storeapp.store.data.remote.dto.store.ReviewRequest
@@ -102,4 +103,10 @@ interface StoreApiService {
     suspend fun createCard(
         @Body cardRequest: CardRequest
     ): Response<StoreResponse<CardDto>>
+
+    @POST("payments/create")
+    suspend fun paymentCreateAndOrder(
+        @Body paymentRequest: PaymentRequest
+    ): Response<StoreResponse<String>>
+
 }

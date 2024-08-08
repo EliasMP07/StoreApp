@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
@@ -113,8 +114,13 @@ private fun MyCartScreen(
                 )
             },
             error = state.error,
-            retry = {
-                onAction(MyCartAction.OnRetryClick)
+            errorContent = {
+                ErrorContent(
+                    error = it,
+                    onRetry = {
+                        onAction(MyCartAction.OnRetryClick)
+                    }
+                )
             }
         )
 

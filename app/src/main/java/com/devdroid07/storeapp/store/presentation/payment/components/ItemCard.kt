@@ -29,7 +29,7 @@ import com.devdroid07.storeapp.store.domain.model.Card
 fun ItemCard(
     card: Card,
     spacing: Dimensions,
-    onClick: (String) -> Unit
+    onClick: (Card) -> Unit
 ) {
 
     val cardIssuer = when (IssuerFinder.detect(card.cardNumber)){
@@ -40,7 +40,7 @@ fun ItemCard(
     }
     Card(
         onClick = {
-            onClick(card.id.toString())
+            onClick(card)
         }
     ) {
         Row(

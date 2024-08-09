@@ -1,3 +1,6 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.gradle.api.provider.ProviderFactory
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -11,6 +14,7 @@ plugins {
 android {
     namespace = "com.devdroid07.storeapp"
     compileSdk = 34
+    val providers: ProviderFactory = project.providers
 
     defaultConfig {
         applicationId = "com.devdroid07.storeapp"
@@ -24,6 +28,7 @@ android {
             useSupportLibrary = true
         }
     }
+
 
     buildTypes {
         release {
@@ -41,8 +46,24 @@ android {
             buildConfigField("String", "BASE_URL", "\"http://192.168.1.69:3000/v1/\"")
             buildConfigField("String", "MERCADOPAGO_URL", "\"https://api.mercadopago.com/\"")
             buildConfigField("String", "COPOMEX_URL", "\"https://api.copomex.com/query/\"")
+            val apiKeyMercado = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_DEVELOP_MERCADOPAGO")
+            val apiKeyCopomex = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_DEVELOP_COPOMEX")
+            buildConfigField("String", "API_KEY_MERCADOPAGO", "\"$apiKeyMercado\"")
+            buildConfigField("String", "API_KEY_COPOMEX", "\"$apiKeyCopomex\"")
+        }
+
+        create("production") {
+            dimension = "env"
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.69:3000/v1/\"")
+            buildConfigField("String", "MERCADOPAGO_URL", "\"https://api.mercadopago.com/\"")
+            buildConfigField("String", "COPOMEX_URL", "\"https://api.copomex.com/query/\"")
+            val apiKeyMercado = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_DEVELOP_MERCADOPAGO")
+            val apiKeyCopomex = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_COPOMEX")
+            buildConfigField("String", "API_KEY_MERCADOPAGO", "\"$apiKeyMercado\"")
+            buildConfigField("String", "API_KEY_COPOMEX", "\"$apiKeyCopomex\"")
         }
     }
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -71,7 +92,7 @@ dependencies {
 
     //Serialization
     implementation(libs.kotlinx.serialization.json)
-    
+
     implementation(libs.commons.io)
 
     implementation(libs.androidx.core.splashscreen)

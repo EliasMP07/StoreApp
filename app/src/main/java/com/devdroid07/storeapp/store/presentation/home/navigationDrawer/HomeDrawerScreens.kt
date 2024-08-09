@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
+import com.devdroid07.storeapp.navigation.util.navigateScreen
 import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
 import com.devdroid07.storeapp.store.presentation.AccountViewModel
 import com.devdroid07.storeapp.store.presentation.account.AccountScreenRoot
@@ -57,10 +58,10 @@ internal fun HomeDrawerScreens(
                 ) { route ->
                     currentDrawerRoute = route
                     when (route) {
-                        RoutesScreens.Account -> navController.navigateToSingleTop(navBackStackEntry, route.route)
-                        RoutesScreens.Home -> navController.navigateToSingleTop(navBackStackEntry, route.route)
+                        RoutesScreens.Account -> navController.navigateScreen(navBackStackEntry, route.route)
+                        RoutesScreens.Home -> navController.navigateScreen(navBackStackEntry, route.route)
                         RoutesScreens.Search -> navigateToSearch()
-                        RoutesScreens.Favorite -> navController.navigateToSingleTop(navBackStackEntry, route.route)
+                        RoutesScreens.Favorite -> navController.navigateScreen(navBackStackEntry, route.route)
                         else -> Unit
                     }
                     coroutineScope.launch { drawerState.close() }
@@ -82,7 +83,7 @@ internal fun HomeDrawerScreens(
                     viewModel = viewModel,
                     navigateToDetailProduct = navigateToDetailProduct,
                     navigateToAccount = {
-                        navController.navigateToSingleTop(navBackStackEntry, RoutesScreens.Account.route)
+                        navController.navigateScreen(navBackStackEntry, RoutesScreens.Account.route)
                     },
                     navigateToSearch = navigateToSearch,
                     navigateToCart = navigateToCart,

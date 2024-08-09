@@ -6,7 +6,7 @@ import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
-import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
+import com.devdroid07.storeapp.store.domain.usecases.favorite.FavoriteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
-    private val productUseCases: ProductUseCases
+    private val favoriteUseCases: FavoriteUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(FavoriteState())
@@ -51,7 +51,7 @@ class FavoriteViewModel @Inject constructor(
                     error = null
                 )
             }
-            productUseCases.getFavoritesProductsUseCase().collectLatest { result ->
+            favoriteUseCases.getFavoritesProductsUseCase().collectLatest { result ->
                 _state.update { currentState ->
                     when (result) {
                         is Result.Error -> {
@@ -77,7 +77,7 @@ class FavoriteViewModel @Inject constructor(
     private fun removeFavorite(idProduct: String) {
         viewModelScope.launch {
 
-            when (val result = productUseCases.removeFavoriteProductUseCase(idProduct)) {
+            when (val result = favoriteUseCases.removeFavoriteProductUseCase(idProduct)) {
                 is Result.Error -> {
                     eventChannel.send(
                         FavoriteEvent.Error(result.error.asUiText())

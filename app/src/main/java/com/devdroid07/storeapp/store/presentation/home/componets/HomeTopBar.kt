@@ -47,6 +47,7 @@ fun HomeTopBar(
     profile: String = "",
     spacing: Dimensions,
     onAccountClick: () -> Unit = {},
+    onSearchClick: () -> Unit,
     openDrawer: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
 ) {
@@ -78,7 +79,9 @@ fun HomeTopBar(
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     ),
-                    onClick = {}
+                    onClick = {
+                        onSearchClick()
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Search,

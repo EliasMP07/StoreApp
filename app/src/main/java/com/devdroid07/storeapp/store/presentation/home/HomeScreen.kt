@@ -101,6 +101,9 @@ private fun HomeScreen(
                     onAction(HomeAction.OnAccountClick)
                 },
                 profile = state.user?.image.orEmpty(),
+                onSearchClick = {
+                    onAction(HomeAction.OnSearchClick)
+                },
                 scrollBehavior = scrollBehavior,
                 spacing = spacing
             )

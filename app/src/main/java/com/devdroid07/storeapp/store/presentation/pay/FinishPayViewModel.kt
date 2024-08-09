@@ -9,8 +9,8 @@ import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.store.domain.usecases.address.AddressUseCases
 import com.devdroid07.storeapp.store.domain.usecases.card.CardUseCases
+import com.devdroid07.storeapp.store.domain.usecases.cart.CartUseCases
 import com.devdroid07.storeapp.store.domain.usecases.payment.PaymentUseCases
-import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
 import com.devdroid07.storeapp.store.presentation.pay.component.utils.ProgressPay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FinishPayViewModel @Inject constructor(
-    private val productUseCases: ProductUseCases,
     private val addressUseCases: AddressUseCases,
+    private val cartUseCases: CartUseCases,
     private val cardUseCases: CardUseCases,
     private val savedStateHandle: SavedStateHandle,
     private val paymentUseCases: PaymentUseCases,
@@ -101,7 +101,7 @@ class FinishPayViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true) }
             combine(
                 addressUseCases.getAllMyAddressUseCase(),
-                productUseCases.getMyCartUseCase(),
+                cartUseCases.getMyCartUseCase(),
                 cardUseCases.getAllMyCardsUseCase()
             ) { addressResult, cartResult, cardResult ->
                 Triple(

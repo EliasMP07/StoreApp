@@ -23,21 +23,6 @@ interface ProductRepository {
 
     fun getReviewsProduct(productId: String): Flow<Result<List<Review>, DataError.Network>>
 
-    suspend fun addMyCart(
-        productId: String,
-        quantity: Int,
-    ): Result<String, DataError.Network>
-
-    fun getMyCart(): Flow<Result<List<Cart>, DataError.Network>>
-
-    suspend fun removeProductCart(idProduct: Int): EmptyResult<DataError.Network>
-
-    suspend fun addMyFavorite(productId: String): Result<String, DataError.Network>
-
-    fun getMyFavorites(): Flow<Result<List<Product>, DataError.Network>>
-
-    suspend fun removeProductFavorite(idProduct: String): EmptyResult<DataError.Network>
-
     suspend fun searchProduct(query: String): Result<List<Product>, DataError.Network>
 
     suspend fun getAllBanner(): Flow<Result<List<Banner>, DataError.Network>>

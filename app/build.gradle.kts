@@ -39,6 +39,8 @@ android {
         create("develop") {
             dimension = "env"
             buildConfigField("String", "BASE_URL", "\"http://192.168.1.69:3000/v1/\"")
+            buildConfigField("String", "MERCADOPAGO_URL", "\"https://api.mercadopago.com/\"")
+            buildConfigField("String", "COPOMEX_URL", "\"https://api.copomex.com/query/\"")
         }
     }
     compileOptions {

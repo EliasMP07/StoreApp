@@ -1,6 +1,6 @@
 package com.devdroid07.storeapp.store.data.repository
 
-import com.devdroid07.storeapp.core.data.network.safeCall2
+import com.devdroid07.storeapp.core.data.network.safeCall
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
@@ -8,9 +8,9 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.domain.util.asEmptyDataResult
 import com.devdroid07.storeapp.store.data.mappers.toAddress
 import com.devdroid07.storeapp.store.data.mappers.toPostalCode
-import com.devdroid07.storeapp.store.data.remote.api.CopomexApi
-import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
-import com.devdroid07.storeapp.store.data.remote.dto.store.AddressRequest
+import com.devdroid07.storeapp.store.data.network.api.AddressApiService
+import com.devdroid07.storeapp.store.data.network.api.CopomexApi
+import com.devdroid07.storeapp.store.data.network.dto.store.AddressRequest
 import com.devdroid07.storeapp.store.domain.model.Address
 import com.devdroid07.storeapp.store.domain.model.PostalCode
 import com.devdroid07.storeapp.store.domain.repository.AddressRepository
@@ -18,13 +18,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class AddressRepositoryImpl (
-    private val storeApiService: StoreApiService,
+    private val addressApiService: AddressApiService,
     private val copomexApi: CopomexApi,
     private val sessionStorage: SessionStorage
 ): AddressRepository {
 
     override suspend fun getInfoByPostalCode(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>> = flow {
-        val result = safeCall2 {
+        val result = safeCall {
             copomexApi.getInfoByPostalCode(
                 codigoPostal = postalCode,
                 token = "pruebas"
@@ -49,8 +49,8 @@ class AddressRepositoryImpl (
     }
 
     override suspend fun getAllMyAddress(): Flow<Result<List<Address>, DataError.Network>> = flow {
-        val result = safeCall2 {
-            storeApiService.getAllMyAddress(
+        val result = safeCall {
+            addressApiService.getAllMyAddress(
                 userId = sessionStorage.get()?.id.orEmpty()
             )
         }
@@ -76,8 +76,8 @@ class AddressRepositoryImpl (
         phoneNumber: String,
         reference: String,
     ): Result<Address, DataError.Network> {
-        val result = safeCall2 {
-            storeApiService.createAddress(
+        val result = safeCall {
+            addressApiService.createAddress(
                 addressRequest = AddressRequest(
                     userId = sessionStorage.get()?.id.orEmpty(),
                     street = street,
@@ -103,8 +103,8 @@ class AddressRepositoryImpl (
     }
 
     override suspend fun deleteAddress(idAddress: Int): EmptyResult<DataError.Network> {
-        val result = safeCall2 {
-            storeApiService.deleteAddress(idAddress.toString())
+        val result = safeCall {
+            addressApiService.deleteAddress(idAddress.toString())
         }
         return result.asEmptyDataResult()
     }

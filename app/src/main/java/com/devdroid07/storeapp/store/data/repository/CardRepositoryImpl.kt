@@ -1,15 +1,15 @@
 package com.devdroid07.storeapp.store.data.repository
 
-import com.devdroid07.storeapp.core.data.network.safeCall2
+import com.devdroid07.storeapp.core.data.network.safeCall
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.store.data.mappers.toCard
-import com.devdroid07.storeapp.store.data.remote.api.MercadoPagoApiService
-import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
-import com.devdroid07.storeapp.store.data.remote.dto.mercadoPago.Cardholder
-import com.devdroid07.storeapp.store.data.remote.dto.mercadoPago.MercadoPagoCardTokenRequest
-import com.devdroid07.storeapp.store.data.remote.dto.store.CardRequest
+import com.devdroid07.storeapp.store.data.network.api.CardApiService
+import com.devdroid07.storeapp.store.data.network.api.MercadoPagoApiService
+import com.devdroid07.storeapp.store.data.network.dto.mercadoPago.Cardholder
+import com.devdroid07.storeapp.store.data.network.dto.mercadoPago.MercadoPagoCardTokenRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.CardRequest
 import com.devdroid07.storeapp.store.domain.model.Card
 import com.devdroid07.storeapp.store.domain.repository.CardRepository
 import kotlinx.coroutines.flow.Flow
@@ -18,12 +18,12 @@ import kotlinx.coroutines.flow.flow
 class CardRepositoryImpl(
     private val sessionStorage: SessionStorage,
     private val mercadoPagoApiService: MercadoPagoApiService,
-    private val storeApiService: StoreApiService,
+    private val cardApiService: CardApiService,
 ) : CardRepository {
 
     override suspend fun getAllMyCard(): Flow<Result<List<Card>, DataError.Network>> = flow {
-        val result = safeCall2 {
-            storeApiService.getAllMyCards(
+        val result = safeCall {
+            cardApiService.getAllMyCards(
                 sessionStorage.get()?.id.orEmpty()
             )
         }
@@ -49,8 +49,8 @@ class CardRepositoryImpl(
         nameHeadline: String,
         cvv: String
     ): Result<Card, DataError.Network> {
-        val result = safeCall2 {
-            storeApiService.createCard(
+        val result = safeCall {
+            cardApiService.createCard(
                 CardRequest(
                     userId = sessionStorage.get()?.id.orEmpty(),
                     cardNumber = cardNumber,
@@ -78,7 +78,7 @@ class CardRepositoryImpl(
         cardNumber: String,
         cardHolder: String,
     ): Result<String, DataError.Network> {
-        val result = safeCall2 {
+        val result = safeCall {
             mercadoPagoApiService.createCardToken(
                 MercadoPagoCardTokenRequest(
                     securityCode = securityCode,

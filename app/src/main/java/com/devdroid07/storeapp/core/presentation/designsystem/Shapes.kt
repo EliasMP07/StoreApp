@@ -16,17 +16,26 @@ import androidx.compose.ui.unit.LayoutDirection
 import kotlin.math.floor
 
 
+/**
+ * Clase que define una forma personalizada con "dientes" en la parte superior e inferior del borde para que tenga forma
+ * de ticket
+ *
+ * @param teethHeightDp Altura de cada diente en dp.
+ * @param teethWidthDp ncho de cada diente en dp.
+ */
 class TicketShapePay(
     private val teethWidthDp: Float,
     private val teethHeightDp: Float
 ) : Shape {
 
+    // Crea el contorno de la forma.
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
         density: Density
     ) = Outline.Generic(Path().apply {
 
+        // Empieza en la esquina superior derecha.
         moveTo(
             size.width * 0.99f,
             size.height * 0.01f
@@ -42,29 +51,28 @@ class TicketShapePay(
         val teethCount = shapeWidthPx / fullTeethWidthPx
         val minTeethCount = floor(teethCount)
 
-        // logic to find optimized count of teethes to fit the available width without overflowing
-        // or underflowing teethes, by modifying the teeth width
-        if (teethCount != minTeethCount) { // check to allow drawing if shape width is a multiple of teeth count
+        // Lógica para encontrar el número óptimo de dientes para ajustar el ancho disponible sin desbordar
+        // o subdimensionar los dientes, modificando el ancho de los dientes.
+        if (teethCount != minTeethCount) { // Verifica si el ancho de la forma es múltiplo del número de dientes
             val newTeethWidthPx = shapeWidthPx / minTeethCount
             fullTeethWidthPx = newTeethWidthPx
             halfTeethWidthPx = fullTeethWidthPx / 2
         }
 
-        var drawnTeethCount = 1 // considering we will draw half of first and last teeth
-        // statically we start with one teeth
+        var drawnTeethCount = 1 // Considerando que dibujaremos la mitad del primer y último diente.
 
-        // draw half of first teeth
+        // Dibuja la mitad del primer diente.
         lineTo(
             currentDrawPositionX - halfTeethWidthPx,
             teethBasePositionY + teethHeightPx
         )
 
-        // draw remaining teethes
+        // Dibuja los dientes restantes.
         while (drawnTeethCount < minTeethCount) {
 
             currentDrawPositionX -= halfTeethWidthPx
 
-            // draw right half of teeth
+            // Dibuja la mitad derecha del diente.
             lineTo(
                 currentDrawPositionX - halfTeethWidthPx,
                 teethBasePositionY - teethHeightPx
@@ -72,7 +80,7 @@ class TicketShapePay(
 
             currentDrawPositionX -= halfTeethWidthPx
 
-            // draw left half of teeth
+            // Dibuja la mitad izquierda del diente.
             lineTo(
                 currentDrawPositionX - halfTeethWidthPx,
                 teethBasePositionY + teethHeightPx
@@ -83,13 +91,13 @@ class TicketShapePay(
 
         currentDrawPositionX -= halfTeethWidthPx
 
-        // draw half of last teeth
+        // Dibuja la mitad del último diente.
         lineTo(
             currentDrawPositionX - halfTeethWidthPx,
             teethBasePositionY - teethHeightPx
         )
 
-        // draw left edge
+        // Dibuja el borde izquierdo.
         lineTo(
             size.width * 0.01f,
             size.height * 0.99f
@@ -99,7 +107,7 @@ class TicketShapePay(
         teethBasePositionY = size.height * 0.99f - teethHeightPx
         currentDrawPositionX = size.width * 0.01f
 
-        // draw half of first teeth
+        // Dibuja la mitad del primer diente.
         lineTo(
             currentDrawPositionX,
             teethBasePositionY + teethHeightPx
@@ -110,12 +118,12 @@ class TicketShapePay(
             teethBasePositionY - teethHeightPx
         )
 
-        // draw remaining teethes
+        // Dibuja los dientes restantes.
         while (drawnTeethCount < minTeethCount) {
 
             currentDrawPositionX += halfTeethWidthPx
 
-            // draw left half of teeth
+            // Dibuja la mitad izquierda del diente.
             lineTo(
                 currentDrawPositionX + halfTeethWidthPx,
                 teethBasePositionY + teethHeightPx
@@ -123,7 +131,7 @@ class TicketShapePay(
 
             currentDrawPositionX += halfTeethWidthPx
 
-            // draw right half of teeth
+            // Dibuja la mitad derecha del diente.
             lineTo(
                 currentDrawPositionX + halfTeethWidthPx,
                 teethBasePositionY - teethHeightPx
@@ -134,23 +142,30 @@ class TicketShapePay(
 
         currentDrawPositionX += halfTeethWidthPx
 
-        // draw half of last teeth
+        // Dibuja la mitad del último diente.
         lineTo(
             currentDrawPositionX + halfTeethWidthPx,
             teethBasePositionY + teethHeightPx
         )
 
-        // left edge will automatically be drawn to close the path with the top-left arc
+        // El borde izquierdo se dibujará automáticamente para cerrar el camino con el arco superior izquierdo.
         close()
     })
 
 }
 
+/**
+ * Clase que define una forma personalizada con esquinas redondeadas y "cortes" circulares en los lados izquierdo y derecho.
+ *
+ * @param circleRadius Radio de los cortes circulares
+ * @param cornerSize Tamaño de las esquina redondeandas
+ */
 class TicketShape(
     private val circleRadius: Dp,
     private val cornerSize: CornerSize,
 ) : Shape {
 
+    // Crea el contorno de la forma.
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
@@ -164,6 +179,7 @@ class TicketShape(
         )
     }
 
+    // Genera el camino que representa la forma completa, combinando el rectángulo redondeado y los cortes circulares.
     private fun getPath(
         size: Size,
         density: Density,
@@ -188,6 +204,7 @@ class TicketShape(
         )
     }
 
+    // Genera el camino que representa solo los cortes circulares.
     private fun getTicketPath(
         size: Size,
         density: Density,
@@ -198,22 +215,22 @@ class TicketShape(
 
         return Path().apply {
             reset()
-            // Start drawing from top left
+            // Empieza a dibujar desde la esquina superior izquierda.
             moveTo(
                 x = 0F,
                 y = 0F
             )
-            // Draw line to top right
+            // Dibuja una línea hasta la esquina superior derecha.
             lineTo(
                 x = size.width,
                 y = 0F
             )
-            // Draw line down the right side
+            // Dibuja una línea hacia abajo por el lado derecho.
             lineTo(
                 x = size.width,
                 y = middleY - circleRadiusInPx
             )
-            // Draw the right arc
+            // Dibuja el arco derecho.
             arcTo(
                 rect = Rect(
                     left = size.width - circleRadiusInPx,
@@ -225,22 +242,22 @@ class TicketShape(
                 sweepAngleDegrees = -180F,
                 forceMoveTo = false
             )
-            // Continue line to bottom right corner
+            // Continúa la línea hasta la esquina inferior derecha.
             lineTo(
                 x = size.width,
                 y = size.height
             )
-            // Draw line to bottom left
+            // Dibuja una línea hasta la esquina inferior izquierda.
             lineTo(
                 x = 0F,
                 y = size.height
             )
-            // Draw line up the left side
+            // Dibuja una línea hacia arriba por el lado izquierdo.
             lineTo(
                 x = 0F,
                 y = middleY + circleRadiusInPx
             )
-            // Draw the left arc
+            // Dibuja el arco izquierdo.
             arcTo(
                 rect = Rect(
                     left = -circleRadiusInPx,
@@ -252,7 +269,7 @@ class TicketShape(
                 sweepAngleDegrees = -180F,
                 forceMoveTo = false
             )
-            // Close the path by drawing line to the top left corner
+            // Cierra el camino dibujando una línea hasta la esquina superior izquierda.
             lineTo(
                 x = 0F,
                 y = 0F
@@ -260,4 +277,3 @@ class TicketShape(
         }
     }
 }
-

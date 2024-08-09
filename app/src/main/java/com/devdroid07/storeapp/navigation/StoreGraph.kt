@@ -44,20 +44,14 @@ fun NavGraphBuilder.store(
             HomeDrawerScreens(
                 context = context,
                 navigateToDetailProduct = {
-                    if (navBackEntry.lifecycleIsResumed()) {
-                        navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
-                    }
+                    navController.navigateScreen(navBackEntry, RoutesScreens.DetailProduct.createRoute(it))
                 },
                 navigateToSearch = {
-                    if (navBackEntry.lifecycleIsResumed()) {
-                        navController.navigate(RoutesScreens.Search.route)
-                    }
+                    navController.navigateScreen(navBackEntry, RoutesScreens.Search.route)
                 },
                 navBackStackEntry = navBackEntry,
                 navigateToCart = {
-                    if (navBackEntry.lifecycleIsResumed()) {
-                        navController.navigate(RoutesScreens.Cart.route)
-                    }
+                    navController.navigateScreen(navBackEntry, RoutesScreens.Cart.route)
                 }
             )
         }
@@ -72,9 +66,7 @@ fun NavGraphBuilder.store(
                 context = context,
                 viewModel = viewModel,
                 navigateToPay = {
-                    if (navBackEntry.lifecycleIsResumed()) {
-                        navController.navigateScreen(navBackEntry, RoutesScreens.Address.route)
-                    }
+                    navController.navigateScreen(navBackEntry, RoutesScreens.Address.route)
                 },
                 navigateBack = {
                     navController.navigateBack()
@@ -84,14 +76,14 @@ fun NavGraphBuilder.store(
         }
         composable(
             route = RoutesScreens.Search.route
-        ) {
+        ) {navBackEntry ->
 
             val viewModel: SearchViewModel = hiltViewModel()
 
             SearchScreenRoot(
                 viewModel =viewModel,
                 navigateToDetailProduct = {
-                    navController.navigate(RoutesScreens.DetailProduct.createRoute(it))
+                    navController.navigateScreen(navBackEntry, RoutesScreens.DetailProduct.createRoute(it))
                 }
             )
 

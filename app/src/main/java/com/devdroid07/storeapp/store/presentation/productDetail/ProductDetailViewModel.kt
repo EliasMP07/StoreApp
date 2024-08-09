@@ -14,6 +14,8 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.navigation.util.NavArgs
+import com.devdroid07.storeapp.store.domain.usecases.cart.CartUseCases
+import com.devdroid07.storeapp.store.domain.usecases.favorite.FavoriteUseCases
 import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -31,7 +33,9 @@ import javax.inject.Inject
 @HiltViewModel()
 class ProductDetailViewModel @Inject constructor(
     private val sessionStorage: SessionStorage,
+    private val favoriteUseCases: FavoriteUseCases,
     private val productUseCases: ProductUseCases,
+    private val cartUseCases: CartUseCases,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -181,7 +185,7 @@ class ProductDetailViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
 
-            val result = productUseCases.addMyCartUseCase(
+            val result = cartUseCases.addMyCartUseCase(
                 idProduct,
                 quantity
             )
@@ -199,7 +203,7 @@ class ProductDetailViewModel @Inject constructor(
 
     private fun addFavorite(idProduct: String) {
         viewModelScope.launch {
-            val result = productUseCases.addFavoriteProductUseCase(idProduct)
+            val result = favoriteUseCases.addFavoriteProductUseCase(idProduct)
 
             when (result) {
                 is Result.Error -> {
@@ -227,9 +231,7 @@ class ProductDetailViewModel @Inject constructor(
     private fun removeFavorite(idProduct: String) {
         viewModelScope.launch {
 
-            val result = productUseCases.removeFavoriteProductUseCase(idProduct)
-
-            when (result) {
+            when (val result = favoriteUseCases.removeFavoriteProductUseCase(idProduct)) {
                 is Result.Error -> {
                     eventChannel.send(
                         ProductDetailEvent.Error(result.error.asUiText())

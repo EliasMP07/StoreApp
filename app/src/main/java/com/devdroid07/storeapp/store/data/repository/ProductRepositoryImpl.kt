@@ -1,6 +1,6 @@
 package com.devdroid07.storeapp.store.data.repository
 
-import com.devdroid07.storeapp.core.data.network.safeCall2
+import com.devdroid07.storeapp.core.data.network.safeCall
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
@@ -10,9 +10,9 @@ import com.devdroid07.storeapp.store.data.mappers.toBanner
 import com.devdroid07.storeapp.store.data.mappers.toCart
 import com.devdroid07.storeapp.store.data.mappers.toProduct
 import com.devdroid07.storeapp.store.data.mappers.toReview
-import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
-import com.devdroid07.storeapp.store.data.remote.dto.store.CartRequest
-import com.devdroid07.storeapp.store.data.remote.dto.store.ReviewRequest
+import com.devdroid07.storeapp.store.data.network.api.ProductApiService
+import com.devdroid07.storeapp.store.data.network.dto.store.CartRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.ReviewRequest
 import com.devdroid07.storeapp.store.domain.model.Banner
 import com.devdroid07.storeapp.store.domain.model.Cart
 import com.devdroid07.storeapp.store.domain.model.Product
@@ -24,13 +24,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class ProductRepositoryImpl(
-    private val api: StoreApiService,
+    private val productApiService: ProductApiService,
     private val sessionStorage: SessionStorage,
 ) : ProductRepository {
 
     override fun getAllProduct(): Flow<Result<List<Product>, DataError.Network>> = flow {
-        val result = safeCall2 {
-            api.getAllProducts(
+        val result = safeCall {
+            productApiService.getAllProducts(
                 idUser = sessionStorage.get()?.id.orEmpty(),
             )
 
@@ -48,8 +48,8 @@ class ProductRepositoryImpl(
     }.flowOn(Dispatchers.IO)
 
     override suspend fun getSingleProduct(idProduct: String): Result<Product, DataError.Network> {
-        val result = safeCall2 {
-            api.getSingleProduct(
+        val result = safeCall {
+            productApiService.getSingleProduct(
                 idProduct = idProduct
             )
         }
@@ -69,8 +69,8 @@ class ProductRepositoryImpl(
         comment: String?,
     ): EmptyResult<DataError.Network> {
 
-        val result = safeCall2 {
-            api.addReviewProduct(
+        val result = safeCall {
+            productApiService.addReviewProduct(
                 reviewRequest = ReviewRequest(
                     productId = productId,
                     rating = rating,
@@ -84,8 +84,8 @@ class ProductRepositoryImpl(
     }
 
     override fun getReviewsProduct(productId: String): Flow<Result<List<Review>, DataError.Network>> = flow {
-        val result = safeCall2 {
-            api.getReviewProduct(
+        val result = safeCall {
+            productApiService.getReviewProduct(
                 productId = productId,
             )
 
@@ -102,107 +102,9 @@ class ProductRepositoryImpl(
         }
     }
 
-    override suspend fun addMyCart(
-        productId: String,
-        quantity: Int,
-    ): Result<String, DataError.Network> {
-        val result = safeCall2 {
-            api.addMyCart(
-                cartRequest = CartRequest(
-                    idUser = sessionStorage.get()?.id.orEmpty(),
-                    productId = productId,
-                    quantity = quantity
-                )
-            )
-        }
-        return when (result) {
-            is Result.Error -> {
-                Result.Error(result.error)
-            }
-            is Result.Success -> {
-                Result.Success(result.data.data.orEmpty())
-            }
-        }
-    }
-
-    override fun getMyCart(): Flow<Result<List<Cart>, DataError.Network>> = flow {
-        val result = safeCall2 {
-            api.getMyCart(
-                idUser = sessionStorage.get()?.id.orEmpty()
-            )
-        }
-
-        when (result) {
-            is Result.Error -> {
-                emit(Result.Error(result.error))
-            }
-            is Result.Success -> {
-                emit(Result.Success(result.data.data?.map {
-                    it.toCart()
-                }.orEmpty()))
-            }
-        }
-    }
-
-    override suspend fun removeProductCart(idProduct: Int): EmptyResult<DataError.Network> {
-        val result = safeCall2 {
-            api.removeProductMyCart(
-                idUser = sessionStorage.get()?.id.orEmpty(),
-                idProduct = idProduct.toString()
-            )
-        }
-        return result.asEmptyDataResult()
-    }
-
-    override suspend fun addMyFavorite(productId: String): Result<String, DataError.Network> {
-        val result = safeCall2 {
-            api.addMyFavorites(
-                idUser = sessionStorage.get()?.id.orEmpty(),
-                idProduct = productId
-            )
-        }
-        return when (result) {
-            is Result.Error -> {
-                Result.Error(result.error)
-            }
-            is Result.Success -> {
-                Result.Success(result.data.data.orEmpty())
-            }
-        }
-    }
-
-    override fun getMyFavorites(): Flow<Result<List<Product>, DataError.Network>> = flow {
-        val result = safeCall2 {
-            api.getMyFavorites(
-                idUser = sessionStorage.get()?.id.orEmpty()
-            )
-        }
-
-        when (result) {
-            is Result.Error -> {
-                emit(Result.Error(result.error))
-            }
-            is Result.Success -> {
-                emit(Result.Success(result.data.data?.map {
-                    it.toProduct()
-                }.orEmpty()))
-            }
-        }
-    }
-
-    override suspend fun removeProductFavorite(idProduct: String): EmptyResult<DataError.Network> {
-        val result = safeCall2 {
-            api.deleteProductMyFavorite(
-                idUser = sessionStorage.get()?.id.orEmpty(),
-                idProduct = idProduct
-            )
-        }
-        return result.asEmptyDataResult()
-    }
-
     override suspend fun searchProduct(query: String): Result<List<Product>, DataError.Network> {
-        val result = safeCall2 {
-            api.searchProduct(
+        val result = safeCall {
+            productApiService.searchProduct(
                 query = query
             )
         }
@@ -224,8 +126,8 @@ class ProductRepositoryImpl(
     }
 
     override suspend fun getAllBanner(): Flow<Result<List<Banner>, DataError.Network>> = flow {
-        val result = safeCall2 {
-            api.getAllBanners()
+        val result = safeCall {
+            productApiService.getAllBanners()
         }
         when(result){
             is Result.Error -> {

@@ -6,7 +6,7 @@ import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
-import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
+import com.devdroid07.storeapp.store.domain.usecases.cart.CartUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyCartViewModel @Inject constructor(
-    private val productUseCases: ProductUseCases
+    private val cartUseCase: CartUseCases
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MyCartState())
@@ -45,7 +45,7 @@ class MyCartViewModel @Inject constructor(
 
     private fun onRemoveProduct(idProduct: Int) {
         viewModelScope.launch {
-            val result = productUseCases.removeProductMyCartUseCase(idProduct)
+            val result = cartUseCase.removeProductMyCartUseCase(idProduct)
 
             when (result) {
                 is Result.Error -> {
@@ -75,7 +75,7 @@ class MyCartViewModel @Inject constructor(
                     error = null
                 )
             }
-            productUseCases.getMyCartUseCase().collectLatest { result ->
+            cartUseCase.getMyCartUseCase().collectLatest { result ->
                 _state.update { currentState ->
                     when (result) {
                         is Result.Error -> {

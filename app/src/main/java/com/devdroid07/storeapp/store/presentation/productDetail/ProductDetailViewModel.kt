@@ -14,7 +14,7 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.navigation.util.NavArgs
-import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
+import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +31,7 @@ import javax.inject.Inject
 @HiltViewModel()
 class ProductDetailViewModel @Inject constructor(
     private val sessionStorage: SessionStorage,
-    private val storeUseCases: StoreUseCases,
+    private val productUseCases: ProductUseCases,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -71,7 +71,7 @@ class ProductDetailViewModel @Inject constructor(
                     isLoadingReview = true
                 )
             }
-            storeUseCases.getReviewsProductUseCase(productId).collectLatest { result ->
+            productUseCases.getReviewsProductUseCase(productId).collectLatest { result ->
                 _state.update { productDetailState ->
                     when (result) {
                         is Result.Error -> productDetailState.copy(
@@ -150,7 +150,7 @@ class ProductDetailViewModel @Inject constructor(
                     isLoading = true
                 )
             }
-            val result = storeUseCases.getSingleProduct(
+            val result = productUseCases.getSingleProduct(
                 productId
             )
             when (result) {
@@ -181,7 +181,7 @@ class ProductDetailViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
 
-            val result = storeUseCases.addMyCartUseCase(
+            val result = productUseCases.addMyCartUseCase(
                 idProduct,
                 quantity
             )
@@ -199,7 +199,7 @@ class ProductDetailViewModel @Inject constructor(
 
     private fun addFavorite(idProduct: String) {
         viewModelScope.launch {
-            val result = storeUseCases.addFavoriteProductUseCase(idProduct)
+            val result = productUseCases.addFavoriteProductUseCase(idProduct)
 
             when (result) {
                 is Result.Error -> {
@@ -227,7 +227,7 @@ class ProductDetailViewModel @Inject constructor(
     private fun removeFavorite(idProduct: String) {
         viewModelScope.launch {
 
-            val result = storeUseCases.removeFavoriteProductUseCase(idProduct)
+            val result = productUseCases.removeFavoriteProductUseCase(idProduct)
 
             when (result) {
                 is Result.Error -> {
@@ -259,7 +259,7 @@ class ProductDetailViewModel @Inject constructor(
                     isEvaluating = true
                 )
             }
-            val result = storeUseCases.addReviewProductUseCase(
+            val result = productUseCases.addReviewProductUseCase(
                 productId = state.value.product.id.toString(),
                 rating = state.value.ranting,
                 comment = state.value.comment.text.toString()

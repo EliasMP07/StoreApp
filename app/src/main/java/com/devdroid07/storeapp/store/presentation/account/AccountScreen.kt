@@ -50,7 +50,6 @@ private fun AccountScreen(
             StoreToolbar(
                 title = stringResource(R.string.profile_title_screen),
                 isMenu = true,
-                isProfile = false,
                 openDrawer = { 
                     onAction(AccountAction.OpenDrawer)
                 }

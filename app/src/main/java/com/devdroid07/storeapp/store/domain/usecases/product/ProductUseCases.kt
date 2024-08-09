@@ -1,7 +1,11 @@
-package com.devdroid07.storeapp.store.domain.usecases
+package com.devdroid07.storeapp.store.domain.usecases.product
 
-data class StoreUseCases(
+import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
+import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
+
+data class ProductUseCases(
     val getAllProducts: GetAllProducts,
+    val getAllBannersUseCases: GetAllBannersUseCases,
     val getSingleProduct: GetSingleProduct,
     val addReviewProductUseCase: AddReviewProductUseCase,
     val getReviewsProductUseCase: GetReviewsProductUseCase,

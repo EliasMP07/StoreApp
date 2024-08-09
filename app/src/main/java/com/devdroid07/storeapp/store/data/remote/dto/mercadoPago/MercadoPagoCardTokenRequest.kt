@@ -1,6 +1,5 @@
 package com.devdroid07.storeapp.store.data.remote.dto.mercadoPago
 
-import com.devdroid07.storeapp.store.data.remote.dto.mercadoPago.Cardholder
 import com.google.gson.annotations.SerializedName
 
 class MercadoPagoCardTokenRequest(

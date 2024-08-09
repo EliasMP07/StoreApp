@@ -88,7 +88,6 @@ private fun FavoriteScreen(
             StoreToolbar(
                 title = stringResource(R.string.my_favorite),
                 isMenu = true,
-                isProfile = false,
                 openDrawer = {
                     onAction(FavoriteAction.OpenDrawer)
                 }

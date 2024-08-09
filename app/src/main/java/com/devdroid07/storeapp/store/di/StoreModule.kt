@@ -7,22 +7,12 @@ import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
 import com.devdroid07.storeapp.store.data.repository.AddressRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.CardRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.PaymentRepositoryImpl
-import com.devdroid07.storeapp.store.data.repository.StoreRepositoryImpl
+import com.devdroid07.storeapp.store.data.repository.ProductRepositoryImpl
 import com.devdroid07.storeapp.store.domain.repository.CardRepository
 import com.devdroid07.storeapp.store.domain.repository.PaymentRepository
-import com.devdroid07.storeapp.store.domain.repository.StoreRepository
-import com.devdroid07.storeapp.store.domain.usecases.AddFavoriteProductUseCase
+import com.devdroid07.storeapp.store.domain.repository.ProductRepository
 import com.devdroid07.storeapp.store.domain.usecases.AddMyCartUseCase
-import com.devdroid07.storeapp.store.domain.usecases.AddReviewProductUseCase
-import com.devdroid07.storeapp.store.domain.usecases.GetAllProducts
-import com.devdroid07.storeapp.store.domain.usecases.GetFavoritesProductsUseCase
 import com.devdroid07.storeapp.store.domain.usecases.GetMyCartUseCase
-import com.devdroid07.storeapp.store.domain.usecases.GetReviewsProductUseCase
-import com.devdroid07.storeapp.store.domain.usecases.GetSingleProduct
-import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyCartUseCase
-import com.devdroid07.storeapp.store.domain.usecases.RemoveProductMyFavoritesUseCase
-import com.devdroid07.storeapp.store.domain.usecases.SearchProductUseCase
-import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
 import com.devdroid07.storeapp.store.domain.usecases.address.AddressUseCases
 import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.DeleteAddressUseCase
@@ -34,6 +24,17 @@ import com.devdroid07.storeapp.store.domain.usecases.card.CreateCardUseCase
 import com.devdroid07.storeapp.store.domain.usecases.card.GetAllMyCardsUseCase
 import com.devdroid07.storeapp.store.domain.usecases.payment.CreatePaymentAndOrderUseCase
 import com.devdroid07.storeapp.store.domain.usecases.payment.PaymentUseCases
+import com.devdroid07.storeapp.store.domain.usecases.product.AddFavoriteProductUseCase
+import com.devdroid07.storeapp.store.domain.usecases.product.AddReviewProductUseCase
+import com.devdroid07.storeapp.store.domain.usecases.product.GetAllBannersUseCases
+import com.devdroid07.storeapp.store.domain.usecases.product.GetAllProducts
+import com.devdroid07.storeapp.store.domain.usecases.product.GetFavoritesProductsUseCase
+import com.devdroid07.storeapp.store.domain.usecases.product.GetReviewsProductUseCase
+import com.devdroid07.storeapp.store.domain.usecases.product.GetSingleProduct
+import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
+import com.devdroid07.storeapp.store.domain.usecases.product.RemoveProductMyCartUseCase
+import com.devdroid07.storeapp.store.domain.usecases.product.RemoveProductMyFavoritesUseCase
+import com.devdroid07.storeapp.store.domain.usecases.product.SearchProductUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,12 +50,10 @@ object StoreModule {
     fun provideStoreRepository(
         api: StoreApiService,
         sessionStorage: SessionStorage,
-        copomexApi: CopomexApi,
-    ): StoreRepository {
-        return StoreRepositoryImpl(
+    ): ProductRepository {
+        return ProductRepositoryImpl(
             api = api,
-            sessionStorage = sessionStorage,
-            copomexApi = copomexApi
+            sessionStorage = sessionStorage
         )
     }
 
@@ -133,10 +132,10 @@ object StoreModule {
 
     @Provides
     @Singleton
-    fun provideStoreUseCase(
-        repository: StoreRepository,
-    ): StoreUseCases {
-        return StoreUseCases(
+    fun provideProductUseCase(
+        repository: ProductRepository,
+    ): ProductUseCases {
+        return ProductUseCases(
             getAllProducts = GetAllProducts(repository),
             getSingleProduct = GetSingleProduct(repository),
             addReviewProductUseCase = AddReviewProductUseCase(repository),
@@ -147,7 +146,8 @@ object StoreModule {
             removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository),
             removeFavoriteProductUseCase = RemoveProductMyFavoritesUseCase(repository),
             addFavoriteProductUseCase = AddFavoriteProductUseCase(repository),
-            getFavoritesProductsUseCase = GetFavoritesProductsUseCase(repository)
+            getFavoritesProductsUseCase = GetFavoritesProductsUseCase(repository),
+            getAllBannersUseCases = GetAllBannersUseCases(repository)
         )
     }
 

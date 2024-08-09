@@ -6,27 +6,27 @@ import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.domain.util.asEmptyDataResult
+import com.devdroid07.storeapp.store.data.mappers.toBanner
 import com.devdroid07.storeapp.store.data.mappers.toCart
 import com.devdroid07.storeapp.store.data.mappers.toProduct
 import com.devdroid07.storeapp.store.data.mappers.toReview
-import com.devdroid07.storeapp.store.data.remote.api.CopomexApi
 import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
 import com.devdroid07.storeapp.store.data.remote.dto.store.CartRequest
 import com.devdroid07.storeapp.store.data.remote.dto.store.ReviewRequest
+import com.devdroid07.storeapp.store.domain.model.Banner
 import com.devdroid07.storeapp.store.domain.model.Cart
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Review
-import com.devdroid07.storeapp.store.domain.repository.StoreRepository
+import com.devdroid07.storeapp.store.domain.repository.ProductRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class StoreRepositoryImpl(
+class ProductRepositoryImpl(
     private val api: StoreApiService,
-    private val copomexApi: CopomexApi,
     private val sessionStorage: SessionStorage,
-) : StoreRepository {
+) : ProductRepository {
 
     override fun getAllProduct(): Flow<Result<List<Product>, DataError.Network>> = flow {
         val result = safeCall2 {
@@ -219,6 +219,24 @@ class StoreRepositoryImpl(
                 Result.Success(
                     products ?: emptyList()
                 )
+            }
+        }
+    }
+
+    override suspend fun getAllBanner(): Flow<Result<List<Banner>, DataError.Network>> = flow {
+        val result = safeCall2 {
+            api.getAllBanners()
+        }
+        when(result){
+            is Result.Error -> {
+                emit(Result.Error(result.error))
+            }
+            is Result.Success -> {
+                emit(Result.Success(
+                    result.data.data?.map {
+                        it.toBanner()
+                    }?: emptyList()
+                ))
             }
         }
     }

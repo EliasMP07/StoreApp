@@ -72,7 +72,6 @@ private fun FinishPayScreen(
                 onBack = {
                     onAction(FinishPayAction.OnBackClick)
                 },
-                isProfile = false,
                 isMenu = false
             )
         }

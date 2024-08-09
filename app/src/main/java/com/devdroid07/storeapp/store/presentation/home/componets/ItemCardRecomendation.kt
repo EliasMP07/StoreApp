@@ -26,21 +26,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StarRating
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateOffset
 import com.devdroid07.storeapp.store.domain.model.Product
 
 @Composable
-fun ItemCardRecomendation(
+fun ItemCardRecommended(
+    spacing: Dimensions,
     product: Product,
     onProductClick: (Product) -> Unit
 ) {
     ElevatedCard(
-        modifier = Modifier.animateAttention(),
+        modifier = Modifier
+            .animateAttention()
+            .padding(bottom = 20.dp),
         elevation = CardDefaults.cardElevation(20.dp),
         shape = RoundedCornerShape(20.dp),
         onClick = {
@@ -50,9 +57,8 @@ fun ItemCardRecomendation(
         Row(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
-                .padding(10.dp)
-                .fillMaxWidth()
-                .height(100.dp),
+                .padding(spacing.spaceSmall)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             GlideImage(
@@ -62,30 +68,31 @@ fun ItemCardRecomendation(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 10.dp)
+                    .padding(start = spacing.spaceSmall)
             ) {
                 Text(
                     text = product.title,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     text = product.category,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "$${product.price}",
+                        text = stringResource(id = R.string.price, product.price),
                         style = MaterialTheme.typography.titleMedium
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(spacing.spaceSmall))
                     StarRating(
                         rating = product.ratingRate,
                     ) {
-                        // Handle rating change
                     }
                 }
             }
@@ -96,7 +103,6 @@ fun ItemCardRecomendation(
 
 @Composable
 private fun ButtonAnimation() {
-
     Box(
         modifier = Modifier
             .height(40.dp)

@@ -4,10 +4,10 @@ import com.devdroid07.storeapp.core.data.network.safeCall2
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.Result
-import com.devdroid07.storeapp.store.data.remote.dto.mercadoPago.Cardholder
 import com.devdroid07.storeapp.store.data.mappers.toCard
 import com.devdroid07.storeapp.store.data.remote.api.MercadoPagoApiService
 import com.devdroid07.storeapp.store.data.remote.api.StoreApiService
+import com.devdroid07.storeapp.store.data.remote.dto.mercadoPago.Cardholder
 import com.devdroid07.storeapp.store.data.remote.dto.mercadoPago.MercadoPagoCardTokenRequest
 import com.devdroid07.storeapp.store.data.remote.dto.store.CardRequest
 import com.devdroid07.storeapp.store.domain.model.Card

@@ -92,7 +92,6 @@ private fun MyCartScreen(
             StoreToolbar(
                 title = stringResource(R.string.my_cart_title_screen),
                 isMenu = false,
-                isProfile = false,
                 onBack = {
                     onAction(MyCartAction.OnBackClick)
                 },

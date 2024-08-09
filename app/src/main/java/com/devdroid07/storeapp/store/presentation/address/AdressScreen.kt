@@ -121,7 +121,6 @@ fun AddressScreen(
                 onBack = {
                     onAction(AddressAction.OnBackClick)
                 },
-                isProfile = false,
                 isMenu = false,
             )
         },

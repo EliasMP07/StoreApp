@@ -33,7 +33,7 @@ import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
 import com.devdroid07.storeapp.store.presentation.address.AddressScreenRoot
 import com.devdroid07.storeapp.store.presentation.address.AddressViewModel
-import com.devdroid07.storeapp.store.presentation.home.componets.HomeDrawerScreens
+import com.devdroid07.storeapp.store.presentation.home.navigationDrawer.HomeDrawerScreens
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartScreenRoot
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayScreenRoot
@@ -79,7 +79,6 @@ fun NavGraphBuilder.store(
         ) { navBackEntry ->
             HomeDrawerScreens(
                 context = context,
-                navigateToSettings = {},
                 navigateToDetailProduct = {
                     if (navBackEntry.lifecycleIsResumed()) {
                         navController.navigate(RoutesScreens.DetailProduct.createRoute(it))

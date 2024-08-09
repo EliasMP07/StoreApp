@@ -44,8 +44,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
-import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonBack
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonBack
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView

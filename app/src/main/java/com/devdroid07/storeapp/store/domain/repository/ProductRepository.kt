@@ -3,12 +3,13 @@ package com.devdroid07.storeapp.store.domain.repository
 import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.Result
+import com.devdroid07.storeapp.store.domain.model.Banner
 import com.devdroid07.storeapp.store.domain.model.Cart
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Review
 import kotlinx.coroutines.flow.Flow
 
-interface StoreRepository {
+interface ProductRepository {
 
     fun getAllProduct(): Flow<Result<List<Product>, DataError.Network>>
 
@@ -38,5 +39,7 @@ interface StoreRepository {
     suspend fun removeProductFavorite(idProduct: String): EmptyResult<DataError.Network>
 
     suspend fun searchProduct(query: String): Result<List<Product>, DataError.Network>
+
+    suspend fun getAllBanner(): Flow<Result<List<Banner>, DataError.Network>>
 
 }

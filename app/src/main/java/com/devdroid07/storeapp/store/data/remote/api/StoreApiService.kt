@@ -3,6 +3,7 @@ package com.devdroid07.storeapp.store.data.remote.api
 import com.devdroid07.storeapp.auth.data.remote.response.StoreResponse
 import com.devdroid07.storeapp.store.data.remote.dto.store.AddressDto
 import com.devdroid07.storeapp.store.data.remote.dto.store.AddressRequest
+import com.devdroid07.storeapp.store.data.remote.dto.store.BannerDto
 import com.devdroid07.storeapp.store.data.remote.dto.store.CardDto
 import com.devdroid07.storeapp.store.data.remote.dto.store.CardRequest
 import com.devdroid07.storeapp.store.data.remote.dto.store.CartDto
@@ -25,6 +26,9 @@ interface StoreApiService {
     suspend fun getAllProducts(
         @Path("id_user") idUser: String
     ): Response<StoreResponse<List<ProductDto>>>
+
+    @GET("products/getAllBanners")
+    suspend fun getAllBanners(): Response<StoreResponse<List<BannerDto>>>
 
     @GET("products/{id_product}")
     suspend fun getSingleProduct(

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
-import com.devdroid07.storeapp.store.domain.usecases.StoreUseCases
+import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val storeUseCases: StoreUseCases
+    private val productUseCases: ProductUseCases
 ): ViewModel() {
 
     private val _state = MutableStateFlow(SearchState())
@@ -44,7 +44,7 @@ class SearchViewModel @Inject constructor(
                     error = null
                 )
             }
-            val result = storeUseCases.searchProductUseCase(query = _state.value.query)
+            val result = productUseCases.searchProductUseCase(query = _state.value.query)
             _state.update {currentState ->
                 when(result){
                     is Result.Error -> {

@@ -137,7 +137,6 @@ private fun PaymentScreen(
             StoreToolbar(
                 title = stringResource(R.string.payment_title_screen),
                 isMenu = false,
-                isProfile = false,
                 onBack = {
                     onAction(PaymentAction.OnBackClick)
                 }

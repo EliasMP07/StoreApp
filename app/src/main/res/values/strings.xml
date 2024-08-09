@@ -111,5 +111,20 @@
     <string name="change_other_pay_aux_text">**Si desea cambiar el metodo de pago presiona la tarjeta</string>
     <string name="delivery_address">Direccion de entrega</string>
     <string name="payment_method">Metodo de pago</string>
+    <string name="content_decription_go_to_cart">Ir al carrito</string>
+    <string name="welcome_app">Bienvenido</string>
+    <string name="our_fashions_app">A nuestra tienda</string>
+    <string name="content_description_search_product">Buscar producto</string>
+    <string name="content_description_profile">Foto de perfil</string>
+    <string name="content_description_menu">Ir al menu</string>
+    <string name="all_products">Todos los productos</string>
+    <string name="content_description_img_product">Imagen del producto</string>
+    <string name="about_app">Acerca de StoreApp</string>
+    <string name="content_description_app">Imagen de la app</string>
+    <string name="content_description_configure_draw_item">Ir a configuracion</string>
+    <string name="content_description_home_draw_item">Ir a inicio</string>
+    <string name="content_description_search_draw_item">Ir a buscar producto</string>
+    <string name="content_description_favorite_draw_item">Ir a favoritos</string>
+    <string name="content_description_account_draw_item">Ir a mi cuenta</string>
 
 </resources>

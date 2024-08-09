@@ -42,17 +42,17 @@ import com.devdroid07.storeapp.R
 @Composable
 fun StoreToolbar(
     isMenu: Boolean = true,
-    profile: String = "",
     title: String = "",
-    onAccountClick: () -> Unit = {},
     openDrawer: () -> Unit = {},
-    isProfile: Boolean = true,
     onBack: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     navigationIcon: @Composable () -> Unit = {},
 ) {
     TopAppBar(
         scrollBehavior = scrollBehavior,
+        colors = TopAppBarDefaults.topAppBarColors(
+            scrolledContainerColor = MaterialTheme.colorScheme.background
+        ),
         navigationIcon = {
             if (isMenu) {
                 IconButton(onClick = openDrawer) {
@@ -77,37 +77,9 @@ fun StoreToolbar(
             )
         },
         actions = {
-            if (isProfile) {
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .border(
-                            BorderStroke(
-                                2.dp,
-                                MaterialTheme.colorScheme.onBackground
-                            ),
-                            CircleShape
-                        ).clickable {
-                            onAccountClick()
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    GlideImage(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.background),
-                        contentScale = ContentScale.Crop,
-                        model = profile.ifBlank { R.drawable.ic_account },
-                        transition = CrossFade,
-                        contentDescription = "Profile Photo"
-                    )
-                }
-                Spacer(modifier = Modifier.width(10.dp))
-            } else {
-                navigationIcon()
-            }
+
+            navigationIcon()
+
         }
     )
 }

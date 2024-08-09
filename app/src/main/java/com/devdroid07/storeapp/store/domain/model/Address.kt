@@ -8,4 +8,5 @@ data class Address(
     val mayoralty: String = "",
     val settlement: String = "",
     val phoneNumber: String = "",
+    val reference: String = ""
 )

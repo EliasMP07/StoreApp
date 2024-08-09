@@ -11,6 +11,7 @@ import com.devdroid07.storeapp.store.data.mappers.toPostalCode
 import com.devdroid07.storeapp.store.data.network.api.AddressApiService
 import com.devdroid07.storeapp.store.data.network.api.CopomexApi
 import com.devdroid07.storeapp.store.data.network.dto.store.AddressRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.AddressUpdateRequest
 import com.devdroid07.storeapp.store.domain.model.Address
 import com.devdroid07.storeapp.store.domain.model.PostalCode
 import com.devdroid07.storeapp.store.domain.repository.AddressRepository
@@ -27,7 +28,6 @@ class AddressRepositoryImpl (
         val result = safeCall {
             copomexApi.getInfoByPostalCode(
                 codigoPostal = postalCode,
-                token = "pruebas"
             )
         }
         when (result) {
@@ -107,5 +107,48 @@ class AddressRepositoryImpl (
             addressApiService.deleteAddress(idAddress.toString())
         }
         return result.asEmptyDataResult()
+    }
+
+    override suspend fun updateAddress(
+        id: String,
+        street: String,
+        postalCode: String,
+        state: String,
+        mayoralty: String,
+        settlement: String,
+        phoneNumber: String,
+        reference: String,
+    ): EmptyResult<DataError.Network> {
+        val result = safeCall {
+            addressApiService.updateAddress(
+                AddressUpdateRequest(
+                    id = id,
+                    street = street,
+                    postalCode = postalCode,
+                    state = state,
+                    mayoralty = mayoralty,
+                    settlement = settlement,
+                    phoneNumber = phoneNumber,
+                    reference = reference
+                )
+            )
+        }
+
+        return result.asEmptyDataResult()
+    }
+
+    override suspend fun getAddress(idAddress: String): Result<Address, DataError.Network> {
+        val result = safeCall {
+            addressApiService.getAddress(addressId = idAddress)
+        }
+
+        return when(result){
+            is Result.Error -> {
+                Result.Error(result.error)
+            }
+            is Result.Success -> {
+                Result.Success(result.data.data?.toAddress()?:Address())
+            }
+        }
     }
 }

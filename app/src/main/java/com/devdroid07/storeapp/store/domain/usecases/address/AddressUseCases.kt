@@ -4,5 +4,7 @@ data class AddressUseCases(
     val createAddressUseCase: CreateAddressUseCase,
     val getAllMyAddressUseCase: GetAllMyAddressUseCase,
     val getInfoByPostalCodeUseCase: GetInfoByPostalCodeUseCase,
-    val deleteAddressUseCase: DeleteAddressUseCase
+    val deleteAddressUseCase: DeleteAddressUseCase,
+    val updateAddressUseCase: UpdateAddressUseCase,
+    val getSingleAddressUseCase: GetSingleAddressUseCase
 )

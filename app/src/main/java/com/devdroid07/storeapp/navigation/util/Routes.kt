@@ -19,6 +19,9 @@ sealed class RoutesScreens(val route: String){
     data object Favorite: RoutesScreens("favorite")
     data object Settings: RoutesScreens("settings")
     data object Address: RoutesScreens("address")
+    data object EditAddress: RoutesScreens("edit_address/{${NavArgs.AddressID.key}}"){
+        fun createRoute(addressId: String) = "edit_address/$addressId"
+    }
     data object Home: RoutesScreens("home")
     data object HomeDrawerRoute: RoutesScreens("home_drawer")
     data object Search: RoutesScreens("search")

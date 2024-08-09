@@ -74,18 +74,20 @@ class AddressViewModel @Inject constructor(
     ) {
         when (action) {
             AddressAction.OnToggleDropdownMenuClick -> {
-                _state.update { addressState ->
-                    addressState.copy(
-                        isExpandedDropdownMenu = !addressState.isExpandedDropdownMenu
-                    )
-                }
+                _state.update { it.copy(isExpandedDropdownMenu = !it.isExpandedDropdownMenu) }
             }
             is AddressAction.OnSettlementChange -> {
-                _state.value.settlement.edit {
-                    replace(
-                        0,
-                        this.length,
-                        action.settlement
+                _state.update {
+                    it.copy(
+                        settlement = it.settlement.apply {
+                            edit {
+                                replace(
+                                    0,
+                                    this.length,
+                                    action.settlement
+                                )
+                            }
+                        }
                     )
                 }
             }
@@ -98,11 +100,7 @@ class AddressViewModel @Inject constructor(
 
     private fun createAddress() {
         viewModelScope.launch {
-            _state.update { addressState ->
-                addressState.copy(
-                    isCreatingAddress = true
-                )
-            }
+            _state.update { it.copy(isCreatingAddress = true) }
             val result = addressUseCases.createAddressUseCase(
                 postalCode = state.value.postalCode.text.toString().trim(),
                 settlement = state.value.settlement.text.toString(),
@@ -112,54 +110,48 @@ class AddressViewModel @Inject constructor(
                 state = state.value.state.text.toString(),
                 street = state.value.street.text.toString()
             )
-            _state.update { addressState ->
-                addressState.copy(
-                    isCreatingAddress = false
-                )
-            }
-            _state.update { addressState ->
+            _state.update { it.copy(isCreatingAddress = false) }
+            _state.update {
                 when (result) {
                     is Result.Error -> {
-                        eventChannel.send(
-                            AddressEvent.Error(UiText.StringResource(R.string.error_create_address))
-                        )
-                        addressState.copy(
-                            addressList = emptyList()
-                        )
+                        eventChannel.send(AddressEvent.Error(UiText.StringResource(R.string.error_create_address)))
+                        it.copy(addressList = emptyList())
                     }
                     is Result.Success -> {
                         val list = state.value.addressList.toMutableList()
                         list.add(result.data)
-                        eventChannel.send(
-                            AddressEvent.Success(UiText.StringResource(R.string.success_create_address))
-                        )
-                        addressState.apply {
-                            state.clearText()
-                            postalCode.clearText()
-                            settlement.clearText()
-                            mayoralty.clearText()
-                            numberContact.clearText()
-                            street.clearText()
-                            references.clearText()
-                        }
-                        addressState.copy(
-                            addressList = list
-                        )
+                        eventChannel.send(AddressEvent.Success(UiText.StringResource(R.string.success_create_address)))
+                        clearForm()
+                        it.copy(addressList = list)
                     }
                 }
             }
         }
     }
 
+    private fun clearForm() {
+        _state.update {
+            it.apply {
+                state.clearText()
+                postalCode.clearText()
+                settlement.clearText()
+                mayoralty.clearText()
+                numberContact.clearText()
+                street.clearText()
+                references.clearText()
+            }
+        }
+    }
+
     private fun getAllMyAddress() {
         viewModelScope.launch {
-            _state.update {addressState ->
+            _state.update { addressState ->
                 addressState.copy(
                     isLoading = true,
                     error = null
                 )
             }
-            addressUseCases.getAllMyAddressUseCase().collectLatest {result ->
+            addressUseCases.getAllMyAddressUseCase().collectLatest { result ->
                 _state.update { addressState ->
                     when (result) {
                         is Result.Error -> {
@@ -189,23 +181,19 @@ class AddressViewModel @Inject constructor(
 
             when (result) {
                 is Result.Error -> {
-                    eventChannel.send(
-                        AddressEvent.Error(UiText.StringResource(R.string.error_delete_address))
-                    )
+                    eventChannel.send(AddressEvent.Error(UiText.StringResource(R.string.error_delete_address)))
                 }
                 is Result.Success -> {
-                    _state.update { addressState ->
-                        val newList = addressState.addressList.toMutableList()
-                        newList.removeIf {
-                            it.id == addressId
+                    _state.update {
+                        val newList = it.addressList.toMutableList()
+                        newList.removeIf { address ->
+                            address.id == addressId
                         }
-                        addressState.copy(
+                        it.copy(
                             addressList = newList
                         )
                     }
-                    eventChannel.send(
-                        AddressEvent.Success(UiText.StringResource(R.string.success_delete_address))
-                    )
+                    eventChannel.send(AddressEvent.Success(UiText.StringResource(R.string.success_delete_address)))
                 }
             }
         }
@@ -214,30 +202,32 @@ class AddressViewModel @Inject constructor(
     private fun getInfoByPostalCode(infoCode: String) {
         viewModelScope.launch {
             addressUseCases.getInfoByPostalCodeUseCase(infoCode).collect { result ->
-                _state.update { addressState ->
+                _state.update {
                     when (result) {
                         is Result.Error -> {
-                            addressState.copy(
-                                isCorrectPostalCode = false
-                            )
+                            it.copy(isCorrectPostalCode = false)
                         }
                         is Result.Success -> {
-                            val settlements: List<String> = result.data.map {
-                                it.asentamiento
+                            val settlements: List<String> = result.data.map { postalCode ->
+                                postalCode.asentamiento
                             }
-                            addressState.state.edit {
-                                insert(
-                                    0,
-                                    result.data.first().estado
-                                )
-                            }
-                            addressState.mayoralty.edit {
-                                insert(
-                                    0,
-                                    result.data.first().estado
-                                )
-                            }
-                            addressState.copy(
+                            it.copy(
+                                state = it.state.apply {
+                                    edit {
+                                        insert(
+                                            0,
+                                            result.data.first().estado
+                                        )
+                                    }
+                                },
+                                mayoralty = it.mayoralty.apply {
+                                    edit {
+                                        insert(
+                                            0,
+                                            result.data.first().municipio
+                                        )
+                                    }
+                                },
                                 isCorrectPostalCode = true,
                                 settlementList = settlements
                             )

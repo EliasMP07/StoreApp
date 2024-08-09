@@ -11,6 +11,7 @@ fun AddressDto.toAddress(): Address{
         settlement =  settlement,
         mayoralty = mayoralty,
         postalCode =  postalCode,
-        phoneNumber = phoneNumber
+        phoneNumber = phoneNumber,
+        reference = reference?:""
     )
 }

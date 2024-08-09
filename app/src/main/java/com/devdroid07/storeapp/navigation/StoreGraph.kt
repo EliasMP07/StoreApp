@@ -13,6 +13,7 @@ import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.lifecycleIsResumed
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
+import com.devdroid07.storeapp.navigation.util.navigateToSingleInclusive
 import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
@@ -29,6 +30,8 @@ import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailRoo
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailViewModel
 import com.devdroid07.storeapp.store.presentation.search.SearchScreenRoot
 import com.devdroid07.storeapp.store.presentation.search.SearchViewModel
+import com.devdroid07.storeapp.store.presentation.updateAddress.UpdateAddressScreenRoot
+import com.devdroid07.storeapp.store.presentation.updateAddress.UpdateAddressViewModel
 
 fun NavGraphBuilder.store(
     context: Context,
@@ -44,14 +47,23 @@ fun NavGraphBuilder.store(
             HomeDrawerScreens(
                 context = context,
                 navigateToDetailProduct = {
-                    navController.navigateScreen(navBackEntry, RoutesScreens.DetailProduct.createRoute(it))
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.DetailProduct.createRoute(it)
+                    )
                 },
                 navigateToSearch = {
-                    navController.navigateScreen(navBackEntry, RoutesScreens.Search.route)
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.Search.route
+                    )
                 },
                 navBackStackEntry = navBackEntry,
                 navigateToCart = {
-                    navController.navigateScreen(navBackEntry, RoutesScreens.Cart.route)
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.Cart.route
+                    )
                 }
             )
         }
@@ -66,7 +78,10 @@ fun NavGraphBuilder.store(
                 context = context,
                 viewModel = viewModel,
                 navigateToPay = {
-                    navController.navigateScreen(navBackEntry, RoutesScreens.Address.route)
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.Address.route
+                    )
                 },
                 navigateBack = {
                     navController.navigateBack()
@@ -76,14 +91,17 @@ fun NavGraphBuilder.store(
         }
         composable(
             route = RoutesScreens.Search.route
-        ) {navBackEntry ->
+        ) { navBackEntry ->
 
             val viewModel: SearchViewModel = hiltViewModel()
 
             SearchScreenRoot(
-                viewModel =viewModel,
+                viewModel = viewModel,
                 navigateToDetailProduct = {
-                    navController.navigateScreen(navBackEntry, RoutesScreens.DetailProduct.createRoute(it))
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.DetailProduct.createRoute(it)
+                    )
                 }
             )
 
@@ -106,6 +124,32 @@ fun NavGraphBuilder.store(
                 },
                 onBack = {
                     navController.navigateBack()
+                },
+                navigateToUpdateAddress = {
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.EditAddress.createRoute(it)
+                    )
+                }
+            )
+        }
+
+        composable(
+            route = RoutesScreens.EditAddress.route
+        ) { navBackEntry ->
+
+            val viewModel: UpdateAddressViewModel = hiltViewModel()
+            UpdateAddressScreenRoot(
+                context = context,
+                viewModel = viewModel,
+                onBack = {
+                    navController.navigateBack()
+                },
+                onSuccessUpdate = {
+                    navController.navigateToSingleInclusive(
+                        navBackEntry,
+                        RoutesScreens.Address.route
+                    )
                 }
             )
         }

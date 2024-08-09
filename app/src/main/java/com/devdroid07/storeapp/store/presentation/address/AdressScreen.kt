@@ -36,6 +36,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreTo
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
+import com.devdroid07.storeapp.core.presentation.ui.util.isVisibleBottomSheet
 import com.devdroid07.storeapp.store.presentation.address.components.BottomSheetAddAddress
 import com.devdroid07.storeapp.store.presentation.address.components.ItemAddress
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +47,7 @@ fun AddressScreenRoot(
     context: Context,
     viewModel: AddressViewModel,
     navigateToPayment: (Int) -> Unit,
+    navigateToUpdateAddress: (String) -> Unit,
     onBack: () -> Unit,
 ) {
 
@@ -60,7 +62,7 @@ fun AddressScreenRoot(
     )
 
     BackHandler {
-        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
+        if (scaffoldState.isVisibleBottomSheet) {
             scope.launch {
                 scaffoldState.bottomSheetState.hide()
             }
@@ -78,7 +80,7 @@ fun AddressScreenRoot(
             }
             is AddressEvent.Success -> {
                 scope.launch {
-                    if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
+                    if (scaffoldState.isVisibleBottomSheet) {
                         scaffoldState.bottomSheetState.hide()
                     }
                     scaffoldState.snackbarHostState.showSnackbar(event.message.asString(context))
@@ -96,6 +98,7 @@ fun AddressScreenRoot(
             when (action) {
                 AddressAction.OnBackClick -> onBack()
                 is AddressAction.OnPaymentClick -> navigateToPayment(action.addressId)
+                is AddressAction.OnUpdateAddressClick -> navigateToUpdateAddress(action.addressId)
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -119,7 +122,7 @@ fun AddressScreen(
         scaffoldState = scaffoldState,
         topBar = {
             StoreToolbar(
-                title = "Direccion de entrega",
+                title = stringResource(R.string.adress_title_screen),
                 openDrawer = {},
                 onBack = {
                     onAction(AddressAction.OnBackClick)
@@ -175,21 +178,20 @@ fun AddressScreen(
                     items(
                         state.addressList,
                         key = { it.id }
-                    ) {
-                        SwipeToDeleteContainer(
-                            item = it,
-                            onDelete = {
-                                onAction(AddressAction.OnDeleteAddress(addressId = it.id))
+                    ) {address ->
+                        ItemAddress(
+                            address = address,
+                            spacing = spacing,
+                            onClick = {
+                                onAction(AddressAction.OnPaymentClick(it))
+                            },
+                            onDeleteClick = {
+                                onAction(AddressAction.OnDeleteAddress(addressId = it))
+                            },
+                            onEditClick = {
+                                onAction(AddressAction.OnUpdateAddressClick(it))
                             }
-                        ) { address ->
-                            ItemAddress(
-                                address = address,
-                                spacing = spacing,
-                                onClick = {
-                                    onAction(AddressAction.OnPaymentClick(it))
-                                }
-                            )
-                        }
+                        )
                     }
                     item {
                         StoreActionButton(

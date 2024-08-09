@@ -67,3 +67,9 @@ val ArrowLeftIcon : ImageVector
     get() = ImageVector.vectorResource(id = R.drawable.ic_arrow_left)
 
 
+val DeleteIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_delete)
+
+
+

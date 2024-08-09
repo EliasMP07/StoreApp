@@ -21,6 +21,15 @@ fun NavHostController.navigateToSingleTop(navBackStackEntry: NavBackStackEntry, 
         }
     }
 }
+fun NavHostController.navigateToSingleInclusive(navBackStackEntry: NavBackStackEntry, route: String){
+    if (navBackStackEntry.lifecycleIsResumed()){
+        navigate(route) {
+            popUpTo(route) { inclusive = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+}
 
 fun NavBackStackEntry.lifecycleIsResumed() =
     this.lifecycle.currentState == Lifecycle.State.RESUMED

@@ -57,12 +57,13 @@ android {
             buildConfigField("String", "BASE_URL", "\"http://192.168.1.69:3000/v1/\"")
             buildConfigField("String", "MERCADOPAGO_URL", "\"https://api.mercadopago.com/\"")
             buildConfigField("String", "COPOMEX_URL", "\"https://api.copomex.com/query/\"")
-            val apiKeyMercado = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_DEVELOP_MERCADOPAGO")
-            val apiKeyCopomex = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_COPOMEX")
+            val apiKeyMercado = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_PRODUCTION_MERCADOPAGO")
+            val apiKeyCopomex = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_PRODUCTION_COPOMEX")
             buildConfigField("String", "API_KEY_MERCADOPAGO", "\"$apiKeyMercado\"")
             buildConfigField("String", "API_KEY_COPOMEX", "\"$apiKeyCopomex\"")
         }
     }
+
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true

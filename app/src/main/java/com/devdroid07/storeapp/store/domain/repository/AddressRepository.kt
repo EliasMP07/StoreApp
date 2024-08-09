@@ -24,4 +24,18 @@ interface AddressRepository {
     ): Result<Address, DataError.Network>
 
     suspend fun deleteAddress(idAddress: Int): EmptyResult<DataError.Network>
+
+    suspend fun updateAddress(
+        id: String,
+        street: String,
+        postalCode: String,
+        state: String,
+        mayoralty: String,
+        settlement: String,
+        phoneNumber: String,
+        reference: String
+    ): EmptyResult<DataError.Network>
+
+    suspend fun getAddress(idAddress: String): Result<Address, DataError.Network>
+
 }

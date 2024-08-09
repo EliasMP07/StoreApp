@@ -27,6 +27,8 @@ import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCas
 import com.devdroid07.storeapp.store.domain.usecases.address.DeleteAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.GetAllMyAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.GetInfoByPostalCodeUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.GetSingleAddressUseCase
+import com.devdroid07.storeapp.store.domain.usecases.address.UpdateAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.card.CardUseCases
 import com.devdroid07.storeapp.store.domain.usecases.card.CreateCardTokenUseCase
 import com.devdroid07.storeapp.store.domain.usecases.card.CreateCardUseCase
@@ -161,7 +163,9 @@ object StoreModule {
             createAddressUseCase = CreateAddressUseCase(repository),
             getAllMyAddressUseCase = GetAllMyAddressUseCase(repository),
             getInfoByPostalCodeUseCase = GetInfoByPostalCodeUseCase(repository),
-            deleteAddressUseCase = DeleteAddressUseCase(repository)
+            deleteAddressUseCase = DeleteAddressUseCase(repository),
+            updateAddressUseCase = UpdateAddressUseCase(repository),
+            getSingleAddressUseCase = GetSingleAddressUseCase(repository)
         )
     }
 

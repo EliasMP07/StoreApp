@@ -36,6 +36,7 @@ inline fun <reified T> safeCall(execute: () -> Response<T>): Result<T, DataError
 inline fun <reified T> responseToResult(response: Response<T>): Result<T, DataError.Network> {
     return when (response.code()) {
         in 200..299 -> Result.Success(response.body()!!)
+        400 -> Result.Error(DataError.Network.BAD_REQUEST)
         401 -> Result.Error(DataError.Network.UNAUTHORIZED)
         408 -> Result.Error(DataError.Network.REQUEST_TIMEOUT)
         404 -> Result.Error(DataError.Network.NOT_FOUND)

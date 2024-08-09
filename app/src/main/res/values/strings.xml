@@ -127,5 +127,10 @@
     <string name="content_description_favorite_draw_item">Ir a favoritos</string>
     <string name="content_description_account_draw_item">Ir a mi cuenta</string>
     <string name="login_successfull">Has inicia session exitosamente.</string>
+    <string name="adress_title_screen">Seleccione la direccion de entrega</string>
+    <string name="success_update_address">Direccion actualizada correctamente</string>
+    <string name="error_request">La solicitud no se pudo procesar debido a datos incorrectos. Por favor, verifica la información ingresada y vuelve a intentarlo.</string>
+    <string name="fields_empty">Hay un campo vacio.</string>
+    <string name="update_address_title_screen">Editar dirección</string>
 
 </resources>

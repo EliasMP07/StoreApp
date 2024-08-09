@@ -9,9 +9,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
@@ -22,18 +24,20 @@ import com.devdroid07.storeapp.store.presentation.search.components.SearchTextFi
 
 @Composable
 fun SearchScreenRoot(
-    state: SearchState,
-    navigateDetailProduct: (String) -> Unit,
-    onAction: (SearchAction) -> Unit,
+    viewModel: SearchViewModel,
+    navigateToDetailProduct: (String) -> Unit,
 ) {
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     SearchScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                is SearchAction.OnProductDetailClick -> navigateDetailProduct(action.idProduct)
+                is SearchAction.OnProductDetailClick -> navigateToDetailProduct(action.idProduct)
                 else -> Unit
             }
-            onAction(action)
+            viewModel.onAction(action)
         }
     )
 }

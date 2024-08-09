@@ -1,8 +1,8 @@
-
 package com.devdroid07.storeapp.auth.presentation.register
 
 import android.Manifest
 import android.content.Context
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -10,29 +10,63 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.auth.presentation.register.components.RegisterForm
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButtonOutline
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreDialog
+import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.core.presentation.ui.util.ComposeFileProvider
 import com.devdroid07.storeapp.core.presentation.ui.util.hasCamaraPermission
 import com.devdroid07.storeapp.core.presentation.ui.util.shouldShowCamaraPermissionRationale
+import com.devdroid07.storeapp.navigation.util.RoutesScreens
+import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
 
 @Composable
 fun RegisterScreenRoot(
-    state: RegisterState,
-    onAction: (RegisterAction) -> Unit
+    viewModel: RegisterViewModel,
+    context: Context,
+    navigateToRegister: () -> Unit,
+    navigateToHome: () -> Unit
 ) {
-    val context = LocalContext.current
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is RegisterEvent.Error -> {
+                keyboardController?.hide()
+                Toast.makeText(
+                    context,
+                    event.message.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            RegisterEvent.RegisterSuccess -> {
+                keyboardController?.hide()
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.account_create_success),
+                    Toast.LENGTH_LONG
+                ).show()
+                navigateToHome()
+            }
+        }
+    }
+
     val permissionLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
             val hasCamaraPermission = it
             val activity = context as ComponentActivity
             val showCamaraRationale = activity.shouldShowCamaraPermissionRationale()
-            onAction(
+            viewModel.onAction(
                 RegisterAction.SubmitCamaraPermissionInfo(
                     acceptedCamaraPermission = hasCamaraPermission,
                     showCamaraRationale = showCamaraRationale
@@ -44,7 +78,7 @@ fun RegisterScreenRoot(
         val activity = context as ComponentActivity
         val showCamaraRationale = activity.shouldShowCamaraPermissionRationale()
 
-        onAction(
+        viewModel.onAction(
             RegisterAction.SubmitCamaraPermissionInfo(
                 acceptedCamaraPermission = context.hasCamaraPermission(),
                 showCamaraRationale = showCamaraRationale
@@ -59,7 +93,15 @@ fun RegisterScreenRoot(
     RegisterScreen(
         state = state,
         context = context,
-        onAction = onAction
+        onAction = { action ->
+            when (action) {
+                RegisterAction.OnLoginClick -> {
+                    navigateToRegister()
+                }
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 
     if (state.showCamaraRationale) {
@@ -72,7 +114,7 @@ fun RegisterScreenRoot(
                     text = stringResource(id = R.string.okay),
                     isLoading = false,
                     onClick = {
-                        onAction(RegisterAction.DismissRationaleDialog)
+                        viewModel.onAction(RegisterAction.DismissRationaleDialog)
                         permissionLauncher.requestStoreProfilePhoto(context)
                     },
                 )
@@ -86,7 +128,7 @@ fun RegisterScreenRoot(
 private fun RegisterScreen(
     context: Context,
     state: RegisterState,
-    onAction: (RegisterAction) -> Unit
+    onAction: (RegisterAction) -> Unit,
 ) {
 
     val intentCamaraLauncher =

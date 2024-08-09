@@ -34,12 +34,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
@@ -57,12 +59,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ProductDetailRootScreenRoot(
-    state: ProductDetailState,
     context: Context,
     viewModel: ProductDetailViewModel,
-    onAction: (ProductDetailAction) -> Unit,
     onBack: () -> Unit,
 ) {
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -115,7 +117,7 @@ fun ProductDetailRootScreenRoot(
                 ProductDetailAction.OnBackClick -> onBack()
                 else -> Unit
             }
-            onAction(action)
+            viewModel.onAction(action)
         },
         scaffoldState = scaffoldState
     )

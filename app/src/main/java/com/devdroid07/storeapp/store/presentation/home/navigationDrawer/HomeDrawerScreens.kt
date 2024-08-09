@@ -41,8 +41,8 @@ internal fun HomeDrawerScreens(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
-    navigateSearch: () -> Unit,
-    navigateMyCart: () -> Unit
+    navigateToSearch: () -> Unit,
+    navigateToCart: () -> Unit
 ) {
 
     var currentDrawerRoute by remember { mutableStateOf<RoutesScreens>(RoutesScreens.Home) }
@@ -57,10 +57,10 @@ internal fun HomeDrawerScreens(
                 ) { route ->
                     currentDrawerRoute = route
                     when (route) {
-                        RoutesScreens.Account -> navController.navigateToSingleTop(navBackStackEntry, route)
-                        RoutesScreens.Home -> navController.navigateToSingleTop(navBackStackEntry, route)
-                        RoutesScreens.Search -> navigateSearch()
-                        RoutesScreens.Favorite -> navController.navigateToSingleTop(navBackStackEntry, route)
+                        RoutesScreens.Account -> navController.navigateToSingleTop(navBackStackEntry, route.route)
+                        RoutesScreens.Home -> navController.navigateToSingleTop(navBackStackEntry, route.route)
+                        RoutesScreens.Search -> navigateToSearch()
+                        RoutesScreens.Favorite -> navController.navigateToSingleTop(navBackStackEntry, route.route)
                         else -> Unit
                     }
                     coroutineScope.launch { drawerState.close() }
@@ -82,10 +82,10 @@ internal fun HomeDrawerScreens(
                     viewModel = viewModel,
                     navigateToDetailProduct = navigateToDetailProduct,
                     navigateToAccount = {
-                        navController.navigateToSingleTop(navBackStackEntry, RoutesScreens.Account)
+                        navController.navigateToSingleTop(navBackStackEntry, RoutesScreens.Account.route)
                     },
-                    navigateToSearch = navigateSearch,
-                    navigateToCart = navigateMyCart,
+                    navigateToSearch = navigateToSearch,
+                    navigateToCart = navigateToCart,
                     openDrawer = {
                         coroutineScope.launch { drawerState.open() }
                     }

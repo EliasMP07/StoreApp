@@ -4,12 +4,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 
-fun NavHostController.navigateTo(route: RoutesScreens) {
-    navigate(route.route) {
-        launchSingleTop = true
-        restoreState = true
-    }
-}
 fun NavHostController.navigateScreen(navBackStackEntry: NavBackStackEntry, route: String){
     if (navBackStackEntry.lifecycleIsResumed()){
         navigate(route) {
@@ -18,9 +12,9 @@ fun NavHostController.navigateScreen(navBackStackEntry: NavBackStackEntry, route
         }
     }
 }
-fun NavHostController.navigateToSingleTop(navBackStackEntry: NavBackStackEntry, route: RoutesScreens) {
+fun NavHostController.navigateToSingleTop(navBackStackEntry: NavBackStackEntry, route: String) {
     if (navBackStackEntry.lifecycleIsResumed()){
-        navigate(route.route) {
+        navigate(route) {
             popUpTo(graph.id) { saveState = true }
             launchSingleTop = true
             restoreState = true

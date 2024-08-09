@@ -21,11 +21,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
@@ -41,13 +43,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AddressScreenRoot(
-    state: AddressState,
     context: Context,
     viewModel: AddressViewModel,
-    onAction: (AddressAction) -> Unit,
     navigateToPayment: (Int) -> Unit,
     onBack: () -> Unit,
 ) {
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     val scope = rememberCoroutineScope()
 
     val scaffoldState = rememberBottomSheetScaffoldState(
@@ -95,7 +98,7 @@ fun AddressScreenRoot(
                 is AddressAction.OnPaymentClick -> navigateToPayment(action.addressId)
                 else -> Unit
             }
-            onAction(action)
+            viewModel.onAction(action)
         },
     )
 

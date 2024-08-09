@@ -1,5 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class,
-            ExperimentalMaterial3Api::class
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
 )
 
 package com.devdroid07.storeapp.store.presentation.myCart
@@ -17,11 +18,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
@@ -36,15 +39,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MyCartScreenRoot(
-    state: MyCartState,
     context: Context,
     navigateToPay: () -> Unit,
     viewModel: MyCartViewModel,
     navigateBack: () -> Unit,
-    onAction: (MyCartAction) -> Unit
 ) {
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     val scope = rememberCoroutineScope()
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     ObserveAsEvents(flow = viewModel.events) { event ->
@@ -72,7 +76,7 @@ fun MyCartScreenRoot(
                 MyCartAction.OnContinuePayClick -> navigateToPay()
                 else -> Unit
             }
-            onAction(action)
+            viewModel.onAction(action)
         }
     )
 
@@ -82,7 +86,7 @@ fun MyCartScreenRoot(
 private fun MyCartScreen(
     state: MyCartState,
     snackbarHostState: SnackbarHostState,
-    onAction: (MyCartAction) -> Unit
+    onAction: (MyCartAction) -> Unit,
 ) {
     Scaffold(
         snackbarHost = {
@@ -94,8 +98,7 @@ private fun MyCartScreen(
                 isMenu = false,
                 onBack = {
                     onAction(MyCartAction.OnBackClick)
-                },
-                openDrawer = { /*TODO*/ }
+                }
             )
         }
     ) { paddingValue ->

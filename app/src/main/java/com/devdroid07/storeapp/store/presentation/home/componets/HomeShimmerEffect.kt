@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp.store.presentation.home.componets
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,19 +21,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.shimmerEffect
 
 @Composable
 fun HomeShimmerEffect(
     paddingValues: PaddingValues,
 ) {
+    val spacing = LocalSpacing.current
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
-            .padding(20.dp),
-        contentPadding = PaddingValues(10.dp)
+            .padding(horizontal = spacing.spaceMedium),
+        horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium),
+        verticalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
     ) {
         item(span = { GridItemSpan(maxCurrentLineSpan) }) {
             Column {

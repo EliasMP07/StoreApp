@@ -126,5 +126,6 @@
     <string name="content_description_search_draw_item">Ir a buscar producto</string>
     <string name="content_description_favorite_draw_item">Ir a favoritos</string>
     <string name="content_description_account_draw_item">Ir a mi cuenta</string>
+    <string name="login_successfull">Has inicia session exitosamente.</string>
 
 </resources>

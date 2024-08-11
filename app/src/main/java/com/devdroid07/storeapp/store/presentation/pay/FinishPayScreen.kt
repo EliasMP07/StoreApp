@@ -1,9 +1,13 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalAnimationApi::class
+)
 
 package com.devdroid07.storeapp.store.presentation.pay
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.layout.padding
@@ -34,7 +38,7 @@ fun FinishPayScreenRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     BackHandler {
-        when(state.pay){
+        when (state.pay) {
             ProgressPay.FAILURE -> onBack()
             ProgressPay.SUCCESS -> navigateToHome()
             else -> onBack()
@@ -105,7 +109,6 @@ private fun FinishPayScreen(
         if (state.isPaying) {
             CircularLoading()
         }
-
     }
     AnimatedVisibility(
         visible = state.pay == ProgressPay.FAILURE,
@@ -123,9 +126,10 @@ private fun FinishPayScreen(
             animationSpec = tween(1000)
         )
     ) {
-         TicketSuccessPay(
-             state = state,
-             onAction = onAction
-         )
+        TicketSuccessPay(
+            state = state,
+            onAction = onAction,
+            spacing = spacing
+        )
     }
 }

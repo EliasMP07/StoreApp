@@ -113,6 +113,7 @@ fun Modifier.animateEnterBottom(
         }
 }
 
+
 /**
  * Animacion para hacer que un elemento entre de lado izquierdo de la pantalla y llegue a su posicion
  *

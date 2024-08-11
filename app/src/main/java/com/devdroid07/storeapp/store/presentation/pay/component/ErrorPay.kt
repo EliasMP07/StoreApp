@@ -26,6 +26,11 @@ import com.devdroid07.storeapp.core.presentation.designsystem.CloseIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButtonOutline
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayAction
 
+/**
+ * Pantalla cuando el pago falla
+ *
+ * @param onAction Acciones en la pantalla
+ */
 @Composable
 fun ErrorPay(
     onAction: (FinishPayAction) -> Unit
@@ -42,7 +47,7 @@ fun ErrorPay(
                 .padding(16.dp)
         ) {
             IconButton(onClick = {
-                onAction(FinishPayAction.OnBackClick)
+                onAction(FinishPayAction.OnNavigateHomeClick)
             }) {
                 Icon(
                     imageVector = CloseIcon,

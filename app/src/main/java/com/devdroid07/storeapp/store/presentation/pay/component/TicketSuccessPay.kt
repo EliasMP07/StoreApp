@@ -26,32 +26,189 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
-import com.devdroid07.storeapp.core.presentation.designsystem.CheckIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.CloseIcon
-import com.devdroid07.storeapp.core.presentation.designsystem.TicketShape
-import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButtonOutline
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayAction
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayState
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
+import com.devdroid07.storeapp.core.presentation.designsystem.TicketShapePay
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
+import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterBottom
 import com.devdroid07.storeapp.store.presentation.pay.component.utils.getCurrentFormattedDate
 
+/**
+ * Pantalla cuando el pago fue existoso
+ *
+ * @param modifier Modificador para cambiar el composable
+ * @param state Estado de la Ui
+ * @param spacing Espacios definidos para evitar usar valores si no los que ya se tienen definido
+ * @param onAction Acciones de la pantalla
+ */
 @Composable
 fun TicketSuccessPay(
+    modifier: Modifier = Modifier,
     state: FinishPayState,
+    spacing: Dimensions,
     onAction: (FinishPayAction) -> Unit,
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF46D19E)),
-        verticalArrangement = Arrangement.Center
+            .background(Color(0xFF46D19E))
     ) {
+        Printer(
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+        LazyColumn(
+            modifier = modifier
+                .animateEnterBottom(
+                    initialOffsetY = 350f,
+                    durationMillis = 2800
+                )
+                .padding(spacing.spaceLarge)
+                .padding(top = spacing.spaceLarge)
+                .clip(
+                    TicketShapePay(
+                        8f,
+                        4f
+                    )
+                )
+                .background(color = Color.White)
+                .fillMaxWidth(),
+            contentPadding = PaddingValues(spacing.spaceMedium),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                Text(
+                    text = stringResource(R.string.title_tickepay),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = stringResource(R.string.thanks_for_you),
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                Text(
+                    text = getCurrentFormattedDate(),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.onBackground.copy(
+                            alpha = 0.5f
+                        )
+                    )
+                )
+                Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            }
+            items(
+                state.listCart
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "${it.quantity} ",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    val cutText = if (it.title.length >= 25) {
+                        25
+                    } else {
+                        it.title.length
+                    }
+                    Text(
+                        text = it.title.substring(
+                            0,
+                            cutText
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(
+                            id = R.string.price,
+                            it.price.toDouble() * it.quantity
+                        ),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = spacing.spaceMedium)
+                ) {
+                    Text(
+                        text = "Total",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(
+                            id = R.string.price,
+                            state.totalPrice
+                        ),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                HorizontalDivider()
+                Text(
+                    text = stringResource(R.string.delivery_address),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                ItemConfirmAddress(address = state.address)
+                HorizontalDivider()
+                Text(
+                    text = stringResource(R.string.payment_method),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                ItemCardPay(
+                    card = state.card,
+                    spacing = spacing
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = spacing.spaceMedium)
+                ) {
+                    Text(
+                        text = stringResource(R.string.total_pay),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(
+                            id = R.string.price,
+                            state.totalPrice
+                        ),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                StoreActionButton(
+                    modifier = Modifier.padding(horizontal = spacing.spaceMedium),
+                    text = stringResource(R.string.btn_go_to_home),
+                    isLoading = false
+                ) {
+                    onAction(FinishPayAction.OnNavigateHomeClick)
+                }
+                Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(spacing.spaceMedium)
         ) {
             IconButton(onClick = {
                 onAction(FinishPayAction.OnNavigateHomeClick)
@@ -63,93 +220,6 @@ fun TicketSuccessPay(
                 )
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .height(300.dp)
-        ) {
-            Card(
-                modifier = Modifier
-                    .padding(top = 40.dp)
-                    .clip(
-                        TicketShape(
-                            20.dp,
-                            CornerSize(0)
-                        )
-                    )
-                    .animateContentSize(),
-                elevation = CardDefaults.cardElevation()
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top = 40.dp,
-                            start = 16.dp,
-                            end = 16.dp
-                        ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = stringResource(R.string.thanks_for_you),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color(0xFF46D19E)
-                    )
-                    Text(
-                        text = stringResource(
-                            id = R.string.price,
-                            state.totalPrice
-                        ),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Text(
-                        text = stringResource(
-                            id = R.string.date_and_time,
-                            getCurrentFormattedDate()
-                        ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
-            }
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
-                    .align(Alignment.TopCenter),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF46D19E)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = CheckIcon,
-                        contentDescription = stringResource(R.string.content_description_success_pay),
-                        tint = Color.White
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        StoreActionButtonOutline(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = stringResource(R.string.btn_go_to_orders),
-            textColor = MaterialTheme.colorScheme.background,
-            borderColor = MaterialTheme.colorScheme.background,
-            isLoading = false
-        ) {
-            onAction(FinishPayAction.OnNavigateHomeClick)
-        }
-        Spacer(modifier = Modifier.weight(0.1f))
     }
+
 }

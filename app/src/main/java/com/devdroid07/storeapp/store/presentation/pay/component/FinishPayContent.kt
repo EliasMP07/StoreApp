@@ -31,18 +31,17 @@ import com.devdroid07.storeapp.store.presentation.pay.FinishPayAction
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayState
 import com.devdroid07.storeapp.store.presentation.payment.components.ItemCard
 
-@Preview
 @Composable
 fun FinishPayContent(
     modifier: Modifier = Modifier,
-    state: FinishPayState = FinishPayState(),
-    spacing: Dimensions = Dimensions(),
-    onAction: (FinishPayAction) -> Unit = {},
+    state: FinishPayState,
+    spacing: Dimensions,
+    onAction: (FinishPayAction) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier
-            .background(Color.White)
-            .padding(spacing.spaceSmall)
+            .padding(spacing.spaceMedium)
+            .background(color = Color.White)
             .shadow(
                 2.dp,
                 shape = TicketShapePay(
@@ -105,7 +104,7 @@ fun FinishPayContent(
                     .padding(vertical = spacing.spaceMedium)
             ) {
                 Text(
-                    text = "Total",
+                    text = stringResource(id = R.string.total_pay),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -170,5 +169,5 @@ fun FinishPayContent(
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
         }
     }
-
 }
+

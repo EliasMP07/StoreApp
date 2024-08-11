@@ -101,7 +101,6 @@
     <string name="btn_text_confirm_pay">Confirmar compra</string>
     <string name="pays">Pagas</string>
     <string name="title_tickepay">Store App, SA DE CV</string>
-    <string name="btn_go_to_orders">Ir a mis pedidos</string>
     <string name="content_description_navigationBack">Navigation back</string>
     <string name="thanks_for_you">Gracias por su compra!</string>
     <string name="content_description_success_pay">Pago exitoso</string>
@@ -136,5 +135,6 @@
     <string name="orders">Mis pedidos</string>
     <string name="content_description_orders_draw_item">Ir a mis pedidos</string>
     <string name="orders_title_screen">Mis pedidos</string>
+    <string name="total_pay">Total</string>
 
 </resources>

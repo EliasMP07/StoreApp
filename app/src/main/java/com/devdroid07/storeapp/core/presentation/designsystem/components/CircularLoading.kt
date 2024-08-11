@@ -20,7 +20,7 @@ fun CircularLoading(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background.copy(0.2f)),
+            .background(color = MaterialTheme.colorScheme.background.copy(0.8f)),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(

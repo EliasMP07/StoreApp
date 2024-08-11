@@ -26,7 +26,7 @@ import com.devdroid07.storeapp.core.presentation.ui.UiText
 @Composable
 fun ErrorContentPay(
     error: UiText,
-    onHomeClick: () -> Unit = {},
+    onHomeClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier

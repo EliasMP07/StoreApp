@@ -34,8 +34,7 @@ fun ItemProduct(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .animateAttention(),
+            .fillMaxWidth(),
         onClick = {
             onClick(product.id.toString())
         },

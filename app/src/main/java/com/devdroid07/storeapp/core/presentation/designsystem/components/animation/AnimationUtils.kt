@@ -25,6 +25,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
+/**
+ *Animacion para hacer que un elemeno se mueva de un punto A a un punto B y se repita
+ */
 @Composable
 fun Modifier.animateOffset(): Modifier {
     val animation = rememberInfiniteTransition(label = "")
@@ -41,10 +44,18 @@ fun Modifier.animateOffset(): Modifier {
     return this.offset(x = offsetIcon)
 }
 
+/**
+ * Animacion para hacer que un elemento entre de lado derecho y llegue a su posicion
+ *
+ * @param targetValue Valor donde llegara el elemento
+ * @param durationMillis Duracion de la animacion
+ *
+ * @return retorna el modifier con el offset que hara la animacion de moverse
+ */
 @Composable
-fun Modifier.animateEnter(
+fun Modifier.animateEnterRight(
     targetValue: Float = 0f,
-    durationMillis: Int = 1000,
+    durationMillis: Int = 1500,
 ): Modifier {
     val animatable = remember { Animatable(1000f) }
 
@@ -67,16 +78,98 @@ fun Modifier.animateEnter(
         .clip(RoundedCornerShape(30.dp))
 }
 
+/**
+ * Animacion para hacer que un elemento entre desde abajo de la pantalla y llegue a su posicion
+ *
+ * @param targetValue Valor donde llegara el elemento
+ * @param durationMillis Duracion de la animacion
+ * @param initialOffsetY Valor inicia desde donde iniciar la animacion
+ *
+ * @return retorna el modifier con el offset que hara la animacion de moverse
+ */
+@Composable
+fun Modifier.animateEnterBottom(
+    initialOffsetY: Float = 500f,
+    targetValue: Float = 0f,
+    durationMillis: Int = 1500,
+): Modifier {
+    val animatable = remember { Animatable(initialOffsetY) }
+
+    LaunchedEffect(animatable) {
+        animatable.animateTo(
+            targetValue = targetValue,
+            animationSpec = tween(
+                durationMillis = durationMillis
+            )
+        )
+    }
+
+    return this
+        .offset {
+            IntOffset(
+                0,
+                animatable.value.toInt()
+            )
+        }
+}
+
+/**
+ * Animacion para hacer que un elemento entre de lado izquierdo de la pantalla y llegue a su posicion
+ *
+ * @param targetValue Valor donde llegara el elemento
+ * @param durationMillis Duracion de la animacion
+ * @param initialOffsetX Valor inicia desde donde iniciar la animacion
+ *
+ * @return retorna el modifier con el offset que hara la animacion de moverse
+ */
+@Composable
+fun Modifier.animateEnterFromLeft(
+    initialOffsetX: Float = -1000f,
+    targetValue: Float = 0f,
+    durationMillis: Int = 1500,
+): Modifier {
+    val animatable = remember { Animatable(initialOffsetX) }
+
+    LaunchedEffect(animatable) {
+        animatable.animateTo(
+            targetValue = targetValue,
+            animationSpec = tween(
+                durationMillis = durationMillis
+            )
+        )
+    }
+
+    return this
+        .offset {
+            IntOffset(
+                animatable.value.toInt(),
+                0
+            )
+        }
+        .clip(RoundedCornerShape(30.dp))
+}
+
+/**
+ * Animacion para hacer que un elemento aparesca y haga un rebote al llegar a su destino
+ *
+ * @param targetValue Valor donde llegara el elemento
+ * @param durationMillis Duracion de la animacion
+ * @param initialValue inicia desde donde iniciar la animacion
+ *
+ * @return retorna el modifier con el graphicsLayer con el escalado animado
+ */
 @Composable
 fun Modifier.animateAttention(
     targetValue: Float = 1f,
+    initialValue: Float = 0f,
+    durationMillis: Int = 1500
 ): Modifier {
-    val animatable = remember { Animatable(0.1f) }
+    val animatable = remember { Animatable(initialValue) }
     LaunchedEffect(Unit) {
         animatable.animateTo(
             targetValue = targetValue,
             animationSpec = tween(
-                durationMillis = 1000,
+                durationMillis = durationMillis,
                 easing = EaseOutBounce
             )
         )
@@ -94,7 +187,7 @@ fun Modifier.animateFavorite(): Modifier {
 
     LaunchedEffect(isClicked.value) {
         if (isClicked.value) {
-            animatable.snapTo(0.1f) // Reiniciar la animación
+            animatable.snapTo(0.1f)
             animatable.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(
@@ -102,7 +195,7 @@ fun Modifier.animateFavorite(): Modifier {
                     easing = EaseOutBounce
                 )
             )
-            isClicked.value = false // Reset the click state
+            isClicked.value = false
         }
     }
 

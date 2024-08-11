@@ -22,8 +22,9 @@ import androidx.navigation.compose.rememberNavController
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
+import com.devdroid07.storeapp.navigation.util.navigateToSingleInclusive
 import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
-import com.devdroid07.storeapp.store.presentation.AccountViewModel
+import com.devdroid07.storeapp.store.presentation.account.AccountViewModel
 import com.devdroid07.storeapp.store.presentation.account.AccountScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteViewModel
@@ -31,6 +32,8 @@ import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
 import com.devdroid07.storeapp.store.presentation.home.HomeViewModel
 import com.devdroid07.storeapp.store.presentation.home.componets.DrawerContent
 import com.devdroid07.storeapp.store.presentation.home.navigationDrawer.utils.drawerItems
+import com.devdroid07.storeapp.store.presentation.orders.OrderScreenRoot
+import com.devdroid07.storeapp.store.presentation.orders.OrdersViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -43,7 +46,7 @@ internal fun HomeDrawerScreens(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
     navigateToSearch: () -> Unit,
-    navigateToCart: () -> Unit
+    navigateToCart: () -> Unit,
 ) {
 
     var currentDrawerRoute by remember { mutableStateOf<RoutesScreens>(RoutesScreens.Home) }
@@ -58,10 +61,23 @@ internal fun HomeDrawerScreens(
                 ) { route ->
                     currentDrawerRoute = route
                     when (route) {
-                        RoutesScreens.Account -> navController.navigateScreen(navBackStackEntry, route.route)
-                        RoutesScreens.Home -> navController.navigateScreen(navBackStackEntry, route.route)
+                        RoutesScreens.Account -> navController.navigateScreen(
+                            navBackStackEntry,
+                            route.route
+                        )
+                        RoutesScreens.Home -> navController.navigateToSingleInclusive(
+                            navBackStackEntry,
+                            route.route
+                        )
                         RoutesScreens.Search -> navigateToSearch()
-                        RoutesScreens.Favorite -> navController.navigateScreen(navBackStackEntry, route.route)
+                        RoutesScreens.Favorite -> navController.navigateScreen(
+                            navBackStackEntry,
+                            route.route
+                        )
+                        RoutesScreens.Orders -> navController.navigateScreen(
+                            navBackStackEntry,
+                            route.route
+                        )
                         else -> Unit
                     }
                     coroutineScope.launch { drawerState.close() }
@@ -83,7 +99,10 @@ internal fun HomeDrawerScreens(
                     viewModel = viewModel,
                     navigateToDetailProduct = navigateToDetailProduct,
                     navigateToAccount = {
-                        navController.navigateScreen(navBackStackEntry, RoutesScreens.Account.route)
+                        navController.navigateScreen(
+                            navBackStackEntry,
+                            RoutesScreens.Account.route
+                        )
                     },
                     navigateToSearch = navigateToSearch,
                     navigateToCart = navigateToCart,
@@ -120,7 +139,7 @@ internal fun HomeDrawerScreens(
                 FavoriteScreenRoot(
                     context = context,
                     state = state,
-                    navigateBack = {
+                    onBack = {
                         navController.navigateBack()
                     },
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
@@ -131,6 +150,25 @@ internal fun HomeDrawerScreens(
                     viewModel = viewModel
                 )
 
+            }
+
+            composable(
+                route = RoutesScreens.Orders.route
+            ) {
+                val viewModel: OrdersViewModel = hiltViewModel()
+
+                OrderScreenRoot(
+                    viewModel = viewModel,
+                    drawerState = drawerState,
+                    closeDrawer = { coroutineScope.launch { drawerState.close() }},
+                    openDrawer = { coroutineScope.launch { drawerState.open() } },
+                    onBack = {
+                        navController.navigateToSingleInclusive(
+                            navBackStackEntry,
+                            RoutesScreens.Home.route
+                        )
+                    }
+                )
             }
 
         }

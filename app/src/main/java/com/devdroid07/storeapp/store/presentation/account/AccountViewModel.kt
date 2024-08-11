@@ -1,9 +1,8 @@
-package com.devdroid07.storeapp.store.presentation
+package com.devdroid07.storeapp.store.presentation.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.core.domain.SessionStorage
-import com.devdroid07.storeapp.store.presentation.account.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

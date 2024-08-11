@@ -36,7 +36,7 @@ fun FavoriteScreenRoot(
     state: FavoriteState,
     openDrawer: () -> Unit,
     viewModel: FavoriteViewModel,
-    navigateBack: () -> Unit,
+    onBack: () -> Unit,
     navigateDetailProduct: (String) -> Unit,
     onAction: (FavoriteAction) -> Unit,
 ) {
@@ -63,7 +63,7 @@ fun FavoriteScreenRoot(
         onAction = { action ->
             when (action) {
                 FavoriteAction.OpenDrawer -> openDrawer()
-                FavoriteAction.OnBackClick -> navigateBack()
+                FavoriteAction.OnBackClick -> onBack()
                 is FavoriteAction.OnProductDetailClick -> navigateDetailProduct(action.idProduct)
                 else -> Unit
             }

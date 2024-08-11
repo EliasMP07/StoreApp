@@ -55,7 +55,8 @@ internal fun DrawerContent(
                 icon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = it.icon),
-                        contentDescription = stringResource(id = it.contentDescription)
+                        contentDescription = stringResource(id = it.contentDescription),
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 colors = NavigationDrawerItemDefaults.colors(

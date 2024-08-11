@@ -9,6 +9,7 @@ import com.devdroid07.storeapp.store.data.network.api.CartApiService
 import com.devdroid07.storeapp.store.data.network.api.CopomexApi
 import com.devdroid07.storeapp.store.data.network.api.FavoriteApiService
 import com.devdroid07.storeapp.store.data.network.api.MercadoPagoApiService
+import com.devdroid07.storeapp.store.data.network.api.OrderApiService
 import com.devdroid07.storeapp.store.data.network.api.PaymentApiService
 import com.devdroid07.storeapp.store.data.network.api.ProductApiService
 import com.devdroid07.storeapp.store.data.network.interceptor.StoreApiInterceptor
@@ -96,6 +97,12 @@ object StoreNetworkModule {
     @Singleton
     fun providePaymentApiService(@StoreRetrofit retrofit: Retrofit): PaymentApiService {
         return retrofit.create(PaymentApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderApiService(@StoreRetrofit retrofit: Retrofit): OrderApiService{
+        return retrofit.create(OrderApiService::class.java)
     }
 
     @Provides

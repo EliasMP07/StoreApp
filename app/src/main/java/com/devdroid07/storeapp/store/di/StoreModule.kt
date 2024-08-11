@@ -7,17 +7,20 @@ import com.devdroid07.storeapp.store.data.network.api.CartApiService
 import com.devdroid07.storeapp.store.data.network.api.CopomexApi
 import com.devdroid07.storeapp.store.data.network.api.FavoriteApiService
 import com.devdroid07.storeapp.store.data.network.api.MercadoPagoApiService
+import com.devdroid07.storeapp.store.data.network.api.OrderApiService
 import com.devdroid07.storeapp.store.data.network.api.PaymentApiService
 import com.devdroid07.storeapp.store.data.network.api.ProductApiService
 import com.devdroid07.storeapp.store.data.repository.AddressRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.CardRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.CartRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.FavoriteRepositoryImpl
+import com.devdroid07.storeapp.store.data.repository.OrderRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.PaymentRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.ProductRepositoryImpl
 import com.devdroid07.storeapp.store.domain.repository.CardRepository
 import com.devdroid07.storeapp.store.domain.repository.CartRepository
 import com.devdroid07.storeapp.store.domain.repository.FavoriteRepository
+import com.devdroid07.storeapp.store.domain.repository.OrderRepository
 import com.devdroid07.storeapp.store.domain.repository.PaymentRepository
 import com.devdroid07.storeapp.store.domain.repository.ProductRepository
 import com.devdroid07.storeapp.store.domain.usecases.cart.AddMyCartUseCase
@@ -47,6 +50,8 @@ import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
 import com.devdroid07.storeapp.store.domain.usecases.cart.RemoveProductMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.favorite.FavoriteUseCases
 import com.devdroid07.storeapp.store.domain.usecases.favorite.RemoveProductMyFavoritesUseCase
+import com.devdroid07.storeapp.store.domain.usecases.order.GetAllOrderUseCase
+import com.devdroid07.storeapp.store.domain.usecases.order.OrderUseCases
 import com.devdroid07.storeapp.store.domain.usecases.product.SearchProductUseCase
 import dagger.Module
 import dagger.Provides
@@ -136,6 +141,18 @@ object StoreModule {
 
     @Singleton
     @Provides
+    fun provideOrderRepository(
+        sessionStorage: SessionStorage,
+        orderApiService: OrderApiService,
+    ): OrderRepository {
+        return OrderRepositoryImpl(
+            sessionStorage = sessionStorage,
+            orderApiService = orderApiService
+        )
+    }
+
+    @Singleton
+    @Provides
     fun providePaymentUseCases(
         repository: PaymentRepository,
     ): PaymentUseCases {
@@ -172,8 +189,8 @@ object StoreModule {
     @Singleton
     @Provides
     fun provideCartUseCases(
-        repository: CartRepository
-    ): CartUseCases{
+        repository: CartRepository,
+    ): CartUseCases {
         return CartUseCases(
             getMyCartUseCase = GetMyCartUseCase(repository),
             addMyCartUseCase = AddMyCartUseCase(repository),
@@ -184,8 +201,8 @@ object StoreModule {
     @Singleton
     @Provides
     fun provideFavoriteUseCases(
-        repository: FavoriteRepository
-    ): FavoriteUseCases{
+        repository: FavoriteRepository,
+    ): FavoriteUseCases {
         return FavoriteUseCases(
             removeFavoriteProductUseCase = RemoveProductMyFavoritesUseCase(repository),
             addFavoriteProductUseCase = AddFavoriteProductUseCase(repository),
@@ -205,6 +222,16 @@ object StoreModule {
             getReviewsProductUseCase = GetReviewsProductUseCase(repository),
             searchProductUseCase = SearchProductUseCase(repository),
             getAllBannersUseCases = GetAllBannersUseCases(repository)
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideOrderUseCase(
+        repository: OrderRepository
+    ): OrderUseCases{
+        return OrderUseCases(
+            getAllOrderUseCase = GetAllOrderUseCase(repository)
         )
     }
 

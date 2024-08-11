@@ -132,5 +132,9 @@
     <string name="error_request">La solicitud no se pudo procesar debido a datos incorrectos. Por favor, verifica la información ingresada y vuelve a intentarlo.</string>
     <string name="fields_empty">Hay un campo vacio.</string>
     <string name="update_address_title_screen">Editar dirección</string>
+    <string name="order_number">Orden #%s</string>
+    <string name="orders">Mis pedidos</string>
+    <string name="content_description_orders_draw_item">Ir a mis pedidos</string>
+    <string name="orders_title_screen">Mis pedidos</string>
 
 </resources>

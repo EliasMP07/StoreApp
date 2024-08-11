@@ -46,7 +46,6 @@ fun ItemCardRecommended(
 ) {
     ElevatedCard(
         modifier = Modifier
-            .animateAttention()
             .padding(bottom = 20.dp),
         elevation = CardDefaults.cardElevation(20.dp),
         shape = RoundedCornerShape(20.dp),

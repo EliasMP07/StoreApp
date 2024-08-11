@@ -22,6 +22,7 @@ sealed class RoutesScreens(val route: String){
     data object EditAddress: RoutesScreens("edit_address/{${NavArgs.AddressID.key}}"){
         fun createRoute(addressId: String) = "edit_address/$addressId"
     }
+    data object Orders: RoutesScreens("orders")
     data object Home: RoutesScreens("home")
     data object HomeDrawerRoute: RoutesScreens("home_drawer")
     data object Search: RoutesScreens("search")

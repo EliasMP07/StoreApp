@@ -31,7 +31,6 @@ fun FooterMyCart(
             topEnd = 30.dp
         ),
         elevation = CardDefaults.cardElevation(10.dp),
-        onClick = { /*TODO*/ },
         modifier = modifier
     ) {
         Column(

@@ -29,7 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnter
+import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterRight
 import com.devdroid07.storeapp.store.domain.model.Cart
 
 @Composable
@@ -43,7 +43,7 @@ fun ItemCart(
         elevation = CardDefaults.cardElevation(20.dp),
         modifier = Modifier
             .clip(RoundedCornerShape(30.dp))
-            .animateEnter()
+            .animateEnterRight()
             .animateContentSize(),
         onClick = { /*TODO*/ }
     ) {

@@ -7,5 +7,6 @@ data class OrderDto(
     @SerializedName("timestamp") val timestamp: String,
     @SerializedName("status") val status: String,
     @SerializedName("products") val products: List<ProductDto>,
-    @SerializedName("address") val address: AddressDto
+    @SerializedName("address") val address: AddressDto,
+    @SerializedName("transaction_amount") val transactionAmount: Double,
 )

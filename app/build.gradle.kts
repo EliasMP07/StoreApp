@@ -43,7 +43,7 @@ android {
     productFlavors {
         create("develop") {
             dimension = "env"
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.66:3000/v1/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.67:3000/v1/\"")
             buildConfigField("String", "MERCADOPAGO_URL", "\"https://api.mercadopago.com/\"")
             buildConfigField("String", "COPOMEX_URL", "\"https://api.copomex.com/query/\"")
             val apiKeyMercado = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_DEVELOP_MERCADOPAGO")
@@ -54,7 +54,7 @@ android {
 
         create("production") {
             dimension = "env"
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.66:3000/v1/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.67:3000/v1/\"")
             buildConfigField("String", "MERCADOPAGO_URL", "\"https://api.mercadopago.com/\"")
             buildConfigField("String", "COPOMEX_URL", "\"https://api.copomex.com/query/\"")
             val apiKeyMercado = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_PRODUCTION_MERCADOPAGO")
@@ -90,6 +90,8 @@ android {
 dependencies {
     // Get day of week api 25 or lower
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    implementation(libs.msz.progress.indicator)
 
     //Serialization
     implementation(libs.kotlinx.serialization.json)

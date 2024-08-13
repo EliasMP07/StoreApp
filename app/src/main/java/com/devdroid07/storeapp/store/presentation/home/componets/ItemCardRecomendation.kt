@@ -34,7 +34,6 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StarRating
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateOffset
 import com.devdroid07.storeapp.store.domain.model.Product
 

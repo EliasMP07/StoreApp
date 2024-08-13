@@ -33,4 +33,20 @@ class OrderRepositoryImpl(
             }
         }
     }
+
+    override suspend fun getSingleOrder(orderId: String): Result<Order, DataError.Network> {
+        val result = safeCall {
+            orderApiService.getSingleOrder(
+                orderId = orderId
+            )
+        }
+       return when(result){
+            is Result.Error -> {
+               Result.Error(result.error)
+            }
+            is Result.Success -> {
+                Result.Success(result.data.data?.toOrder()?:Order())
+            }
+        }
+    }
 }

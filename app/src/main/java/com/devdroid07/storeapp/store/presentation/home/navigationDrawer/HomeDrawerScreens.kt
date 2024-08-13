@@ -23,9 +23,8 @@ import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
 import com.devdroid07.storeapp.navigation.util.navigateToSingleInclusive
-import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
-import com.devdroid07.storeapp.store.presentation.account.AccountViewModel
 import com.devdroid07.storeapp.store.presentation.account.AccountScreenRoot
+import com.devdroid07.storeapp.store.presentation.account.AccountViewModel
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteViewModel
 import com.devdroid07.storeapp.store.presentation.home.HomeScreenRoot
@@ -46,6 +45,7 @@ internal fun HomeDrawerScreens(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
     navigateToSearch: () -> Unit,
+    navigateToDetailOrder: (String) -> Unit,
     navigateToCart: () -> Unit,
 ) {
 
@@ -167,6 +167,9 @@ internal fun HomeDrawerScreens(
                             navBackStackEntry,
                             RoutesScreens.Home.route
                         )
+                    },
+                    navigateToDetailOrder = {
+                        navigateToDetailOrder(it)
                     }
                 )
             }

@@ -42,6 +42,8 @@ class ProductDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(ProductDetailState())
     val state: StateFlow<ProductDetailState> get() = _state.asStateFlow()
 
+    private val  productId: String = checkNotNull(savedStateHandle[NavArgs.ProductID.key])
+
 
     private val eventChannel = Channel<ProductDetailEvent>()
     val events = eventChannel.receiveAsFlow()
@@ -63,8 +65,7 @@ class ProductDetailViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
-        val productId = savedStateHandle[NavArgs.ProductID.key] ?: "1"
-        getProduct(productId = productId)
+        getProduct()
     }
 
     private fun getReviews(productId: String) {
@@ -103,7 +104,7 @@ class ProductDetailViewModel @Inject constructor(
                 getReviews(state.value.product.id.toString())
             }
             ProductDetailAction.OnRetry -> {
-                getProduct(state.value.product.id.toString())
+                getProduct()
             }
             ProductDetailAction.OnMoreInfoClick -> {
                 _state.update { it.copy(isExpanded = !state.value.isExpanded) }
@@ -146,7 +147,7 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getProduct(productId: String) {
+    private fun getProduct() {
         viewModelScope.launch {
             _state.update {
                 it.copy(

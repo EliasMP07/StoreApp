@@ -4,7 +4,6 @@ import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.store.domain.model.Banner
-import com.devdroid07.storeapp.store.domain.model.Cart
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Review
 import kotlinx.coroutines.flow.Flow

@@ -13,18 +13,12 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.navigation.util.NavArgs
-import com.devdroid07.storeapp.store.domain.model.Address
 import com.devdroid07.storeapp.store.domain.usecases.address.AddressUseCases
-import com.devdroid07.storeapp.store.domain.usecases.address.UpdateAddressUseCase
-import com.devdroid07.storeapp.store.presentation.address.AddressAction
-import com.devdroid07.storeapp.store.presentation.address.AddressEvent
-import com.devdroid07.storeapp.store.presentation.address.AddressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -47,10 +41,11 @@ class UpdateAddressViewModel @Inject constructor(
     private val eventChannel = Channel<UpdateAddressEvent>()
     val events = eventChannel.receiveAsFlow()
 
+    private val addressId: String = checkNotNull(savedStateHandle[NavArgs.AddressID.key])
+
 
     init {
-        val addressId = savedStateHandle[NavArgs.AddressID.key] ?: "1"
-        getAddress(addressId.toInt())
+        getAddress()
         _state.value.postalCode.textAsFlow().onEach { postalCode ->
             if (postalCode.length >= 5) {
                 getInfoByPostalCode(postalCode.toString())
@@ -93,7 +88,7 @@ class UpdateAddressViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isUpdatingAddress = true) }
             val result = addressUseCase.updateAddressUseCase(
-                id = state.value.addressId,
+                id = addressId,
                 postalCode = state.value.postalCode.text.toString().trim(),
                 settlement = state.value.settlement.text.toString(),
                 mayoralty = state.value.mayoralty.text.toString(),
@@ -122,22 +117,20 @@ class UpdateAddressViewModel @Inject constructor(
         }
     }
 
-    private fun getAddress(idAddress: Int) {
+    private fun getAddress() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = addressUseCase.getSingleAddressUseCase(idAddress.toString())
+            val result = addressUseCase.getSingleAddressUseCase(addressId)
             _state.update {
                 when (result) {
                     is Result.Error -> {
                         it.copy(
-                            addressId = idAddress.toString(),
                             isLoading = false,
                             error = result.error.asUiText()
                         )
                     }
                     is Result.Success -> {
                         it.copy(
-                            addressId = idAddress.toString(),
                             state = it.state.apply {
                                 edit {
                                     insert(

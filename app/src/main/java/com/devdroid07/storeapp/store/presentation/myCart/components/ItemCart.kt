@@ -2,7 +2,6 @@
 
 package com.devdroid07.storeapp.store.presentation.myCart.components
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,14 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,26 +30,16 @@ import com.devdroid07.storeapp.store.domain.model.Cart
 fun ItemCart(
     cart: Cart
 ) {
-    var isExpand by rememberSaveable {
-        mutableStateOf(false)
-    }
     ElevatedCard(
-        elevation = CardDefaults.cardElevation(20.dp),
         modifier = Modifier
-            .clip(RoundedCornerShape(30.dp))
             .animateEnterRight()
-            .animateContentSize(),
-        onClick = { /*TODO*/ }
+            .padding(8.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(20.dp),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(
-                    RoundedCornerShape(
-                        topStart = 30.dp,
-                        bottomStart = 30.dp
-                    )
-                )
                 .background(MaterialTheme.colorScheme.background),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -93,6 +77,5 @@ fun ItemCart(
             )
             Spacer(modifier = Modifier.weight(0.1f))
         }
-        HorizontalDivider()
     }
 }

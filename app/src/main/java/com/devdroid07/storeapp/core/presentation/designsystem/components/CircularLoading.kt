@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ehsanmsz.mszprogressindicator.progressindicator.BallSpinFadeLoaderProgressIndicator
 
 
 @Composable
@@ -23,8 +24,9 @@ fun CircularLoading(
             .background(color = MaterialTheme.colorScheme.background.copy(0.8f)),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(48.dp)
+        BallSpinFadeLoaderProgressIndicator(
+            diameter = 60.dp,
+            color = MaterialTheme.colorScheme.onBackground,
         )
     }
 }

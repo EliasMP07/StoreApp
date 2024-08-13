@@ -19,6 +19,10 @@ sealed class RoutesScreens(val route: String){
     data object Favorite: RoutesScreens("favorite")
     data object Settings: RoutesScreens("settings")
     data object Address: RoutesScreens("address")
+
+    data object DetailOrder: RoutesScreens("detail_order/{${NavArgs.OrderId.key}}"){
+        fun createRoute(orderId: String) = "detail_order/${orderId}"
+    }
     data object EditAddress: RoutesScreens("edit_address/{${NavArgs.AddressID.key}}"){
         fun createRoute(addressId: String) = "edit_address/$addressId"
     }
@@ -35,5 +39,6 @@ enum class NavArgs(val key: String){
     AddressID("addressId"),
     ProductID("productId"),
     CardID("cardId"),
-    TokenId("tokenId")
+    TokenId("tokenId"),
+    OrderId("orderId")
 }

@@ -13,4 +13,9 @@ interface OrderApiService {
         @Path("client_id") userId: String
     ): Response<StoreResponse<List<OrderDto>>>
 
+    @GET("orders/getSingleOrder/{order_id}")
+    suspend fun getSingleOrder(
+        @Path("order_id") orderId: String
+    ): Response<StoreResponse<OrderDto>>
+
 }

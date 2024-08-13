@@ -36,12 +36,9 @@ class PaymentViewModel @Inject constructor(
     private val eventChannel = Channel<PaymentEvent>()
     val events = eventChannel.receiveAsFlow()
 
+    private val addressId: String = checkNotNull(savedStateHandle[NavArgs.AddressID.key])
+
     init {
-        _state.update { paymentState ->
-            paymentState.copy(
-                addressId = savedStateHandle[NavArgs.AddressID.key] ?: "1"
-            )
-        }
         getAllMyCard()
     }
 
@@ -183,7 +180,7 @@ class PaymentViewModel @Inject constructor(
                     }
                     eventChannel.send(
                         PaymentEvent.SuccessCreateToken(
-                            addressId = state.value.addressId,
+                            addressId = addressId,
                             tokenId = result.data,
                             cardId = card.id.toString()
                         )

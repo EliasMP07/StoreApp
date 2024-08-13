@@ -6,7 +6,6 @@ import com.devdroid07.storeapp.core.presentation.ui.UiText
 
 @OptIn(ExperimentalFoundationApi::class)
 data class UpdateAddressState(
-    val addressId: String = "",
     val isLoading: Boolean = false,
     val error:UiText? = null,
     val street: TextFieldState = TextFieldState(),

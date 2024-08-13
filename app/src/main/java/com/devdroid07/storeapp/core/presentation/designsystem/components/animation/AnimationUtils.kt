@@ -1,7 +1,9 @@
 package com.devdroid07.storeapp.core.presentation.designsystem.components.animation
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.EaseOutBounce
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateValue
@@ -53,6 +55,40 @@ fun Modifier.animateOffset(): Modifier {
  * @return retorna el modifier con el offset que hara la animacion de moverse
  */
 @Composable
+fun Modifier.animateEnterTop(
+    targetValue: Float = 0f,
+    durationMillis: Int = 1500,
+): Modifier {
+    val animatable = remember { Animatable(-500f) }
+
+    LaunchedEffect(animatable) {
+        animatable.animateTo(
+            targetValue = targetValue,
+            animationSpec = tween(
+                durationMillis = durationMillis,
+                easing = EaseOut
+            )
+        )
+    }
+
+    return this
+        .offset {
+            IntOffset(
+                0,
+                animatable.value.toInt()
+            )
+        }
+}
+
+/**
+ * Animacion para hacer que un elemento entre de lado derecho y llegue a su posicion
+ *
+ * @param targetValue Valor donde llegara el elemento
+ * @param durationMillis Duracion de la animacion
+ *
+ * @return retorna el modifier con el offset que hara la animacion de moverse
+ */
+@Composable
 fun Modifier.animateEnterRight(
     targetValue: Float = 0f,
     durationMillis: Int = 1500,
@@ -63,7 +99,8 @@ fun Modifier.animateEnterRight(
         animatable.animateTo(
             targetValue = targetValue,
             animationSpec = tween(
-                durationMillis = durationMillis
+                durationMillis = durationMillis,
+                easing = EaseOut
             )
         )
     }
@@ -75,7 +112,6 @@ fun Modifier.animateEnterRight(
                 0
             )
         }
-        .clip(RoundedCornerShape(30.dp))
 }
 
 /**
@@ -135,7 +171,8 @@ fun Modifier.animateEnterFromLeft(
         animatable.animateTo(
             targetValue = targetValue,
             animationSpec = tween(
-                durationMillis = durationMillis
+                durationMillis = durationMillis,
+                easing = EaseOut
             )
         )
     }
@@ -147,7 +184,6 @@ fun Modifier.animateEnterFromLeft(
                 0
             )
         }
-        .clip(RoundedCornerShape(30.dp))
 }
 
 /**

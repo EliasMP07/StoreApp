@@ -22,6 +22,8 @@ import com.devdroid07.storeapp.store.presentation.address.AddressViewModel
 import com.devdroid07.storeapp.store.presentation.home.navigationDrawer.HomeDrawerScreens
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartScreenRoot
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartViewModel
+import com.devdroid07.storeapp.store.presentation.orderDetail.OrderDetailScreenRoot
+import com.devdroid07.storeapp.store.presentation.orderDetail.OrderDetailViewModel
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayScreenRoot
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayViewModel
 import com.devdroid07.storeapp.store.presentation.payment.PaymentScreenRoot
@@ -64,6 +66,12 @@ fun NavGraphBuilder.store(
                         navBackEntry,
                         RoutesScreens.Cart.route
                     )
+                },
+                navigateToDetailOrder = {
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.DetailOrder.createRoute(it)
+                    )
                 }
             )
         }
@@ -88,6 +96,23 @@ fun NavGraphBuilder.store(
                 },
             )
 
+        }
+        composable(
+            route = RoutesScreens.DetailOrder.route
+        ) { navBackEntry ->
+            val viewModel: OrderDetailViewModel = hiltViewModel()
+            OrderDetailScreenRoot(
+                viewModel = viewModel,
+                onBack = {
+                    navController.navigateBack()
+                },
+                navigateToDetailProduct = {
+                    navController.navigateScreen(
+                        navBackEntry,
+                        RoutesScreens.DetailProduct.createRoute(it)
+                    )
+                }
+            )
         }
         composable(
             route = RoutesScreens.Search.route

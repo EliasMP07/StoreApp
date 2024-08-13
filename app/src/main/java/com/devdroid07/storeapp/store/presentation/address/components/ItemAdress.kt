@@ -1,29 +1,20 @@
 package com.devdroid07.storeapp.store.presentation.address.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,11 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.DeleteIcon
@@ -110,14 +97,14 @@ fun ItemAddress(
                 IconButton(onClick = { expanded = true }) {
                     Icon(
                         Icons.Default.MoreVert,
-                        contentDescription = "Localized description"
+                        contentDescription = stringResource(R.string.content_description_menu_address)
                     )
                 }
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }) {
                     DropdownMenuItem(
-                        text = { Text("Editar") },
+                        text = { Text(stringResource(R.string.menu_item_edit)) },
                         onClick = {
                             expanded = false
                             onEditClick(address.id.toString())
@@ -125,12 +112,12 @@ fun ItemAddress(
                         leadingIcon = {
                             Icon(
                                 EditIcon,
-                                contentDescription = null
+                                contentDescription = stringResource(id = R.string.content_description_item_edit)
                             )
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Eliminar") },
+                        text = { Text(stringResource(R.string.menu_item_delete)) },
                         onClick = {
                             expanded = false
                             onDeleteClick(address.id)
@@ -138,7 +125,7 @@ fun ItemAddress(
                         leadingIcon = {
                             Icon(
                                 DeleteIcon,
-                                contentDescription = null
+                                contentDescription = stringResource(id = R.string.content_description_item_delete)
                             )
                         }
                     )

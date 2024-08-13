@@ -26,6 +26,13 @@ class OrdersViewModel @Inject constructor(
         getAllOrders()
     }
 
+    fun onAction(action: OrdersAction){
+        when(action){
+            OrdersAction.OnRetry -> getAllOrders()
+            else -> Unit
+        }
+    }
+
     private fun getAllOrders() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
@@ -47,7 +54,4 @@ class OrdersViewModel @Inject constructor(
         }
     }
 
-    fun onAction(){
-
-    }
 }

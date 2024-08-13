@@ -14,7 +14,6 @@ data class FinishPayState(
     val listCart: List<Cart> = emptyList(),
     val card: Card = Card(),
     val error: UiText? = null,
-    val token: String = "",
     val address: Address = Address(),
     val pay: ProgressPay = ProgressPay.LOADING,
     val isPaying: Boolean = false

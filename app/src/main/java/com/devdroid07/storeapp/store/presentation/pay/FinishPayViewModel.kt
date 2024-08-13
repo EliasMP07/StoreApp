@@ -34,15 +34,12 @@ class FinishPayViewModel @Inject constructor(
     private val _state = MutableStateFlow(FinishPayState())
     val state: StateFlow<FinishPayState> get() = _state.asStateFlow()
 
+    private val cardId: String = checkNotNull(savedStateHandle[NavArgs.CardID.key])
+    private val addressId: String = checkNotNull(savedStateHandle[NavArgs.AddressID.key])
+    private val token: String = checkNotNull(savedStateHandle[NavArgs.TokenId.key])
+
     init {
-        val cardId = savedStateHandle[NavArgs.CardID.key] ?: "1"
-        val addressId = savedStateHandle[NavArgs.AddressID.key] ?: "1"
-        val token = savedStateHandle[NavArgs.TokenId.key] ?: "1"
-        getMyCard(
-            addressId,
-            cardId,
-            token
-        )
+        getMyCard()
     }
 
     fun onAction(
@@ -58,8 +55,8 @@ class FinishPayViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isPaying = true) }
             val result = paymentUseCases.createPaymentAndOrderUseCase(
-                addressId = state.value.address.id.toString(),
-                token = state.value.token,
+                addressId = addressId,
+                token = token,
                 transactionAmount = state.value.totalPrice
             )
             _state.update {
@@ -92,11 +89,7 @@ class FinishPayViewModel @Inject constructor(
         }
     }
 
-    private fun getMyCard(
-        addressId: String,
-        cardId: String,
-        token: String,
-    ) {
+    private fun getMyCard() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             combine(
@@ -122,7 +115,6 @@ class FinishPayViewModel @Inject constructor(
                     addressResult is Result.Success && cartResult is Result.Success && cardResult is Result.Success -> {
                         _state.update { finishPayState ->
                             finishPayState.copy(
-                                token = token,
                                 listCart = cartResult.data,
                                 isLoading = false,
                                 card = cardResult.data.first {

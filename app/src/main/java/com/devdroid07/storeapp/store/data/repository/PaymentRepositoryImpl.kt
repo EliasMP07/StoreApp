@@ -25,7 +25,8 @@ class PaymentRepositoryImpl (
                 PaymentRequest(
                     order = OrderRequest(
                         clientId = sessionStorage.get()?.id.orEmpty(),
-                        addressId = addressId
+                        transactionAmount = transactionAmount,
+                        addressId = addressId,
                     ),
                     token = token,
                     description = "Pagoo",

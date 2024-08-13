@@ -23,8 +23,6 @@ import com.devdroid07.storeapp.store.domain.repository.FavoriteRepository
 import com.devdroid07.storeapp.store.domain.repository.OrderRepository
 import com.devdroid07.storeapp.store.domain.repository.PaymentRepository
 import com.devdroid07.storeapp.store.domain.repository.ProductRepository
-import com.devdroid07.storeapp.store.domain.usecases.cart.AddMyCartUseCase
-import com.devdroid07.storeapp.store.domain.usecases.cart.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.AddressUseCases
 import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.DeleteAddressUseCase
@@ -36,22 +34,25 @@ import com.devdroid07.storeapp.store.domain.usecases.card.CardUseCases
 import com.devdroid07.storeapp.store.domain.usecases.card.CreateCardTokenUseCase
 import com.devdroid07.storeapp.store.domain.usecases.card.CreateCardUseCase
 import com.devdroid07.storeapp.store.domain.usecases.card.GetAllMyCardsUseCase
+import com.devdroid07.storeapp.store.domain.usecases.cart.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.cart.CartUseCases
+import com.devdroid07.storeapp.store.domain.usecases.cart.GetMyCartUseCase
+import com.devdroid07.storeapp.store.domain.usecases.cart.RemoveProductMyCartUseCase
+import com.devdroid07.storeapp.store.domain.usecases.favorite.AddFavoriteProductUseCase
+import com.devdroid07.storeapp.store.domain.usecases.favorite.FavoriteUseCases
+import com.devdroid07.storeapp.store.domain.usecases.favorite.GetFavoritesProductsUseCase
+import com.devdroid07.storeapp.store.domain.usecases.favorite.RemoveProductMyFavoritesUseCase
+import com.devdroid07.storeapp.store.domain.usecases.order.GetAllOrderUseCase
+import com.devdroid07.storeapp.store.domain.usecases.order.GetSingleOrderUseCase
+import com.devdroid07.storeapp.store.domain.usecases.order.OrderUseCases
 import com.devdroid07.storeapp.store.domain.usecases.payment.CreatePaymentAndOrderUseCase
 import com.devdroid07.storeapp.store.domain.usecases.payment.PaymentUseCases
-import com.devdroid07.storeapp.store.domain.usecases.favorite.AddFavoriteProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.product.AddReviewProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.product.GetAllBannersUseCases
 import com.devdroid07.storeapp.store.domain.usecases.product.GetAllProducts
-import com.devdroid07.storeapp.store.domain.usecases.favorite.GetFavoritesProductsUseCase
 import com.devdroid07.storeapp.store.domain.usecases.product.GetReviewsProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.product.GetSingleProduct
 import com.devdroid07.storeapp.store.domain.usecases.product.ProductUseCases
-import com.devdroid07.storeapp.store.domain.usecases.cart.RemoveProductMyCartUseCase
-import com.devdroid07.storeapp.store.domain.usecases.favorite.FavoriteUseCases
-import com.devdroid07.storeapp.store.domain.usecases.favorite.RemoveProductMyFavoritesUseCase
-import com.devdroid07.storeapp.store.domain.usecases.order.GetAllOrderUseCase
-import com.devdroid07.storeapp.store.domain.usecases.order.OrderUseCases
 import com.devdroid07.storeapp.store.domain.usecases.product.SearchProductUseCase
 import dagger.Module
 import dagger.Provides
@@ -231,7 +232,8 @@ object StoreModule {
         repository: OrderRepository
     ): OrderUseCases{
         return OrderUseCases(
-            getAllOrderUseCase = GetAllOrderUseCase(repository)
+            getAllOrderUseCase = GetAllOrderUseCase(repository),
+            getSingleOrderUseCase = GetSingleOrderUseCase(repository)
         )
     }
 

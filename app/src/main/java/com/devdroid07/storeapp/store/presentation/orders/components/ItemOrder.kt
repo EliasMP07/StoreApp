@@ -28,24 +28,29 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterFromLeft
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterRight
 import com.devdroid07.storeapp.store.domain.model.Order
+import com.devdroid07.storeapp.store.presentation.orderDetail.components.utils.StatusOrder
 import dashedBorder
 
 @Composable
 fun ItemOrder(
     spacing: Dimensions,
-    order: Order
+    order: Order,
+    onClick: (String) -> Unit
 ){
+    val name = StatusOrder.fromString(order.status)
     Card(
         modifier = Modifier
-            .fillMaxWidth().animateEnterRight().padding(spacing.spaceSmall),
+            .fillMaxWidth()
+            .animateEnterRight(
+                durationMillis = 1000
+            )
+            .padding(spacing.spaceSmall),
         onClick = {
-
+            onClick(order.id.toString())
         },
-        elevation = CardDefaults.cardElevation(10.dp),
+        elevation = CardDefaults.cardElevation(20.dp),
         shape = RoundedCornerShape(20.dp),
     ) {
         Row(
@@ -71,11 +76,11 @@ fun ItemOrder(
                 contentDescription = stringResource(R.string.content_description_img_product)
             )
             Column(
-                modifier = Modifier.weight(0.6f),
+                modifier = Modifier.weight(0.4f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = if (order.status == "PAGADO") "Pediente" else order.status,
+                    text = stringResource(id = name.title),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium.copy(
@@ -89,19 +94,18 @@ fun ItemOrder(
                 Text(
                     text = stringResource(
                         id = R.string.price,
-                        order.products.sumOf {
-                            it.price
-                        }
+                        order.transactionAmount
                     ),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
             Text(
                 modifier = Modifier
-                    .weight(0.4f)
+                    .weight(0.5f)
                     .align(Alignment.Top),
                 text = order.timestamp,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
             )
         }
 

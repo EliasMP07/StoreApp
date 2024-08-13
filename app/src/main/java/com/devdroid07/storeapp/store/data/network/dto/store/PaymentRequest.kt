@@ -13,5 +13,6 @@ class PaymentRequest(
 
 data class OrderRequest(
     @SerializedName("id_client") val clientId: String,
+    @SerializedName("transaction_amount") val transactionAmount: Double,
     @SerializedName("id_address") val addressId: String
 )

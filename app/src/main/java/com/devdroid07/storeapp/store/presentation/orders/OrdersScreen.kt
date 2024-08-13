@@ -29,6 +29,7 @@ fun OrderScreenRoot(
     drawerState: DrawerState,
     closeDrawer: () -> Unit,
     openDrawer: () -> Unit,
+    navigateToDetailOrder: (String) -> Unit,
     onBack: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -45,7 +46,10 @@ fun OrderScreenRoot(
         onAction = { action ->
             when (action) {
                 OrdersAction.OpenDrawerClick -> openDrawer()
+                is OrdersAction.OnDetailOrderClick -> navigateToDetailOrder(action.orderId)
+                else -> Unit
             }
+            viewModel.onAction(action)
         }
     )
 
@@ -75,8 +79,9 @@ private fun OrderScreen(
                 CircularLoading()
             },
             errorContent = {
-                ErrorContent(error = it)
+                ErrorContent(error = it, onRetry = {onAction(OrdersAction.OnRetry)})
             },
+            isEmpty = state.ordersList.isEmpty(),
             error = state.error
         )
         if(result){
@@ -88,7 +93,10 @@ private fun OrderScreen(
                 items(state.ordersList) {
                     ItemOrder(
                         spacing = spacing,
-                        order = it
+                        order = it,
+                        onClick = {idOrder ->
+                            onAction(OrdersAction.OnDetailOrderClick(idOrder))
+                        }
                     )
                 }
             }

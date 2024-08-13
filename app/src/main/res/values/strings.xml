@@ -136,5 +136,21 @@
     <string name="content_description_orders_draw_item">Ir a mis pedidos</string>
     <string name="orders_title_screen">Mis pedidos</string>
     <string name="total_pay">Total</string>
+    <string name="menu_item_delete">Eliminar</string>
+    <string name="menu_item_edit">Editar</string>
+    <string name="content_description_item_edit">Editar dirección</string>
+    <string name="content_description_item_delete">Eliminar dirección</string>
+    <string name="content_description_menu_address">Menu de opciones de dirección</string>
+    <string name="title_pending">Pendiente</string>
+    <string name="description_status_order_peding">Tu pedido ya se recibio en la tienda.</string>
+    <string name="title_status_order_dispatched">Despachando</string>
+    <string name="description_status_order_dispatched">Tu pedido se esta despachando en tienda.</string>
+    <string name="title_status_order_on_the_way">En camino</string>
+    <string name="description_status_order_on_the_way">Tu pedido ya se encuentra en camino.</string>
+    <string name="title_status_order_delivered">Pedido entregado</string>
+    <string name="description_status_order_delivered">Tu pedido se entrego.</string>
+    <string name="title_screen_tacker_order">Seguimiento del pedido</string>
+    <string name="total_order">Total $%s MX</string>
+    <string name="products_pay">"Producto comprados: "</string>
 
 </resources>

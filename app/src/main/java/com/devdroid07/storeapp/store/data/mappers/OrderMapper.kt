@@ -11,6 +11,7 @@ fun OrderDto.toOrder(): Order{
         products = products.map {
             it.toProduct()
         },
-        address = address.toAddress()
+        address = address.toAddress(),
+        transactionAmount = transactionAmount
     )
 }

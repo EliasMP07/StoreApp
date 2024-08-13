@@ -72,4 +72,13 @@ val DeleteIcon : ImageVector
     get() = ImageVector.vectorResource(id = R.drawable.ic_delete)
 
 
+val BagdeIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_badge)
+
+val DeliveryIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.ic_delivery)
+
+
 

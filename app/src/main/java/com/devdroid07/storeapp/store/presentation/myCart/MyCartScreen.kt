@@ -30,6 +30,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyLi
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
+import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterBottom
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.store.presentation.myCart.components.FooterMyCart
@@ -152,11 +153,11 @@ private fun MyCartScreen(
                         }
                     }
                 }
-
                 FooterMyCart(
                     state = state,
                     onAction = onAction,
                     modifier = Modifier
+                        .animateEnterBottom()
                         .fillMaxWidth()
                         .weight(0.3f),
                 )

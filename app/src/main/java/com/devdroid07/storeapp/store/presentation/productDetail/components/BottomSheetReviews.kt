@@ -17,7 +17,6 @@ import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
-import com.devdroid07.storeapp.store.presentation.favorite.component.FavoriteShimmerEffect
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailAction
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailState
 
@@ -31,7 +30,7 @@ fun BottomSheetReviews(
         val result = handleResultView(
             isLoading = state.isLoadingReview,
             contentLoading = {
-                FavoriteShimmerEffect(
+                ReviewsShimmerEffect(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth(),

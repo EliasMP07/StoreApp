@@ -167,5 +167,7 @@
     <string name="sub_total">Sub total</string>
     <string name="success_update_quantity">Se actualizo la cantidad</string>
     <string name="total_item">pieza</string>
+    <string name="empty_orders">No tienes ninguno pedido</string>
+    <string name="see_more">... mostrar más</string>
 
 </resources>

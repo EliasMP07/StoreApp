@@ -1,6 +1,5 @@
 package com.devdroid07.storeapp.store.presentation.favorite.component
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,36 +18,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterRight
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.store.domain.model.Product
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ItemFavorite(
     product: Product,
-    onDetailProduct: (String) -> Unit
+    onDetailProduct: (String) -> Unit,
 ) {
-
     ElevatedCard(
-        elevation = CardDefaults.cardElevation(20.dp),
         modifier = Modifier
-            .clip(RoundedCornerShape(30.dp))
-            .animateEnterRight()
-            .animateContentSize(),
-        onClick = { onDetailProduct(product.id.toString()) }
+            .padding(8.dp),
+        onClick = { onDetailProduct(product.id.toString()) },
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(
-                    RoundedCornerShape(
-                        topStart = 30.dp,
-                        bottomStart = 30.dp
-                    )
-                )
                 .background(MaterialTheme.colorScheme.background),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -62,7 +53,7 @@ fun ItemFavorite(
                     .background(Color.White),
                 model = product.image,
                 contentScale = ContentScale.Fit,
-                contentDescription = ""
+                contentDescription = stringResource(id = R.string.content_description_img_product)
             )
             Column(
                 modifier = Modifier.weight(1f)
@@ -78,6 +69,5 @@ fun ItemFavorite(
             }
             Spacer(modifier = Modifier.weight(0.1f))
         }
-        HorizontalDivider()
     }
 }

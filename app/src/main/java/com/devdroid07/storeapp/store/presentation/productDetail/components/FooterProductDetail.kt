@@ -135,10 +135,6 @@ fun FooterProductDetail(
                         onAction(ProductDetailAction.OnRemoveProductClick)
                     }
                 )
-                Text(
-                    text = "Available in stock",
-                    style = MaterialTheme.typography.labelMedium
-                )
             }
         }
         Column(
@@ -162,7 +158,7 @@ fun FooterProductDetail(
                 if (!state.isExpanded) {
                     val density = LocalDensity.current
                     Text(
-                        "... See more",
+                        stringResource(R.string.see_more),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             textAlign = TextAlign.Justify,
                             fontWeight = FontWeight.Bold,

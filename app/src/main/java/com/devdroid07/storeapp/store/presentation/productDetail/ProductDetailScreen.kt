@@ -153,6 +153,8 @@ private fun ProductDetailScreen(
                 StoreSnackBar(snackbarData = it, labelButton = state.labelButton)
             }
         },
+        sheetTonalElevation = 0.dp,
+        sheetShadowElevation = 30.dp,
         sheetPeekHeight = 0.dp,
         scaffoldState = scaffoldState,
         sheetContent = {
@@ -184,13 +186,11 @@ private fun ProductDetailScreen(
                     .padding(paddingValue),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
                 ) {
-
                     GlideImage(
                         modifier = Modifier
                             .align(Alignment.Center),

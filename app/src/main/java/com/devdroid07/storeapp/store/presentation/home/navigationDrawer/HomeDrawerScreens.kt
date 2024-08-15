@@ -23,6 +23,7 @@ import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
 import com.devdroid07.storeapp.navigation.util.navigateAndRemoveCurrent
+import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
 import com.devdroid07.storeapp.store.presentation.account.AccountScreenRoot
 import com.devdroid07.storeapp.store.presentation.account.AccountViewModel
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
@@ -61,20 +62,20 @@ internal fun HomeDrawerScreens(
                 ) { route ->
                     currentDrawerRoute = route
                     when (route) {
-                        RoutesScreens.Account -> navController.navigateScreen(
+                        RoutesScreens.Account -> navController.navigateToSingleTop(
                             navBackStackEntry,
                             route.route
                         )
-                        RoutesScreens.Home -> navController.navigateAndRemoveCurrent(
+                        RoutesScreens.Home -> navController.navigateToSingleTop(
                             navBackStackEntry,
                             route.route
                         )
                         RoutesScreens.Search -> navigateToSearch()
-                        RoutesScreens.Favorite -> navController.navigateScreen(
+                        RoutesScreens.Favorite -> navController.navigateToSingleTop(
                             navBackStackEntry,
                             route.route
                         )
-                        RoutesScreens.Orders -> navController.navigateScreen(
+                        RoutesScreens.Orders -> navController.navigateToSingleTop(
                             navBackStackEntry,
                             route.route
                         )
@@ -133,20 +134,21 @@ internal fun HomeDrawerScreens(
             ) {
 
                 val viewModel: FavoriteViewModel = hiltViewModel()
-                val state by viewModel.state.collectAsStateWithLifecycle()
-                val onAction = viewModel::onAction
 
                 FavoriteScreenRoot(
+                    drawerState = drawerState,
                     context = context,
-                    state = state,
+                    closeDrawer = { coroutineScope.launch { drawerState.close() } },
                     onBack = {
-                        navController.navigateBack()
+                        navController.navigateToSingleTop(
+                            navBackStackEntry,
+                            RoutesScreens.Home.route
+                        )
                     },
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
                     navigateDetailProduct = {
                         navigateToDetailProduct(it)
                     },
-                    onAction = onAction,
                     viewModel = viewModel
                 )
 
@@ -160,10 +162,10 @@ internal fun HomeDrawerScreens(
                 OrderScreenRoot(
                     viewModel = viewModel,
                     drawerState = drawerState,
-                    closeDrawer = { coroutineScope.launch { drawerState.close() }},
+                    closeDrawer = { coroutineScope.launch { drawerState.close() } },
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
                     onBack = {
-                        navController.navigateAndRemoveCurrent(
+                        navController.navigateToSingleTop(
                             navBackStackEntry,
                             RoutesScreens.Home.route
                         )

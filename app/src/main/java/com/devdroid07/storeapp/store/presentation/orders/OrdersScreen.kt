@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.CircularLoading
+import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
@@ -77,6 +78,13 @@ private fun OrderScreen(
             isLoading = state.isLoading,
             contentLoading = {
                 CircularLoading()
+            },
+            contentEmpty = {
+                EmptyListScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    text = stringResource(R.string.empty_orders),
+                    image = R.drawable.empty_data
+                )
             },
             errorContent = {
                 ErrorContent(error = it, onRetry = {onAction(OrdersAction.OnRetry)})

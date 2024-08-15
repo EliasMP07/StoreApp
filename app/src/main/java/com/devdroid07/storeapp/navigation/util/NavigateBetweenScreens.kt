@@ -4,16 +4,23 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 
-fun NavHostController.navigateScreen(navBackStackEntry: NavBackStackEntry, route: String){
-    if (navBackStackEntry.lifecycleIsResumed()){
+fun NavHostController.navigateScreen(
+    navBackStackEntry: NavBackStackEntry,
+    route: String,
+) {
+    if (navBackStackEntry.lifecycleIsResumed()) {
         navigate(route) {
             launchSingleTop = true
             restoreState = true
         }
     }
 }
-fun NavHostController.navigateToSingleTop(navBackStackEntry: NavBackStackEntry, route: String) {
-    if (navBackStackEntry.lifecycleIsResumed()){
+
+fun NavHostController.navigateToSingleTop(
+    navBackStackEntry: NavBackStackEntry,
+    route: String,
+) {
+    if (navBackStackEntry.lifecycleIsResumed()) {
         navigate(route) {
             popUpTo(graph.id) { saveState = true }
             launchSingleTop = true
@@ -22,8 +29,11 @@ fun NavHostController.navigateToSingleTop(navBackStackEntry: NavBackStackEntry, 
     }
 }
 
-fun NavHostController.navigateAndRemoveCurrent(navBackStackEntry: NavBackStackEntry, route: String) {
-    if (navBackStackEntry.lifecycleIsResumed()){
+fun NavHostController.navigateAndRemoveCurrent(
+    navBackStackEntry: NavBackStackEntry,
+    route: String,
+) {
+    if (navBackStackEntry.lifecycleIsResumed()) {
         val currentRoute = navBackStackEntry.destination.route
         if (currentRoute != null) {
             navigate(route) {
@@ -34,7 +44,6 @@ fun NavHostController.navigateAndRemoveCurrent(navBackStackEntry: NavBackStackEn
         }
     }
 }
-
 
 fun NavBackStackEntry.lifecycleIsResumed() =
     this.lifecycle.currentState == Lifecycle.State.RESUMED

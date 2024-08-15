@@ -41,7 +41,7 @@ fun ItemCart(
             onClickCart(cart.quantity, cart.idProduct)
         },
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(20.dp),
+        elevation = CardDefaults.cardElevation(8.dp),
     ) {
         Row(
             modifier = Modifier

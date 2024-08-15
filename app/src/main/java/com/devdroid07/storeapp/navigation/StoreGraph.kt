@@ -10,11 +10,13 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
+import com.devdroid07.storeapp.navigation.util.enterTransition
+import com.devdroid07.storeapp.navigation.util.exitTransition
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
 import com.devdroid07.storeapp.navigation.util.navigateAndRemoveCurrent
-import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
-import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
+import com.devdroid07.storeapp.navigation.util.popEnterTransition
+import com.devdroid07.storeapp.navigation.util.popExitTransition
 import com.devdroid07.storeapp.store.presentation.address.AddressScreenRoot
 import com.devdroid07.storeapp.store.presentation.address.AddressViewModel
 import com.devdroid07.storeapp.store.presentation.home.navigationDrawer.HomeDrawerScreens
@@ -75,6 +77,18 @@ fun NavGraphBuilder.store(
         }
 
         composable(
+            enterTransition = {
+                enterTransition()
+            },
+            exitTransition = {
+                exitTransition()
+            },
+            popExitTransition = {
+                popExitTransition()
+            },
+            popEnterTransition = {
+                popEnterTransition()
+            },
             route = RoutesScreens.Cart.route
         ) { navBackEntry ->
 
@@ -90,13 +104,17 @@ fun NavGraphBuilder.store(
                     )
                 },
                 onBack = {
-                    navController.navigateBack()
+                    navController.navigateAndRemoveCurrent(
+                        navBackEntry,
+                        RoutesScreens.HomeDrawerRoute.route
+                    )
                 },
             )
 
         }
         composable(
-            route = RoutesScreens.DetailOrder.route
+            route = RoutesScreens.DetailOrder.route,
+            arguments = listOf(navArgument(NavArgs.OrderId.key) { type = NavType.StringType })
         ) { navBackEntry ->
             val viewModel: OrderDetailViewModel = hiltViewModel()
             OrderDetailScreenRoot(
@@ -131,6 +149,18 @@ fun NavGraphBuilder.store(
         }
 
         composable(
+            enterTransition = {
+                enterTransition()
+            },
+            exitTransition = {
+                exitTransition()
+            },
+            popExitTransition = {
+                popExitTransition()
+            },
+            popEnterTransition = {
+                popEnterTransition()
+            },
             route = RoutesScreens.Address.route
         ) { navBackEntry ->
 
@@ -158,7 +188,20 @@ fun NavGraphBuilder.store(
         }
 
         composable(
-            route = RoutesScreens.EditAddress.route
+            enterTransition = {
+                enterTransition()
+            },
+            exitTransition = {
+                exitTransition()
+            },
+            popExitTransition = {
+                popExitTransition()
+            },
+            popEnterTransition = {
+                popEnterTransition()
+            },
+            route = RoutesScreens.EditAddress.route,
+            arguments = listOf(navArgument(NavArgs.AddressID.key) { type = NavType.StringType })
         ) { navBackEntry ->
 
             val viewModel: UpdateAddressViewModel = hiltViewModel()
@@ -181,7 +224,20 @@ fun NavGraphBuilder.store(
         }
 
         composable(
-            route = RoutesScreens.Payment.route
+            enterTransition = {
+                enterTransition()
+            },
+            exitTransition = {
+                exitTransition()
+            },
+            popExitTransition = {
+                popExitTransition()
+            },
+            popEnterTransition = {
+                popEnterTransition()
+            },
+            route = RoutesScreens.Payment.route,
+            arguments = listOf(navArgument(NavArgs.AddressID.key) { type = NavType.StringType })
         ) { navBackEntry ->
 
             val viewModel: PaymentViewModel = hiltViewModel()
@@ -206,7 +262,24 @@ fun NavGraphBuilder.store(
         }
 
         composable(
-            route = RoutesScreens.FinishPay.route
+            enterTransition = {
+                enterTransition()
+            },
+            exitTransition = {
+                exitTransition()
+            },
+            popExitTransition = {
+                popExitTransition()
+            },
+            popEnterTransition = {
+                popEnterTransition()
+            },
+            route = RoutesScreens.FinishPay.route,
+            arguments = listOf(
+                navArgument(NavArgs.CardID.key) { type = NavType.StringType },
+                navArgument(NavArgs.AddressID.key) { type = NavType.StringType },
+                navArgument(NavArgs.TokenId.key) { type = NavType.StringType }
+            )
         ) { navBackEntry ->
 
             val viewModel: FinishPayViewModel = hiltViewModel()
@@ -227,14 +300,19 @@ fun NavGraphBuilder.store(
         }
         composable(
             enterTransition = {
-                scaleIntoContainer()
+                enterTransition()
             },
             exitTransition = {
-                scaleOutOfContainer()
+                exitTransition()
+            },
+            popExitTransition = {
+                popExitTransition()
+            },
+            popEnterTransition = {
+                popEnterTransition()
             },
             route = RoutesScreens.DetailProduct.route,
             arguments = listOf(navArgument(NavArgs.ProductID.key) { type = NavType.StringType })
-
         ) { navBackEntry ->
 
             val viewModel: ProductDetailViewModel = hiltViewModel()

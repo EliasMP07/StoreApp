@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.store.presentation.favorite.component
+package com.devdroid07.storeapp.store.presentation.productDetail.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.shimmerEffect
 
 @Composable
-fun FavoriteShimmerEffect(
+fun ReviewsShimmerEffect(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues
 ) {

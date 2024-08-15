@@ -152,5 +152,20 @@
     <string name="title_screen_tacker_order">Seguimiento del pedido</string>
     <string name="total_order">Total $%s MX</string>
     <string name="products_pay">"Producto comprados: "</string>
+    <string name="btn_text_continue_pay">Continuar para pagar</string>
+    <string name="label_undo">Deshacer</string>
+    <string name="goToCart">Ir al carrito</string>
+    <string name="description_product">Descripcion</string>
+    <string name="total_price">Precio</string>
+    <string name="btn_text_add_cart">Agregar al carrito</string>
+    <string name="total_items">piezas</string>
+    <string name="add_more_products">Agregar mas al carrito</string>
+    <string name="content_description_add_product_cart">Agregar mas</string>
+    <string name="content_description_remove_product_quantity_cart">Quitar</string>
+    <string name="btn_text_update_cart">Actualizar cantidad</string>
+    <string name="total_items_products">Total(%s)</string>
+    <string name="sub_total">Sub total</string>
+    <string name="success_update_quantity">Se actualizo la cantidad</string>
+    <string name="total_item">pieza</string>
 
 </resources>

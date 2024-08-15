@@ -38,6 +38,7 @@ import com.devdroid07.storeapp.store.domain.usecases.cart.AddMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.cart.CartUseCases
 import com.devdroid07.storeapp.store.domain.usecases.cart.GetMyCartUseCase
 import com.devdroid07.storeapp.store.domain.usecases.cart.RemoveProductMyCartUseCase
+import com.devdroid07.storeapp.store.domain.usecases.cart.UpdateQuantityProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.favorite.AddFavoriteProductUseCase
 import com.devdroid07.storeapp.store.domain.usecases.favorite.FavoriteUseCases
 import com.devdroid07.storeapp.store.domain.usecases.favorite.GetFavoritesProductsUseCase
@@ -195,7 +196,8 @@ object StoreModule {
         return CartUseCases(
             getMyCartUseCase = GetMyCartUseCase(repository),
             addMyCartUseCase = AddMyCartUseCase(repository),
-            removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository)
+            removeProductMyCartUseCase = RemoveProductMyCartUseCase(repository),
+            updateQuantityProductUseCase = UpdateQuantityProductUseCase(repository)
         )
     }
 

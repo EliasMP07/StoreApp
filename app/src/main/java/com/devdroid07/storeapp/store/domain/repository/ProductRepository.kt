@@ -24,6 +24,6 @@ interface ProductRepository {
 
     suspend fun searchProduct(query: String): Result<List<Product>, DataError.Network>
 
-    suspend fun getAllBanner(): Flow<Result<List<Banner>, DataError.Network>>
+    fun getAllBanner(): Flow<Result<List<Banner>, DataError.Network>>
 
 }

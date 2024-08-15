@@ -10,11 +10,9 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
-import com.devdroid07.storeapp.navigation.util.lifecycleIsResumed
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
-import com.devdroid07.storeapp.navigation.util.navigateToSingleInclusive
-import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
+import com.devdroid07.storeapp.navigation.util.navigateAndRemoveCurrent
 import com.devdroid07.storeapp.navigation.util.scaleIntoContainer
 import com.devdroid07.storeapp.navigation.util.scaleOutOfContainer
 import com.devdroid07.storeapp.store.presentation.address.AddressScreenRoot
@@ -91,7 +89,7 @@ fun NavGraphBuilder.store(
                         RoutesScreens.Address.route
                     )
                 },
-                navigateBack = {
+                onBack = {
                     navController.navigateBack()
                 },
             )
@@ -151,7 +149,7 @@ fun NavGraphBuilder.store(
                     navController.navigateBack()
                 },
                 navigateToUpdateAddress = {
-                    navController.navigateScreen(
+                    navController.navigateAndRemoveCurrent(
                         navBackEntry,
                         RoutesScreens.EditAddress.createRoute(it)
                     )
@@ -168,10 +166,13 @@ fun NavGraphBuilder.store(
                 context = context,
                 viewModel = viewModel,
                 onBack = {
-                    navController.navigateBack()
+                    navController.navigateAndRemoveCurrent(
+                        navBackEntry,
+                        RoutesScreens.Address.route
+                    )
                 },
                 onSuccessUpdate = {
-                    navController.navigateToSingleInclusive(
+                    navController.navigateAndRemoveCurrent(
                         navBackEntry,
                         RoutesScreens.Address.route
                     )
@@ -213,7 +214,7 @@ fun NavGraphBuilder.store(
             FinishPayScreenRoot(
                 viewModel = viewModel,
                 navigateToHome = {
-                    navController.navigateToSingleTop(
+                    navController.navigateAndRemoveCurrent(
                         navBackEntry,
                         RoutesScreens.HomeDrawerRoute.route
                     )
@@ -234,13 +235,19 @@ fun NavGraphBuilder.store(
             route = RoutesScreens.DetailProduct.route,
             arguments = listOf(navArgument(NavArgs.ProductID.key) { type = NavType.StringType })
 
-        ) {
+        ) { navBackEntry ->
 
             val viewModel: ProductDetailViewModel = hiltViewModel()
 
             ProductDetailRootScreenRoot(
                 context = context,
                 viewModel = viewModel,
+                navigateToCart = {
+                    navController.navigateAndRemoveCurrent(
+                        navBackEntry,
+                        RoutesScreens.Cart.route
+                    )
+                },
                 onBack = {
                     navController.navigateBack()
                 }

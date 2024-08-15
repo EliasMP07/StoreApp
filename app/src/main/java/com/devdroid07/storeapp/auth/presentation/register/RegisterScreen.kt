@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,8 +23,6 @@ import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.core.presentation.ui.util.ComposeFileProvider
 import com.devdroid07.storeapp.core.presentation.ui.util.hasCamaraPermission
 import com.devdroid07.storeapp.core.presentation.ui.util.shouldShowCamaraPermissionRationale
-import com.devdroid07.storeapp.navigation.util.RoutesScreens
-import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
 
 @Composable
 fun RegisterScreenRoot(

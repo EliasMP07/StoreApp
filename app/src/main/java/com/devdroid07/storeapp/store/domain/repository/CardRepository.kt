@@ -6,7 +6,8 @@ import com.devdroid07.storeapp.store.domain.model.Card
 import kotlinx.coroutines.flow.Flow
 
 interface CardRepository {
-    suspend fun getAllMyCard(): Flow<Result<List<Card>, DataError.Network>>
+    fun getAllMyCard(): Flow<Result<List<Card>, DataError.Network>>
+
     suspend fun createCard(
         cardNumber: String,
         expireDate: String,

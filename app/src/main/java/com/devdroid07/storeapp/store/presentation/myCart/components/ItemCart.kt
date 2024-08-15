@@ -20,20 +20,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterRight
+import com.devdroid07.storeapp.core.presentation.ui.util.roundToTwoDecimals
 import com.devdroid07.storeapp.store.domain.model.Cart
 
 @Composable
 fun ItemCart(
-    cart: Cart
+    cart: Cart,
+    onClickCart: (Int, String) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
-            .animateEnterRight()
             .padding(8.dp),
+        onClick = {
+            onClickCart(cart.quantity, cart.idProduct)
+        },
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(20.dp),
     ) {
@@ -66,7 +72,10 @@ fun ItemCart(
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "$${(cart.price.toDouble() * cart.quantity)}",
+                    text = stringResource(
+                        id = R.string.price,
+                        (cart.price.toDouble() * cart.quantity).roundToTwoDecimals()
+                    ),
                     style = MaterialTheme.typography.titleMedium
                 )
             }

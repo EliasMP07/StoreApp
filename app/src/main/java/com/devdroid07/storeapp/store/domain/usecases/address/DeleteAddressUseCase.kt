@@ -10,8 +10,6 @@ class DeleteAddressUseCase(
     private val repository: AddressRepository
 ) {
     suspend operator fun invoke(addressId: Int): EmptyResult<DataError.Network>{
-        return withContext(Dispatchers.IO){
-            repository.deleteAddress(idAddress = addressId)
-        }
+        return repository.deleteAddress(idAddress = addressId)
     }
 }

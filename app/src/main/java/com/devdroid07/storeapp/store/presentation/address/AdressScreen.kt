@@ -116,6 +116,8 @@ fun AddressScreen(
     val spacing = LocalSpacing.current
 
     BottomSheetScaffold(
+        sheetTonalElevation = 0.dp,
+        sheetShadowElevation = 30.dp,
         sheetPeekHeight = 0.dp,
         scaffoldState = scaffoldState,
         topBar = {

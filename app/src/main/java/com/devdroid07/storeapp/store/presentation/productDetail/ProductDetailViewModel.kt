@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.domain.SessionStorage
 import com.devdroid07.storeapp.core.domain.util.Result
+import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.SnackBarStyle
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.navigation.util.NavArgs
@@ -42,7 +43,7 @@ class ProductDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(ProductDetailState())
     val state: StateFlow<ProductDetailState> get() = _state.asStateFlow()
 
-    private val  productId: String = checkNotNull(savedStateHandle[NavArgs.ProductID.key])
+    private val productId: String = checkNotNull(savedStateHandle[NavArgs.ProductID.key])
 
 
     private val eventChannel = Channel<ProductDetailEvent>()
@@ -66,33 +67,6 @@ class ProductDetailViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
         getProduct()
-    }
-
-    private fun getReviews(productId: String) {
-        viewModelScope.launch {
-            _state.update { productDetailState ->
-                productDetailState.copy(
-                    errorReviews = null,
-                    isLoadingReview = true
-                )
-            }
-            productUseCases.getReviewsProductUseCase(productId).collectLatest { result ->
-                _state.update { productDetailState ->
-                    when (result) {
-                        is Result.Error -> productDetailState.copy(
-                            isLoadingReview = false,
-                            errorReviews = result.error.asUiText(),
-                            reviewsList = emptyList()
-                        )
-                        is Result.Success -> productDetailState.copy(
-                            isLoadingReview = false,
-                            errorReviews = null,
-                            reviewsList = result.data
-                        )
-                    }
-                }
-            }
-        }
     }
 
     fun onAction(action: ProductDetailAction) {
@@ -147,6 +121,34 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
+    private fun getReviews(productId: String) {
+        viewModelScope.launch {
+            _state.update { productDetailState ->
+                productDetailState.copy(
+                    errorReviews = null,
+                    isLoadingReview = true
+                )
+            }
+            productUseCases.getReviewsProductUseCase(productId).collectLatest { result ->
+                _state.update { productDetailState ->
+                    when (result) {
+                        is Result.Error -> productDetailState.copy(
+                            isLoadingReview = false,
+                            errorReviews = result.error.asUiText(),
+                            reviewsList = emptyList()
+                        )
+                        is Result.Success -> productDetailState.copy(
+                            isLoadingReview = false,
+                            errorReviews = null,
+                            reviewsList = result.data
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
     private fun getProduct() {
         viewModelScope.launch {
             _state.update {
@@ -182,21 +184,31 @@ class ProductDetailViewModel @Inject constructor(
 
     private fun addMyCart(
         idProduct: String,
-        quantity: Int
+        quantity: Int,
     ) {
         viewModelScope.launch {
-
+            _state.update { it.copy(isAddingCart = true) }
             val result = cartUseCases.addMyCartUseCase(
                 idProduct,
                 quantity
             )
-
+            _state.update {
+                it.copy(
+                    labelButton = UiText.StringResource(R.string.goToCart),
+                    isAddingCart = false
+                )
+            }
             when (result) {
                 is Result.Error -> {
                     eventChannel.send(ProductDetailEvent.Error(UiText.StringResource(R.string.error_add_cart)))
                 }
                 is Result.Success -> {
-                    eventChannel.send(ProductDetailEvent.Success(UiText.StringResource(R.string.success_add_cart)))
+                    eventChannel.send(
+                        ProductDetailEvent.Success(
+                            UiText.StringResource(R.string.success_add_cart),
+                            SnackBarStyle.SuccessAddCart
+                        )
+                    )
                 }
             }
         }
@@ -218,11 +230,15 @@ class ProductDetailViewModel @Inject constructor(
                             isFavorite = true
                         )
                         currentState.copy(
-                            product = updatedProducts
+                            product = updatedProducts,
+                            labelButton = null
                         )
                     }
                     eventChannel.send(
-                        ProductDetailEvent.Success(UiText.StringResource(R.string.success_add_favorite))
+                        ProductDetailEvent.Success(
+                            UiText.StringResource(R.string.success_add_favorite),
+                            SnackBarStyle.SuccessAddFavorite
+                        )
                     )
                 }
             }
@@ -244,11 +260,15 @@ class ProductDetailViewModel @Inject constructor(
                             isFavorite = false
                         )
                         currentState.copy(
-                            product = updatedProducts
+                            product = updatedProducts,
+                            labelButton = null
                         )
                     }
                     eventChannel.send(
-                        ProductDetailEvent.Success(UiText.StringResource(R.string.success_delete_favorite))
+                        ProductDetailEvent.Success(
+                            UiText.StringResource(R.string.success_delete_favorite),
+                            SnackBarStyle.SuccessRemoveFavorite
+                        )
                     )
                 }
             }
@@ -269,6 +289,7 @@ class ProductDetailViewModel @Inject constructor(
             )
             _state.update { productDetailState ->
                 productDetailState.copy(
+                    labelButton = null,
                     isEvaluating = false
                 )
             }
@@ -280,7 +301,10 @@ class ProductDetailViewModel @Inject constructor(
                 }
                 is Result.Success -> {
                     eventChannel.send(
-                        ProductDetailEvent.Success(UiText.StringResource(R.string.success_add_review))
+                        ProductDetailEvent.Success(
+                            UiText.StringResource(R.string.success_add_review),
+                            SnackBarStyle.SuccessAddReview
+                        )
                     )
                     _state.update { productDetailState ->
                         productDetailState.comment.clearText()

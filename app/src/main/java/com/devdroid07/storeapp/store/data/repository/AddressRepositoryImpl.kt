@@ -24,7 +24,7 @@ class AddressRepositoryImpl (
     private val sessionStorage: SessionStorage
 ): AddressRepository {
 
-    override suspend fun getInfoByPostalCode(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>> = flow {
+    override fun getInfoByPostalCode(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>> = flow {
         val result = safeCall {
             copomexApi.getInfoByPostalCode(
                 codigoPostal = postalCode,
@@ -48,7 +48,7 @@ class AddressRepositoryImpl (
         }
     }
 
-    override suspend fun getAllMyAddress(): Flow<Result<List<Address>, DataError.Network>> = flow {
+    override fun getAllMyAddress(): Flow<Result<List<Address>, DataError.Network>> = flow {
         val result = safeCall {
             addressApiService.getAllMyAddress(
                 userId = sessionStorage.get()?.id.orEmpty()

@@ -29,12 +29,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StarRating
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
 import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailAction
@@ -44,7 +46,7 @@ import com.devdroid07.storeapp.store.presentation.productDetail.ProductDetailSta
 fun FooterProductDetail(
     state: ProductDetailState,
     onAction: (ProductDetailAction) -> Unit,
-    onClickReview: () -> Unit
+    onClickReview: () -> Unit,
 ) {
     var cutText by remember(state.product.description) { mutableStateOf<String?>(null) }
 
@@ -144,7 +146,7 @@ fun FooterProductDetail(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "Description",
+                text = stringResource(R.string.description_product),
                 style = MaterialTheme.typography.titleMedium
             )
             Box {
@@ -195,7 +197,7 @@ fun FooterProductDetail(
                 modifier = Modifier.weight(0.5f)
             ) {
                 Text(
-                    text = "Total price",
+                    text = stringResource(R.string.total_price),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.primary.copy(
                             alpha = 0.5f
@@ -203,14 +205,17 @@ fun FooterProductDetail(
                     )
                 )
                 Text(
-                    text = "$${state.product.price}",
+                    text = stringResource(
+                        id = R.string.price,
+                        state.product.price
+                    ),
                     style = MaterialTheme.typography.titleLarge
                 )
             }
             StoreActionButton(
                 modifier = Modifier.weight(1f),
-                text = "Add to Cart",
-                isLoading = state.isLoading,
+                text = stringResource(R.string.btn_text_add_cart),
+                isLoading = state.isAddingCart,
                 icon = Icons.Rounded.ShoppingCart
             ) {
                 onAction(

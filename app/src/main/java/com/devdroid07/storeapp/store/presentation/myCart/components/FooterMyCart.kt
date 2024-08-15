@@ -14,8 +14,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
+import com.devdroid07.storeapp.core.presentation.ui.util.roundToTwoDecimals
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartAction
 import com.devdroid07.storeapp.store.presentation.myCart.MyCartState
 
@@ -24,7 +27,7 @@ fun FooterMyCart(
     state: MyCartState,
     onAction: (MyCartAction) -> Unit,
     modifier: Modifier,
-){
+) {
     ElevatedCard(
         shape = RoundedCornerShape(
             topStart = 30.dp,
@@ -47,29 +50,38 @@ fun FooterMyCart(
 
                 Column {
                     Text(
-                        text = "Total(${state.myCart.size} items)",
+                        text = stringResource(
+                            R.string.total_items_products,
+                            state.myCart.size
+                        ),
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        text = "Sub total",
+                        text = stringResource(R.string.sub_total),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
                 Column {
                     Text(
-                        text = "$${state.myCart.sumOf { it.price.toDouble() } * state.myCart.size}",
+                        text = stringResource(
+                            id = R.string.price,
+                            state.totalSale.roundToTwoDecimals()
+                        ),
                         style = MaterialTheme.typography.titleSmall
                     )
 
                     Text(
-                        text = "$${state.myCart.sumOf { it.price.toDouble() } * state.myCart.size}",
+                        text = stringResource(
+                            id = R.string.price,
+                            state.totalSale.roundToTwoDecimals()
+                        ),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
             StoreActionButton(
                 modifier = Modifier.padding(horizontal = 10.dp),
-                text = "Continuar para pagar",
+                text = stringResource(R.string.btn_text_continue_pay),
                 isLoading = false
             ) {
                 onAction(MyCartAction.OnContinuePayClick)

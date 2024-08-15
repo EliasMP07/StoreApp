@@ -8,6 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -19,5 +20,11 @@ interface CartApiService {
     suspend fun getMyCart(@Path("id_user") idUser: String): Response<StoreResponse<List<CartDto>>>
 
     @DELETE("cart/deleteProduct/remove")
-    suspend fun removeProductMyCart(@Query("id_user") idUser: String, @Query("id_product") idProduct: String): Response<StoreResponse<String>>
+    suspend fun removeProductMyCart(
+        @Query("id_user") idUser: String,
+        @Query("id_product") idProduct: String,
+    ): Response<StoreResponse<String>>
+
+    @PUT("/v1/cart/updateQuantity")
+    suspend fun updateQuantity(@Body cartRequest: CartRequest): Response<StoreResponse<String>>
 }

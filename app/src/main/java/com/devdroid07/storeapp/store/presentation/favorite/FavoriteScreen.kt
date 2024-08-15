@@ -133,12 +133,12 @@ private fun FavoriteScreen(
                         .padding(horizontal = 10.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(state.productFavorites) { product ->
+                    items(state.productFavorites, key = {it.id}) { product ->
                         SwipeToDeleteContainer(
                             item = product,
                             onDelete = {
                                 onAction(FavoriteAction.RemoveFavoriteSlide(it.id.toString()))
-                            }
+                            },
                         ) {
                             ItemFavorite(
                                 product = product,

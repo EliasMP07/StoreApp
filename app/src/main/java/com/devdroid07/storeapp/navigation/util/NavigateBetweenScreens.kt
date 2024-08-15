@@ -21,15 +21,20 @@ fun NavHostController.navigateToSingleTop(navBackStackEntry: NavBackStackEntry, 
         }
     }
 }
-fun NavHostController.navigateToSingleInclusive(navBackStackEntry: NavBackStackEntry, route: String){
+
+fun NavHostController.navigateAndRemoveCurrent(navBackStackEntry: NavBackStackEntry, route: String) {
     if (navBackStackEntry.lifecycleIsResumed()){
-        navigate(route) {
-            popUpTo(route) { inclusive = true }
-            launchSingleTop = true
-            restoreState = true
+        val currentRoute = navBackStackEntry.destination.route
+        if (currentRoute != null) {
+            navigate(route) {
+                popUpTo(currentRoute) { inclusive = true }
+                launchSingleTop = true
+                restoreState = true
+            }
         }
     }
 }
+
 
 fun NavBackStackEntry.lifecycleIsResumed() =
     this.lifecycle.currentState == Lifecycle.State.RESUMED

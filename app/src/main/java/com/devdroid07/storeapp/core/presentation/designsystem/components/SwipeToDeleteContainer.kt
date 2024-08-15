@@ -1,9 +1,12 @@
 package com.devdroid07.storeapp.core.presentation.designsystem.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Ease
+import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,21 +30,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
+import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterRight
 
 @ExperimentalMaterial3Api
 @Composable
 fun <T> SwipeToDeleteContainer(
     item: T,
     onDelete: (T) -> Unit,
-    animationDuration: Int = 500,
-    content: @Composable (T) -> Unit
+    content: @Composable (T) -> Unit,
 ) {
-    var isRemoved by remember {
-        mutableStateOf(false)
-    }
-    val state = rememberSwipeToDismissBoxState(
-        confirmValueChange = {value ->
+    var isRemoved by remember { mutableStateOf(false) }
+    val swipeState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { value ->
             if (value == SwipeToDismissBoxValue.EndToStart) {
                 isRemoved = true
                 true
@@ -51,25 +51,31 @@ fun <T> SwipeToDeleteContainer(
         }
     )
 
-    LaunchedEffect(key1 = isRemoved) {
+    LaunchedEffect(isRemoved) {
         if (isRemoved) {
-            delay(animationDuration.toLong())
             onDelete(item)
         }
     }
 
     AnimatedVisibility(
+        modifier = Modifier,
         visible = !isRemoved,
-        exit = shrinkVertically(
-            animationSpec = tween(durationMillis = animationDuration),
-            shrinkTowards = Alignment.Top
+        exit = shrinkHorizontally(
+            animationSpec = tween(
+                durationMillis = 1000,
+                easing = EaseIn
+            ),
+            shrinkTowards = Alignment.Start
         ) + fadeOut()
     ) {
         SwipeToDismissBox(
-            state = state,
+            state = swipeState,
             backgroundContent = {
-                DeleteBackground(swipeDismissState = state)
+                DeleteBackground(
+                    swipeDismissState = swipeState
+                )
             },
+            enableDismissFromEndToStart = true,
             enableDismissFromStartToEnd = false,
             content = {
                 content(item)
@@ -80,15 +86,31 @@ fun <T> SwipeToDeleteContainer(
 
 @ExperimentalMaterial3Api
 @Composable
-fun DeleteBackground(swipeDismissState: SwipeToDismissBoxState) {
-    val color = if (swipeDismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
-        Color.Red
-    } else Color.Transparent
+fun DeleteBackground(
+    swipeDismissState: SwipeToDismissBoxState
+) {
+
+    val background by animateColorAsState(
+        targetValue = when {
+            swipeDismissState.progress >= 0.15f && swipeDismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart -> Color.Red
+            swipeDismissState.progress  >= 0f -> Color.Gray
+            else -> Color.Transparent
+        },
+        animationSpec = tween(
+            500,
+            easing = Ease
+        ),
+        label = "color"
+    )
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = color, shape = RoundedCornerShape(30))
+            .padding(8.dp)
+            .background(
+                color = background,
+                shape = RoundedCornerShape(20)
+            )
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterEnd
     ) {
@@ -98,4 +120,6 @@ fun DeleteBackground(swipeDismissState: SwipeToDismissBoxState) {
             tint = Color.White
         )
     }
+
+
 }

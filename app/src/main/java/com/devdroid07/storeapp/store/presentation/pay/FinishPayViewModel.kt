@@ -2,10 +2,12 @@ package com.devdroid07.storeapp.store.presentation.pay
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import java.util.Locale
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
+import com.devdroid07.storeapp.core.presentation.ui.util.roundToTwoDecimals
 import com.devdroid07.storeapp.navigation.util.NavArgs
 import com.devdroid07.storeapp.store.domain.usecases.address.AddressUseCases
 import com.devdroid07.storeapp.store.domain.usecases.card.CardUseCases
@@ -125,7 +127,7 @@ class FinishPayViewModel @Inject constructor(
                                 },
                                 totalPrice = cartResult.data.sumOf {
                                     it.quantity.toDouble() * it.price.toDouble()
-                                }
+                                }.roundToTwoDecimals()
                             )
                         }
                     }
@@ -134,3 +136,4 @@ class FinishPayViewModel @Inject constructor(
         }
     }
 }
+

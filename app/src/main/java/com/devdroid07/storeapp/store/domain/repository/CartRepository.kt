@@ -17,4 +17,9 @@ interface CartRepository {
 
     suspend fun removeProductCart(idProduct: Int): EmptyResult<DataError.Network>
 
+    suspend fun updateQuantity(
+        productId: String,
+        quantity: Int,
+    ): EmptyResult<DataError.Network>
+
 }

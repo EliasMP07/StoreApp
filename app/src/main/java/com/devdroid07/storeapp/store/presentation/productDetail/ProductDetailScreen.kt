@@ -31,6 +31,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -39,17 +40,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonBack
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreSnackBar
+import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterBottom
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetReviews
@@ -61,6 +65,7 @@ import kotlinx.coroutines.launch
 fun ProductDetailRootScreenRoot(
     context: Context,
     viewModel: ProductDetailViewModel,
+    navigateToCart: () -> Unit,
     onBack: () -> Unit,
 ) {
 
@@ -99,10 +104,15 @@ fun ProductDetailRootScreenRoot(
                     if (scaffoldState.bottomSheetState.isVisible) {
                         scaffoldState.bottomSheetState.hide()
                     }
-                    snackbarHostState.showSnackbar(
+                    val result = snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
-                        duration = SnackbarDuration.Short
+                        duration = SnackbarDuration.Short,
+                        actionLabel = event.snackBarStyle.type
                     )
+                    when(result){
+                        SnackbarResult.ActionPerformed -> navigateToCart()
+                        else -> Unit
+                    }
                 }
             }
         }
@@ -139,7 +149,9 @@ private fun ProductDetailScreen(
 
     BottomSheetScaffold(
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = snackbarHostState){
+                StoreSnackBar(snackbarData = it, labelButton = state.labelButton)
+            }
         },
         sheetPeekHeight = 0.dp,
         scaffoldState = scaffoldState,
@@ -181,10 +193,9 @@ private fun ProductDetailScreen(
 
                     GlideImage(
                         modifier = Modifier
-                            .animateAttention()
                             .align(Alignment.Center),
                         model = state.product.image,
-                        contentDescription = "ImageProduct"
+                        contentDescription = stringResource(id = R.string.content_description_img_product)
                     )
 
                     this@Column.AnimatedVisibility(
@@ -218,7 +229,6 @@ private fun ProductDetailScreen(
                             }
                         )
                     }
-
                     StoreIconButtonBack(
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -229,14 +239,15 @@ private fun ProductDetailScreen(
                     )
 
                 }
-
                 ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.elevatedCardElevation(50.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateEnterBottom(),
                     shape = RoundedCornerShape(
                         topEnd = 25.dp,
                         topStart = 25.dp
                     ),
+                    elevation = CardDefaults.cardElevation(10.dp),
                 ) {
                     FooterProductDetail(
                         state = state,

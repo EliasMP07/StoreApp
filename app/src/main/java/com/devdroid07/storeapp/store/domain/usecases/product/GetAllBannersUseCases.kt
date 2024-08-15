@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class GetAllBannersUseCases (
     private val repository: ProductRepository
 ) {
-    suspend operator fun invoke(): Flow<Result<List<Banner>, DataError.Network>>{
+    operator fun invoke(): Flow<Result<List<Banner>, DataError.Network>>{
         return repository.getAllBanner()
     }
 }

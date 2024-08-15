@@ -4,6 +4,7 @@ package com.devdroid07.storeapp.store.presentation.updateAddress
 
 import android.content.Context
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -32,6 +33,10 @@ fun UpdateAddressScreenRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    BackHandler {
+        onBack()
+    }
 
     ObserveAsEvents(viewModel.events) {event ->
         when(event){

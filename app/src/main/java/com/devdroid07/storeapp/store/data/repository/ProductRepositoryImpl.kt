@@ -122,7 +122,7 @@ class ProductRepositoryImpl(
         }
     }
 
-    override suspend fun getAllBanner(): Flow<Result<List<Banner>, DataError.Network>> = flow {
+    override fun getAllBanner(): Flow<Result<List<Banner>, DataError.Network>> = flow {
         val result = safeCall {
             productApiService.getAllBanners()
         }
@@ -138,7 +138,7 @@ class ProductRepositoryImpl(
                 ))
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
 
 }

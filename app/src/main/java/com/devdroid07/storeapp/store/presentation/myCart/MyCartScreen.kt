@@ -6,62 +6,97 @@
 package com.devdroid07.storeapp.store.presentation.myCart
 
 import android.content.Context
-import androidx.compose.foundation.layout.Arrangement
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.components.CircularLoading
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreSnackBar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.EmptyListScreen
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
-import com.devdroid07.storeapp.core.presentation.designsystem.components.SwipeToDeleteContainer
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterBottom
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
+import com.devdroid07.storeapp.core.presentation.ui.util.isVisibleBottomSheet
+import com.devdroid07.storeapp.store.presentation.myCart.components.BottomSheetMyCart
 import com.devdroid07.storeapp.store.presentation.myCart.components.FooterMyCart
-import com.devdroid07.storeapp.store.presentation.myCart.components.ItemCart
-import com.devdroid07.storeapp.store.presentation.myCart.components.MyCartShimmerEffect
+import com.devdroid07.storeapp.store.presentation.myCart.components.MyCartContent
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun MyCartScreenRoot(
     context: Context,
     navigateToPay: () -> Unit,
     viewModel: MyCartViewModel,
-    navigateBack: () -> Unit,
+    onBack: () -> Unit,
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
 
-    val snackbarHostState = remember { SnackbarHostState() }
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = false
+        )
+    )
+
+    BackHandler {
+        if (scaffoldState.isVisibleBottomSheet) {
+            scope.launch {
+                scaffoldState.bottomSheetState.hide()
+            }
+        } else {
+            onBack()
+        }
+    }
 
     ObserveAsEvents(flow = viewModel.events) { event ->
         when (event) {
             is MyCartEvent.Error -> {
                 scope.launch {
-                    snackbarHostState.showSnackbar(message = event.error.asString(context))
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.error.asString(context)
+                    )
                 }
             }
             is MyCartEvent.Success -> {
                 scope.launch {
-                    snackbarHostState.showSnackbar(message = event.message.asString(context))
+                    if (scaffoldState.isVisibleBottomSheet) {
+                        scaffoldState.bottomSheetState.hide()
+                    }
+                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message.asString(context),
+                        duration = SnackbarDuration.Indefinite,
+                        actionLabel = event.snackBarStyle.type
+                    )
+                    //Se valida el resultado del snackbar si hay un accion o si se oculto haga otra opcion
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> {
+                            viewModel.onAction(MyCartAction.OnRestoreRemove)
+                        }
+                        SnackbarResult.Dismissed -> {
+                            viewModel.onAction(MyCartAction.OnConfirmRemove)
+                        }
+                    }
                 }
             }
         }
@@ -70,11 +105,16 @@ fun MyCartScreenRoot(
 
     MyCartScreen(
         state = state,
-        snackbarHostState = snackbarHostState,
+        scaffoldState = scaffoldState,
         onAction = { action ->
             when (action) {
-                MyCartAction.OnBackClick -> navigateBack()
+                MyCartAction.OnBackClick -> onBack()
                 MyCartAction.OnContinuePayClick -> navigateToPay()
+                MyCartAction.OnCartClick -> {
+                    scope.launch {
+                        scaffoldState.bottomSheetState.expand()
+                    }
+                }
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -83,15 +123,31 @@ fun MyCartScreenRoot(
 
 }
 
+
 @Composable
 private fun MyCartScreen(
     state: MyCartState,
-    snackbarHostState: SnackbarHostState,
+    scaffoldState: BottomSheetScaffoldState,
     onAction: (MyCartAction) -> Unit,
 ) {
-    Scaffold(
+    BottomSheetScaffold(
+        sheetTonalElevation = 0.dp,
+        sheetShadowElevation = 30.dp,
+        sheetPeekHeight = 0.dp,
+        scaffoldState = scaffoldState,
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = scaffoldState.snackbarHostState) {
+                StoreSnackBar(
+                    snackbarData = it,
+                    labelButton = state.labelButton
+                )
+            }
+        },
+        sheetContent = {
+            BottomSheetMyCart(
+                state = state,
+                onAction = onAction
+            )
         },
         topBar = {
             StoreToolbar(
@@ -107,11 +163,12 @@ private fun MyCartScreen(
         val result = handleResultView(
             isLoading = state.isLoading,
             contentLoading = {
-                MyCartShimmerEffect(paddingValues = paddingValue)
+                CircularLoading()
             },
             isEmpty = state.myCart.isEmpty(),
             contentEmpty = {
                 EmptyListScreen(
+                    modifier = Modifier.fillMaxSize(),
                     text = stringResource(id = R.string.cart_empty),
                     image = R.drawable.empty_cart
                 )
@@ -126,44 +183,30 @@ private fun MyCartScreen(
                 )
             }
         )
-
         if (result) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValue)
             ) {
-
-                LazyColumn(
+                MyCartContent(
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
                         .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.myCart) { cart ->
-                        SwipeToDeleteContainer(
-                            item = cart,
-                            onDelete = {
-                                onAction(MyCartAction.OnRemoveProduct(it.idProduct.toInt()))
-                            }
-                        ) {
-                            ItemCart(
-                                cart = cart
-                            )
-                        }
-                    }
-                }
+                    state = state,
+                    onAction = onAction
+                )
                 FooterMyCart(
                     state = state,
                     onAction = onAction,
                     modifier = Modifier
-                        .animateEnterBottom()
                         .fillMaxWidth()
                         .weight(0.3f),
                 )
 
             }
         }
-
     }
 }
+
+

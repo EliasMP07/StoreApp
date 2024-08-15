@@ -66,7 +66,9 @@ class AddressViewModel @Inject constructor(
                 )
             }
         }.launchIn(viewModelScope)
+
         getAllMyAddress()
+
     }
 
     fun onAction(

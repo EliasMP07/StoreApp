@@ -13,7 +13,7 @@ import com.devdroid07.storeapp.auth.presentation.register.RegisterScreenRoot
 import com.devdroid07.storeapp.auth.presentation.register.RegisterViewModel
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateScreen
-import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
+import com.devdroid07.storeapp.navigation.util.navigateAndRemoveCurrent
 
 fun NavGraphBuilder.auth(
     context: Context,
@@ -49,13 +49,13 @@ fun NavGraphBuilder.auth(
                 viewModel = viewModel,
                 context = context,
                 navigateToHome = {
-                    navController.navigateToSingleTop(
+                    navController.navigateAndRemoveCurrent(
                         navBackEntry,
                         RoutesScreens.Store.route
                     )
                 },
                 navigateToRegister = {
-                    navController.navigateToSingleTop(
+                    navController.navigateAndRemoveCurrent(
                         navBackEntry,
                         RoutesScreens.Register.route
                     )
@@ -72,13 +72,13 @@ fun NavGraphBuilder.auth(
                 viewModel = viewModel,
                 context = context,
                 navigateToRegister = {
-                    navController.navigateToSingleTop(
+                    navController.navigateAndRemoveCurrent(
                         navBackEntry,
                         RoutesScreens.Login.route
                     )
                 },
                 navigateToHome = {
-                    navController.navigateToSingleTop(
+                    navController.navigateAndRemoveCurrent(
                         navBackEntry,
                         RoutesScreens.Store.route
                     )

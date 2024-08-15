@@ -21,7 +21,7 @@ class CardRepositoryImpl(
     private val cardApiService: CardApiService,
 ) : CardRepository {
 
-    override suspend fun getAllMyCard(): Flow<Result<List<Card>, DataError.Network>> = flow {
+    override fun getAllMyCard(): Flow<Result<List<Card>, DataError.Network>> = flow {
         val result = safeCall {
             cardApiService.getAllMyCards(
                 sessionStorage.get()?.id.orEmpty()

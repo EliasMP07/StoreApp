@@ -22,7 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devdroid07.storeapp.navigation.util.RoutesScreens
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
-import com.devdroid07.storeapp.navigation.util.navigateToSingleInclusive
+import com.devdroid07.storeapp.navigation.util.navigateAndRemoveCurrent
 import com.devdroid07.storeapp.store.presentation.account.AccountScreenRoot
 import com.devdroid07.storeapp.store.presentation.account.AccountViewModel
 import com.devdroid07.storeapp.store.presentation.favorite.FavoriteScreenRoot
@@ -65,7 +65,7 @@ internal fun HomeDrawerScreens(
                             navBackStackEntry,
                             route.route
                         )
-                        RoutesScreens.Home -> navController.navigateToSingleInclusive(
+                        RoutesScreens.Home -> navController.navigateAndRemoveCurrent(
                             navBackStackEntry,
                             route.route
                         )
@@ -163,7 +163,7 @@ internal fun HomeDrawerScreens(
                     closeDrawer = { coroutineScope.launch { drawerState.close() }},
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
                     onBack = {
-                        navController.navigateToSingleInclusive(
+                        navController.navigateAndRemoveCurrent(
                             navBackStackEntry,
                             RoutesScreens.Home.route
                         )

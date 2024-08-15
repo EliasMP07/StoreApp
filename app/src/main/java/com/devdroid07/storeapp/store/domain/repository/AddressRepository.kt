@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface AddressRepository {
 
-    suspend fun getInfoByPostalCode(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>>
+    fun getInfoByPostalCode(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>>
 
-    suspend fun getAllMyAddress(): Flow<Result<List<Address>, DataError.Network>>
+    fun getAllMyAddress(): Flow<Result<List<Address>, DataError.Network>>
 
     suspend fun createAddress(
         street: String,

@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.flow
 
 class CartRepositoryImpl(
     private val cartApiService: CartApiService,
-    private val sessionStorage: SessionStorage
-): CartRepository{
+    private val sessionStorage: SessionStorage,
+) : CartRepository {
     override suspend fun addMyCart(
         productId: String,
         quantity: Int,
@@ -65,6 +65,22 @@ class CartRepositoryImpl(
             cartApiService.removeProductMyCart(
                 idUser = sessionStorage.get()?.id.orEmpty(),
                 idProduct = idProduct.toString()
+            )
+        }
+        return result.asEmptyDataResult()
+    }
+
+    override suspend fun updateQuantity(
+        productId: String,
+        quantity: Int,
+    ): EmptyResult<DataError.Network> {
+        val result = safeCall {
+            cartApiService.updateQuantity(
+                cartRequest = CartRequest(
+                    idUser = sessionStorage.get()?.id.orEmpty(),
+                    productId = productId,
+                    quantity = quantity
+                )
             )
         }
         return result.asEmptyDataResult()

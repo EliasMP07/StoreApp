@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class GetInfoByPostalCodeUseCase(
     private val repository: AddressRepository
 ) {
-    suspend operator fun invoke(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>> {
+    operator fun invoke(postalCode: String): Flow<Result<List<PostalCode>, DataError.Network>> {
         return repository.getInfoByPostalCode(postalCode = postalCode)
     }
 }

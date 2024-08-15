@@ -9,9 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class GetAllMyCardsUseCase(
     private val repository: CardRepository,
 ) {
-    suspend operator fun invoke(): Flow<Result<List<Card>, DataError.Network>> {
-
+    operator fun invoke(): Flow<Result<List<Card>, DataError.Network>> {
         return repository.getAllMyCard()
-
     }
 }

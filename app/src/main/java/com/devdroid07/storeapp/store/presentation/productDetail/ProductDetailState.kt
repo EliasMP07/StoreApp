@@ -4,11 +4,13 @@ package com.devdroid07.storeapp.store.presentation.productDetail
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.runtime.Stable
 import com.devdroid07.storeapp.core.domain.User
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Review
 
+@Stable
 data class ProductDetailState(
     val isLoading: Boolean = false,
     val isLoadingReview: Boolean = false,
@@ -22,6 +24,8 @@ data class ProductDetailState(
     val canReview: Boolean = false,
     val isEvaluating: Boolean = false,
     val isExpanded: Boolean = false,
+    val isAddingCart: Boolean = false,
     val product: Product = Product(),
+    val labelButton: UiText? = null
 
 )

@@ -142,6 +142,8 @@ private fun PaymentScreen(
                 }
             )
         },
+        sheetTonalElevation = 0.dp,
+        sheetShadowElevation = 30.dp,
         sheetPeekHeight = 0.dp,
         scaffoldState = scaffoldState,
         sheetContent = {

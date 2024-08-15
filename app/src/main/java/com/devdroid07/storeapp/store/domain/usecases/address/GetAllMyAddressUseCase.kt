@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class GetAllMyAddressUseCase (
     private val repository: AddressRepository
 ) {
-    suspend operator fun invoke(): Flow<Result<List<Address>, DataError.Network>> {
+    operator fun invoke(): Flow<Result<List<Address>, DataError.Network>> {
         return repository.getAllMyAddress()
     }
 }

@@ -8,5 +8,12 @@ import com.devdroid07.storeapp.store.domain.model.Cart
 data class MyCartState(
     val myCart: List<Cart> = emptyList(),
     val error: UiText? = null,
-    val isLoading: Boolean = false
+    val removedItems: List<Cart> = emptyList(),
+    val totalSale: Double = 0.0,
+    val quantity: Int = 0,
+    val productId: String = "",
+    val quantityList: List<Int> = (1..100).toList(),
+    val labelButton: UiText? = null,
+    val isLoading: Boolean = false,
+    val isUpdatingQuantity: Boolean = false
 )

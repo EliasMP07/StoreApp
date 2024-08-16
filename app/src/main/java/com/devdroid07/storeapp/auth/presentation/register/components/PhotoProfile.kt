@@ -60,8 +60,7 @@ fun PhotoProfile(
             contentScale = ContentScale.Crop,
             model = image,
             contentDescription = stringResource(id = R.string.content_description_profile),
-            transition = CrossFade,
-            failure = placeholder(R.drawable.error_image)
+            transition = CrossFade
         )
         if (image.isBlank()) {
             Icon(

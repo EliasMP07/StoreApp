@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateAttention
 import com.devdroid07.storeapp.core.presentation.designsystem.components.card.utils.CardDesign
 import com.devdroid07.storeapp.core.presentation.designsystem.components.card.utils.CardIssuer
 import com.devdroid07.storeapp.core.presentation.designsystem.components.card.utils.IssuerFinder

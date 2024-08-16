@@ -16,11 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.CamaraIcon
 
 @Composable
@@ -53,7 +55,7 @@ fun PhotoProfile(
                 .background(MaterialTheme.colorScheme.background),
             contentScale = ContentScale.Crop,
             model = image,
-            contentDescription = "",
+            contentDescription = stringResource(id = R.string.content_description_profile),
             transition = CrossFade
         )
         if (image.isBlank()) {

@@ -53,7 +53,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorCo
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonBack
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreSnackBar
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterBottom
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterBottom
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetReviews
@@ -72,7 +72,6 @@ fun ProductDetailRootScreenRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = false
@@ -93,7 +92,7 @@ fun ProductDetailRootScreenRoot(
         when (event) {
             is ProductDetailEvent.Error -> {
                 scope.launch {
-                    snackbarHostState.showSnackbar(
+                    scaffoldState.snackbarHostState.showSnackbar(
                         message = event.error.asString(context),
                         duration = SnackbarDuration.Short
                     )
@@ -104,7 +103,7 @@ fun ProductDetailRootScreenRoot(
                     if (scaffoldState.bottomSheetState.isVisible) {
                         scaffoldState.bottomSheetState.hide()
                     }
-                    val result = snackbarHostState.showSnackbar(
+                    val result = scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short,
                         actionLabel = event.snackBarStyle.type
@@ -121,7 +120,6 @@ fun ProductDetailRootScreenRoot(
 
     ProductDetailScreen(
         state = state,
-        snackbarHostState = snackbarHostState,
         onAction = { action ->
             when (action) {
                 ProductDetailAction.OnBackClick -> onBack()
@@ -138,7 +136,6 @@ fun ProductDetailRootScreenRoot(
 private fun ProductDetailScreen(
     state: ProductDetailState,
     scaffoldState: BottomSheetScaffoldState,
-    snackbarHostState: SnackbarHostState,
     onAction: (ProductDetailAction) -> Unit,
 ) {
 
@@ -149,7 +146,7 @@ private fun ProductDetailScreen(
 
     BottomSheetScaffold(
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState){
+            SnackbarHost(hostState = scaffoldState.snackbarHostState){
                 StoreSnackBar(snackbarData = it, labelButton = state.labelButton)
             }
         },
@@ -275,7 +272,6 @@ private fun ProductDetailRootScreenPreview() {
         ProductDetailScreen(
             state = ProductDetailState(),
             onAction = {},
-            snackbarHostState = SnackbarHostState(),
             scaffoldState = rememberBottomSheetScaffoldState()
         )
     }

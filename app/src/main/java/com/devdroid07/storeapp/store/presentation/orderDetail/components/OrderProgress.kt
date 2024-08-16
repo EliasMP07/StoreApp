@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterFromLeft
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterFromLeft
 import com.devdroid07.storeapp.store.presentation.orderDetail.components.utils.StatusOrder
 
 

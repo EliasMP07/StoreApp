@@ -34,7 +34,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorCo
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
-import com.devdroid07.storeapp.core.presentation.ui.util.isVisibleBottomSheet
+import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.isVisibleBottomSheet
 import com.devdroid07.storeapp.store.presentation.myCart.components.BottomSheetMyCart
 import com.devdroid07.storeapp.store.presentation.myCart.components.FooterMyCart
 import com.devdroid07.storeapp.store.presentation.myCart.components.MyCartContent

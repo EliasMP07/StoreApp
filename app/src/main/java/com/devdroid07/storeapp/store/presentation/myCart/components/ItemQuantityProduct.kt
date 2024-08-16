@@ -20,7 +20,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devdroid07.storeapp.R
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateAttention
 
 @Composable
 fun ItemQuantityProduct(

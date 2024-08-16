@@ -21,9 +21,11 @@ val PhoneIcon : ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.ic_phone)
 
-val RemoveIcon : ImageVector
+
+val PersonIcon : ImageVector
     @Composable
-    get() = ImageVector.vectorResource(id = R.drawable.ic_remove_cart)
+    get() = ImageVector.vectorResource(id = R.drawable.ic_person)
+
 
 val EditIcon : ImageVector
     @Composable
@@ -72,13 +74,6 @@ val DeleteIcon : ImageVector
     get() = ImageVector.vectorResource(id = R.drawable.ic_delete)
 
 
-val BagdeIcon : ImageVector
-    @Composable
-    get() = ImageVector.vectorResource(id = R.drawable.ic_badge)
-
-val DeliveryIcon : ImageVector
-    @Composable
-    get() = ImageVector.vectorResource(id = R.drawable.ic_delivery)
 
 
 

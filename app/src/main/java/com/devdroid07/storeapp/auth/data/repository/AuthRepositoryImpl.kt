@@ -40,6 +40,8 @@ class AuthRepositoryImpl(
     override suspend fun register(
         email: String,
         image: String,
+        name: String,
+        lastname: String,
         password: String
     ): EmptyResult<DataError.Network> {
         val result = safeCall {
@@ -47,7 +49,9 @@ class AuthRepositoryImpl(
                 RegisterRequest(
                     image = image,
                     email = email,
-                    password = password
+                    password = password,
+                    name = name,
+                    lastname = lastname
                 )
             )
         }

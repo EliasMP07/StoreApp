@@ -10,11 +10,15 @@ class SignUpWithEmailUseCase(
     suspend operator fun invoke(
         email: String,
         password: String,
+        name: String,
+        lastname: String,
         image: String
     ): EmptyResult<DataError.Network> {
         return repository.register(
             email = email,
             password = password,
+            name = name,
+            lastname = lastname,
             image = image
         )
     }

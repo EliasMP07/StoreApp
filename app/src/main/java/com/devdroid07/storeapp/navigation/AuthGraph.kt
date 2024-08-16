@@ -44,7 +44,9 @@ fun NavGraphBuilder.auth(
         composable(
             route = RoutesScreens.Login.route
         ) { navBackEntry ->
+
             val viewModel: LoginViewModel = hiltViewModel()
+
             LoginScreenRoot(
                 viewModel = viewModel,
                 context = context,

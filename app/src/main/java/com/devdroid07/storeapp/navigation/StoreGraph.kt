@@ -15,6 +15,7 @@ import com.devdroid07.storeapp.navigation.util.exitTransition
 import com.devdroid07.storeapp.navigation.util.navigateBack
 import com.devdroid07.storeapp.navigation.util.navigateScreen
 import com.devdroid07.storeapp.navigation.util.navigateAndRemoveCurrent
+import com.devdroid07.storeapp.navigation.util.navigateToSingleTop
 import com.devdroid07.storeapp.navigation.util.popEnterTransition
 import com.devdroid07.storeapp.navigation.util.popExitTransition
 import com.devdroid07.storeapp.store.presentation.address.AddressScreenRoot
@@ -61,6 +62,9 @@ fun NavGraphBuilder.store(
                     )
                 },
                 navBackStackEntry = navBackEntry,
+                navigateToLogout = {
+                    navController.navigateToSingleTop(navBackEntry, RoutesScreens.Intro.route)
+                },
                 navigateToCart = {
                     navController.navigateScreen(
                         navBackEntry,

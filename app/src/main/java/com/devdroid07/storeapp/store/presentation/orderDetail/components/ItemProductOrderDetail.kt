@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterRight
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterRight
 import com.devdroid07.storeapp.store.domain.model.Product
 
 @Composable

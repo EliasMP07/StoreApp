@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
@@ -43,7 +44,7 @@ fun BottomSheetReviews(
                     modifier = Modifier
                         .weight(1f)
                         .align(Alignment.CenterHorizontally),
-                    text = "No hay reseñas sobre el producto.",
+                    text = stringResource(R.string.empty_reviews),
                     image = R.drawable.img_review
                 )
             },

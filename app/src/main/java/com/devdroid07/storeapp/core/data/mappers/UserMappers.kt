@@ -9,6 +9,8 @@ fun User.toUserSerializable(): UserSerializable{
         id = id,
         image = image,
         email = email,
+        name = name,
+        lastname = lastname,
         token = token
     )
 }
@@ -18,6 +20,8 @@ fun UserSerializable.toUser(): User{
         id = id,
         image = image,
         email = email,
+        name = name,
+        lastname = lastname,
         token = token
     )
 }
@@ -27,6 +31,8 @@ fun UserDto.toUser(): User{
         id = id,
         image = image?:"",
         email = email,
+        name = name,
+        lastname = lastname,
         token = token
     )
 }

@@ -30,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-    private val userDataValidator: UserDataValidator
+    private val userDataValidator: UserDataValidator,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterState())
@@ -43,11 +43,11 @@ class RegisterViewModel @Inject constructor(
         _state.value.email.textAsFlow()
             .onEach { email ->
                 val isValidEmail = userDataValidator.isValidEmail(email.toString())
-                _state.update { currentState ->
-                    currentState.copy(
+                _state.update {
+                    it.copy(
                         isEmailValid = isValidEmail,
-                        canRegister = isValidEmail && state.value.passwordValidationState.isValidPassword
-                                && !state.value.isRegistering
+                        canRegister = isValidEmail && _state.value.passwordValidationState.isValidPassword
+                                && !_state.value.isRegistering && _state.value.name.text.isNotEmpty() && _state.value.lastName.text.isNotEmpty()
                     )
                 }
             }
@@ -56,11 +56,11 @@ class RegisterViewModel @Inject constructor(
         _state.value.password.textAsFlow()
             .onEach { password ->
                 val passwordValidationState = userDataValidator.validatePassword(password.toString())
-                _state.update { currentState ->
-                    currentState.copy(
+                _state.update {
+                    it.copy(
                         passwordValidationState = passwordValidationState,
                         canRegister = _state.value.isEmailValid && passwordValidationState.isValidPassword
-                                && !state.value.isRegistering
+                                && !_state.value.isRegistering && _state.value.name.text.isNotEmpty() && _state.value.lastName.text.isNotEmpty()
                     )
                 }
             }
@@ -68,36 +68,23 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onAction(
-        action: RegisterAction
+        action: RegisterAction,
     ) {
         when (action) {
             RegisterAction.OnRegisterClick -> register()
             RegisterAction.OnToggleVisibilityPassword -> {
-                _state.update { currentState ->
-                    currentState.copy(
-                        isVisiblePassword = !currentState.isVisiblePassword
-                    )
-                }
+                _state.update { it.copy(isVisiblePassword = !it.isVisiblePassword)}
             }
             RegisterAction.DismissRationaleDialog -> {
-                _state.update { currentState ->
-                    currentState.copy(
-                        showCamaraRationale = false
-                    )
-                }
+                _state.update { it.copy(showCamaraRationale = false) }
             }
             RegisterAction.OnToggleDialogSelectImage -> {
-                _state.update { currentState ->
-                    currentState.copy(
-                        showOptionProfileImage = !currentState.showOptionProfileImage
-                    )
-                }
+                _state.update { it.copy(showOptionProfileImage = !it.showOptionProfileImage) }
             }
             is RegisterAction.SubmitCamaraPermissionInfo -> {
-                _state.update { currentState ->
-                    currentState.copy(
-                        showCamaraRationale =  action.showCamaraRationale,
-                        hasPermissionCamara = action.acceptedCamaraPermission
+                _state.update {
+                    it.copy(
+                        showCamaraRationale = action.showCamaraRationale
                     )
                 }
             }
@@ -113,55 +100,47 @@ class RegisterViewModel @Inject constructor(
 
 
     private fun onImageCamaraChange(image: String) {
-        _state.update { currentState ->
-            currentState.copy(
-                showOptionProfileImage = !currentState.showOptionProfileImage,
+        _state.update {
+            it.copy(
+                showOptionProfileImage = !it.showOptionProfileImage,
                 imagePreview = image,
                 image = imageCamara(image)
             )
         }
     }
 
-    private fun onImageGalleryChange(image: String){
-        _state.update { currentState ->
-            currentState.copy(
-                showOptionProfileImage = !currentState.showOptionProfileImage,
+    private fun onImageGalleryChange(image: String) {
+        _state.update {
+            it.copy(
+                showOptionProfileImage = !it.showOptionProfileImage,
                 imagePreview = image,
                 image = reduceImageSize(image)
             )
         }
     }
 
-
-    private fun loading(isLoading: Boolean){
-        _state.update {currentState ->
-            currentState.copy(
-                isRegistering = isLoading
-            )
-        }
-    }
-
-
     private fun register() {
         viewModelScope.launch {
-            loading(true)
+            _state.update { it.copy(isRegistering = true) }
             val result = authUseCases.signUpWithEmailUseCase(
                 email = _state.value.email.text.toString().trim(),
                 password = _state.value.password.text.toString(),
-                image = _state.value.image
+                image = _state.value.image,
+                name = _state.value.name.text.toString(),
+                lastname = _state.value.lastName.text.toString(),
             )
-            loading(false)
-            when(result){
+            _state.update { it.copy(isRegistering = false) }
+            when (result) {
                 is Result.Error -> {
-                    when(result.error){
+                    when (result.error) {
                         DataError.Network.UNAUTHORIZED -> {
                             eventChannel.send(
                                 RegisterEvent.Error(
-                                UiText.StringResource(R.string.error_email_exist)
-                            ))
+                                    UiText.StringResource(R.string.error_email_exist)
+                                )
+                            )
                         }
-
-                        else ->{
+                        else -> {
                             eventChannel.send(RegisterEvent.Error(result.error.asUiText()))
                         }
                     }

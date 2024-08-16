@@ -3,15 +3,18 @@
 package com.devdroid07.storeapp.auth.presentation.register.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -30,51 +34,61 @@ import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.auth.domain.validator.UserDataValidator
 import com.devdroid07.storeapp.auth.presentation.register.RegisterAction
 import com.devdroid07.storeapp.auth.presentation.register.RegisterState
+import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.EmailIcon
+import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
+import com.devdroid07.storeapp.core.presentation.designsystem.PersonIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
-import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreLogoVertical
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StorePasswordTextField
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreTextField
 
 @Composable
-fun RegisterForm(
+fun RegisterContent(
     state: RegisterState,
-    onAction: (RegisterAction) -> Unit
-){
+    onAction: (RegisterAction) -> Unit,
+) {
+    val spacing = LocalSpacing.current
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .systemBarsPadding()
-            .padding(20.dp)
+            .padding(spacing.spaceMedium)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            contentAlignment = Alignment.Center
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            StoreLogoVertical()
-        }
-        Text(
-            text = "Registrate!",
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold
+            Image(
+                painter = painterResource(id = R.drawable.logo_splashscreen),
+                contentDescription = stringResource(R.string.content_description_logo_app)
             )
-        )
-        Text(text = "Please sign upp to continue our app")
-        Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.width(spacing.spaceMedium))
+            Column {
+                Text(
+                    text = stringResource(R.string.title_register_screen),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    text = stringResource(R.string.message_register_screen),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(spacing.spaceLarge))
         Text(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "Photo of profile"
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            text = stringResource(R.string.photo_profile)
         )
         PhotoProfile(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
             image = state.imagePreview,
             onClick = {
                 onAction(RegisterAction.OnToggleDialogSelectImage)
             }
         )
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(spacing.spaceLarge))
         StoreTextField(
             state = state.email,
             startIcon = EmailIcon,
@@ -83,7 +97,25 @@ fun RegisterForm(
             hint = stringResource(R.string.hint_text_email),
             title = stringResource(R.string.title_text_email)
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(spacing.spaceSmall))
+        StoreTextField(
+            state = state.name,
+            startIcon = PersonIcon,
+            keyboardType = KeyboardType.Text,
+            endIcon = null,
+            hint = "",
+            title = stringResource(R.string.title_text_name)
+        )
+        Spacer(modifier = Modifier.height(spacing.spaceSmall))
+        StoreTextField(
+            state = state.lastName,
+            startIcon = PersonIcon,
+            keyboardType = KeyboardType.Text,
+            endIcon = null,
+            hint = "",
+            title = stringResource(R.string.title_text_lastname)
+        )
+        Spacer(modifier = Modifier.height(spacing.spaceSmall))
         StorePasswordTextField(
             state = state.password,
             isPasswordVisible = state.isVisiblePassword,
@@ -94,7 +126,7 @@ fun RegisterForm(
             hint = stringResource(R.string.hint_text_password),
             title = stringResource(R.string.title_text_password)
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(spacing.spaceSmall))
         PasswordRequirement(
             text = stringResource(
                 id = R.string.at_least_x_characters,
@@ -102,28 +134,28 @@ fun RegisterForm(
             ),
             isValid = state.passwordValidationState.hasMinLength
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
         PasswordRequirement(
             text = stringResource(
                 id = R.string.at_least_one_number,
             ),
             isValid = state.passwordValidationState.hasNumber
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
         PasswordRequirement(
             text = stringResource(
                 id = R.string.contains_lowercase_char,
             ),
             isValid = state.passwordValidationState.hasLowerCaseCharacter
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
         PasswordRequirement(
             text = stringResource(
                 id = R.string.contains_uppercase_char,
             ),
             isValid = state.passwordValidationState.hasUpperCaseCharacter
         )
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(spacing.spaceLarge))
         StoreActionButton(
             enabled = state.canRegister,
             text = stringResource(R.string.text_btn_register),
@@ -167,6 +199,5 @@ fun RegisterForm(
                 }
             }
         )
-
     }
 }

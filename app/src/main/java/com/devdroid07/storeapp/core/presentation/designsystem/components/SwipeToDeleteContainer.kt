@@ -30,7 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterRight
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterRight
 
 @ExperimentalMaterial3Api
 @Composable

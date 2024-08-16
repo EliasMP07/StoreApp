@@ -8,7 +8,12 @@ import java.io.IOException
 import java.nio.channels.UnresolvedAddressException
 import kotlin.coroutines.cancellation.CancellationException
 
-
+/**
+ * Realiza una llamada de red segura, manejando varias excepciones comunes y retornando un resultado de tipo Result.
+ *
+ * @param execute Una función lambda que ejecuta la llamada de red y retorna un "Response".
+ * @return Un "Result" que puede ser un éxito con el cuerpo de la respuesta, un error de red o una exepcion.
+ */
 inline fun <reified T> safeCall(execute: () -> Response<T>): Result<T, DataError.Network> {
 
     val response = try {
@@ -32,7 +37,12 @@ inline fun <reified T> safeCall(execute: () -> Response<T>): Result<T, DataError
 
 }
 
-
+/**
+ * Convierte un objeto "Response" en un "Result", evaluando el código de estado HTTP.
+ *
+ * @param response El objeto "Response" de la llamada de red de retrofit.
+ * @return Un "Result" que puede ser un éxito con el cuerpo de la respuesta o un error basado en el código de estado de la respuesta del backend.
+ */
 inline fun <reified T> responseToResult(response: Response<T>): Result<T, DataError.Network> {
     return when (response.code()) {
         in 200..299 -> Result.Success(response.body()!!)

@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.devdroid07.storeapp.R
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterTop
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterTop
 import com.devdroid07.storeapp.store.presentation.orderDetail.OrderDetailState
 
 @Composable

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devdroid07.storeapp.R
@@ -49,8 +50,8 @@ private fun IntroScreen(
     ) {
         Image(
             modifier = Modifier
-                .fillMaxSize()
-                .alpha(0.5f),
+                .fillMaxSize(),
+            alpha = 0.5f,
             contentScale = ContentScale.Crop,
             painter = painterResource(id = R.drawable.background_intro),
             contentDescription = null
@@ -72,7 +73,7 @@ private fun IntroScreen(
                 StoreLogoVertical()
             }
             StoreActionButton(
-                text = "Login",
+                text = stringResource(R.string.btn_text_login),
                 isLoading = false,
                 onClick = {
                     onAction(IntroAction.OnSignInClick)
@@ -80,7 +81,7 @@ private fun IntroScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
             StoreActionButtonOutline(
-                text = "Register",
+                text = stringResource(R.string.btn_text_register),
                 isLoading = false,
                 onClick = {
                     onAction(IntroAction.OnSignUpClick)

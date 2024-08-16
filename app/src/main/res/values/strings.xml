@@ -12,15 +12,15 @@
     <string name="error_internet_connection">Sin conexión a Internet. Por favor, verifica tu conexión e inténtalo de nuevo.</string>
     <string name="error_timeout_connection">Error de red. No se pudo completar tu solicitud.</string>
     <string name="have_account">¿Tienes una cuenta?</string>
-    <string name="sign_in">Iniciar Sessión</string>
-    <string name="title_text_email">Email</string>
-    <string name="hint_text_email">example@test.com</string>
-    <string name="hint_text_password">Password</string>
-    <string name="title_text_password">Password</string>
-    <string name="text_btn_register">Registrar</string>
-    <string name="text_btn_login">Iniciar sessión</string>
-    <string name="text_welcome">Welcome!</string>
-    <string name="text_welcome_description">Please login or sign up to continue our app</string>
+    <string name="sign_in">Iniciar sesión</string>
+    <string name="title_text_email">Correo electronico</string>
+    <string name="hint_text_email">contraseña@test.com</string>
+    <string name="hint_text_password">Contraseña</string>
+    <string name="title_text_password">Contraseña</string>
+    <string name="text_btn_register">Registrarse</string>
+    <string name="text_btn_login">Iniciar sesión</string>
+    <string name="text_welcome">Bienvenido!</string>
+    <string name="text_welcome_description">Porfavor inicia sesión o registrate para continuar en nuestra App</string>
     <string name="error_request_timeout">La solicitud ha caducado</string>
     <string name="error_too_many_requests">Demasiadas solicitudes</string>
     <string name="error_no_internet">No hay conexión a Internet</string>
@@ -57,7 +57,7 @@
     <string name="products_search_empty">No se encontraron resultado.</string>
     <string name="profile_title_screen">Mi cuenta</string>
     <string name="text_btn_review">Calificar!</string>
-    <string name="text_comment">Comentar como %s</string>
+    <string name="text_comment">Comentar como %1$s %2$s</string>
     <string name="text_calification">Calificación: </string>
     <string name="success_add_review">Gracias por tu calificación.</string>
     <string name="example_street">Ejemplo: Calle 1 x 8</string>
@@ -169,5 +169,14 @@
     <string name="total_item">pieza</string>
     <string name="empty_orders">No tienes ninguno pedido</string>
     <string name="see_more">... mostrar más</string>
+    <string name="title_text_lastname">Apellido</string>
+    <string name="title_text_name">Nombre</string>
+    <string name="empty_reviews">No hay reseñas sobre el producto.</string>
+    <string name="title_register_screen">Registrate!</string>
+    <string name="message_register_screen">Porfavor registrate para continuar en nuestra App</string>
+    <string name="content_description_logo_app">Logo de la applicacion</string>
+    <string name="photo_profile">Foto de perfil</string>
+    <string name="btn_text_login">Iniciar sesión</string>
+    <string name="btn_text_register">Registrarse</string>
 
 </resources>

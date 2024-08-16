@@ -28,4 +28,17 @@ class AccountViewModel @Inject constructor(
             }
         }
     }
+
+    fun onAction(action: AccountAction){
+        when(action){
+            AccountAction.OnLogoutClick -> logout()
+            else -> Unit
+        }
+    }
+
+    private fun logout(){
+        viewModelScope.launch {
+            sessionStorage.set(null)
+        }
+    }
 }

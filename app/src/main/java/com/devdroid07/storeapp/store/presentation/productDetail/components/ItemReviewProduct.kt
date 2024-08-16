@@ -22,7 +22,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.devdroid07.storeapp.auth.presentation.register.components.PhotoProfile
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StarRating
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateAttention
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateAttention
 import com.devdroid07.storeapp.store.domain.model.Review
 
 @Composable

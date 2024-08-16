@@ -96,7 +96,9 @@ fun StorePasswordTextField(
                             alpha = 0.05f
                         )
                     } else {
-                        MaterialTheme.colorScheme.surface
+                        MaterialTheme.colorScheme.primary.copy(
+                            alpha = 0.05f
+                        )
                     }
                 )
                 .border(

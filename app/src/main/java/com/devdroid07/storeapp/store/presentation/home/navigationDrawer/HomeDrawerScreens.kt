@@ -45,6 +45,7 @@ internal fun HomeDrawerScreens(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
+    navigateToLogout :() -> Unit,
     navigateToSearch: () -> Unit,
     navigateToDetailOrder: (String) -> Unit,
     navigateToCart: () -> Unit,
@@ -119,10 +120,10 @@ internal fun HomeDrawerScreens(
             ) {
 
                 val viewModel: AccountViewModel = hiltViewModel()
-                val state by viewModel.state.collectAsStateWithLifecycle()
 
                 AccountScreenRoot(
-                    state = state,
+                    viewModel = viewModel,
+                    onLogout = navigateToLogout,
                     openDrawer = {
                         coroutineScope.launch { drawerState.open() }
                     }

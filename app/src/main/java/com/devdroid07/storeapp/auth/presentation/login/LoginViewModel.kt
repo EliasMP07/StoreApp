@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class,
+@file:OptIn(
             ExperimentalFoundationApi::class
 )
 
@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalFoundationApi::class)
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
@@ -40,7 +41,7 @@ class LoginViewModel @Inject constructor(
     val events = eventChannel.receiveAsFlow()
 
     init {
-        combine(state.value.email.textAsFlow(), state.value.password.textAsFlow()){ email, password ->
+        combine(_state.value.email.textAsFlow(), _state.value.password.textAsFlow()){ email, password ->
             _state.update {
                 it.copy(
                     passwordCorrect = userDataValidator.isValidEmail(email = email.toString().trim()),
@@ -56,33 +57,20 @@ class LoginViewModel @Inject constructor(
         when(action){
             LoginAction.OnLoginClick -> login()
             LoginAction.OnToggleVisibilityPassword -> {
-                _state.update {
-                    it.copy(
-                        isVisiblePassword = !_state.value.isVisiblePassword
-                    )
-                }
+                _state.update { it.copy(isVisiblePassword = !_state.value.isVisiblePassword) }
             }
             else -> Unit
         }
     }
 
-    private fun loading(isLoading: Boolean){
-        _state.update {currentState ->
-            currentState.copy(
-                isLoggingIn = isLoading
-            )
-        }
-    }
-
-
     private fun login(){
         viewModelScope.launch {
-            loading(true)
+            _state.update {it.copy(isLoggingIn = true) }
             val result = authRepository.login(
                 email = _state.value.email.text.toString().trim(),
                 password = _state.value.password.text.toString()
             )
-            loading(false)
+            _state.update {it.copy(isLoggingIn = false) }
             when(result){
                 is Result.Error -> {
                     when(result.error){

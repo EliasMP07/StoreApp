@@ -35,12 +35,6 @@ val drawerItems = listOf(
         contentDescription = R.string.content_description_account_draw_item,
         icon = R.drawable.ic_account,
         route = RoutesScreens.Account
-    ),
-    DrawerItem(
-        title = R.string.settings,
-        contentDescription = R.string.content_description_configure_draw_item,
-        icon = R.drawable.ic_settings,
-        route = RoutesScreens.Settings
     )
 )
 

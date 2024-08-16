@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.devdroid07.storeapp.core.presentation.ui.util
+package com.devdroid07.storeapp.core.presentation.designsystem.components.utils
 
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api

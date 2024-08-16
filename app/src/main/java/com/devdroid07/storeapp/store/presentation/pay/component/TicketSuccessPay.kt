@@ -30,7 +30,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.CloseIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.TicketShapePay
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
-import com.devdroid07.storeapp.core.presentation.designsystem.components.animation.animateEnterBottom
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterBottom
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayAction
 import com.devdroid07.storeapp.store.presentation.pay.FinishPayState
 import com.devdroid07.storeapp.store.presentation.pay.component.utils.getCurrentFormattedDate

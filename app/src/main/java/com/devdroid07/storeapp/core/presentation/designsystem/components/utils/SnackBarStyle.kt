@@ -1,6 +1,7 @@
 package com.devdroid07.storeapp.core.presentation.designsystem.components.utils
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -33,6 +34,13 @@ sealed class SnackBarStyle(
         icon = Icons.Default.RemoveShoppingCart,
         backgroundColor = primaryLight,
         type = "SUCCESS_REMOVE_CART",
+        duration = 2
+    )
+
+    data object Success : SnackBarStyle(
+        icon = Icons.Default.Check,
+        backgroundColor = successColor,
+        type = "SUCCESS",
         duration = 2
     )
 

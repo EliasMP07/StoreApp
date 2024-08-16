@@ -34,7 +34,7 @@ fun NavHostController.navigateToSingleTop(
 ) {
     if (navBackStackEntry.lifecycleIsResumed()) {
         navigate(route) {
-            popUpTo(graph.id) { saveState = true }
+            popUpTo(graph.id) { saveState = false }
             launchSingleTop = true
             restoreState = true
         }

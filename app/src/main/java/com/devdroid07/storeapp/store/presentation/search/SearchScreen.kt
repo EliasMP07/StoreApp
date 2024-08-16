@@ -80,6 +80,7 @@ fun SearchScreen(
             isEmpty = state.isEmpty,
             contentEmpty = {
                 EmptyListScreen(
+                    modifier = Modifier.fillMaxSize(),
                     text = stringResource(id = R.string.products_search_empty),
                     image = R.drawable.empty_data
                 )

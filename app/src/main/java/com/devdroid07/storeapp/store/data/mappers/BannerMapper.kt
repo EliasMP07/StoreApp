@@ -1,6 +1,6 @@
 package com.devdroid07.storeapp.store.data.mappers
 
-import com.devdroid07.storeapp.store.data.network.dto.store.BannerDto
+import com.devdroid07.storeapp.store.data.network.dto.store.product.BannerDto
 import com.devdroid07.storeapp.store.domain.model.Banner
 
 fun BannerDto.toBanner(): Banner{

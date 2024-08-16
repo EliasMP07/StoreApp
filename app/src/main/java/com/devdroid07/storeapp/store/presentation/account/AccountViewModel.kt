@@ -21,11 +21,7 @@ class AccountViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _state.update {accountState ->
-                accountState.copy(
-                    user = sessionStorage.get()
-                )
-            }
+            _state.update {it.copy(user = sessionStorage.get())}
         }
     }
 

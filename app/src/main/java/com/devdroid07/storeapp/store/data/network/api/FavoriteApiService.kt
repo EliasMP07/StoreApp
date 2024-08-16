@@ -1,7 +1,7 @@
 package com.devdroid07.storeapp.store.data.network.api
 
 import com.devdroid07.storeapp.core.data.network.StoreResponse
-import com.devdroid07.storeapp.store.data.network.dto.store.ProductDto
+import com.devdroid07.storeapp.store.data.network.dto.store.product.ProductDto
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET

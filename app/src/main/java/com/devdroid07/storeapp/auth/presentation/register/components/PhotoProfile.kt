@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.CamaraIcon
 
@@ -29,6 +30,7 @@ import com.devdroid07.storeapp.core.presentation.designsystem.CamaraIcon
 fun PhotoProfile(
     modifier: Modifier = Modifier,
     size: Dp = 100.dp,
+    isClickeable: Boolean = true,
     onClick: () -> Unit = {},
     image: String = ""
 ) {
@@ -43,7 +45,9 @@ fun PhotoProfile(
                 ),
                 CircleShape
             )
-            .clickable {
+            .clickable(
+                enabled = isClickeable
+            ) {
                 onClick()
             },
         contentAlignment = Alignment.Center
@@ -56,7 +60,8 @@ fun PhotoProfile(
             contentScale = ContentScale.Crop,
             model = image,
             contentDescription = stringResource(id = R.string.content_description_profile),
-            transition = CrossFade
+            transition = CrossFade,
+            failure = placeholder(R.drawable.error_image)
         )
         if (image.isBlank()) {
             Icon(

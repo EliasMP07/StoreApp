@@ -1,5 +1,7 @@
-package com.devdroid07.storeapp.store.data.network.dto.store
+package com.devdroid07.storeapp.store.data.network.dto.store.order
 
+import com.devdroid07.storeapp.store.data.network.dto.store.address.AddressDto
+import com.devdroid07.storeapp.store.data.network.dto.store.product.ProductDto
 import com.google.gson.annotations.SerializedName
 
 data class OrderDto(

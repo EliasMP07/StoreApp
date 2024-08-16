@@ -178,5 +178,8 @@
     <string name="photo_profile">Foto de perfil</string>
     <string name="btn_text_login">Iniciar sesión</string>
     <string name="btn_text_register">Registrarse</string>
+    <string name="btn_text_update_profile">Actualizar perfil</string>
+    <string name="btn_text_logout">Cerrar sesion</string>
+    <string name="update_profile_title_screen">Actualizar perfil</string>
 
 </resources>

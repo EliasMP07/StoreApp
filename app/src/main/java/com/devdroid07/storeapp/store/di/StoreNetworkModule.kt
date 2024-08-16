@@ -3,6 +3,7 @@ package com.devdroid07.storeapp.store.di
 import com.devdroid07.storeapp.BuildConfig
 import com.devdroid07.storeapp.core.di.CoreRetrofit
 import com.devdroid07.storeapp.core.domain.SessionStorage
+import com.devdroid07.storeapp.store.data.network.api.AccountApiService
 import com.devdroid07.storeapp.store.data.network.api.AddressApiService
 import com.devdroid07.storeapp.store.data.network.api.CardApiService
 import com.devdroid07.storeapp.store.data.network.api.CartApiService
@@ -103,6 +104,14 @@ object StoreNetworkModule {
     @Singleton
     fun provideOrderApiService(@StoreRetrofit retrofit: Retrofit): OrderApiService{
         return retrofit.create(OrderApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(
+        @StoreRetrofit retrofit: Retrofit,
+    ): AccountApiService {
+        return retrofit.create(AccountApiService::class.java)
     }
 
     @Provides

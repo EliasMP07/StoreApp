@@ -8,7 +8,7 @@ import com.devdroid07.storeapp.core.domain.util.Result
 import com.devdroid07.storeapp.core.domain.util.asEmptyDataResult
 import com.devdroid07.storeapp.store.data.mappers.toCart
 import com.devdroid07.storeapp.store.data.network.api.CartApiService
-import com.devdroid07.storeapp.store.data.network.dto.store.CartRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.cart.CartRequest
 import com.devdroid07.storeapp.store.domain.model.Cart
 import com.devdroid07.storeapp.store.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow

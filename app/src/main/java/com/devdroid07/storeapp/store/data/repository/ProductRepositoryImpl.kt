@@ -10,7 +10,7 @@ import com.devdroid07.storeapp.store.data.mappers.toBanner
 import com.devdroid07.storeapp.store.data.mappers.toProduct
 import com.devdroid07.storeapp.store.data.mappers.toReview
 import com.devdroid07.storeapp.store.data.network.api.ProductApiService
-import com.devdroid07.storeapp.store.data.network.dto.store.ReviewRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.product.ReviewRequest
 import com.devdroid07.storeapp.store.domain.model.Banner
 import com.devdroid07.storeapp.store.domain.model.Product
 import com.devdroid07.storeapp.store.domain.model.Review

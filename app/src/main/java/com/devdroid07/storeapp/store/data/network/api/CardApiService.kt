@@ -1,8 +1,8 @@
 package com.devdroid07.storeapp.store.data.network.api
 
 import com.devdroid07.storeapp.core.data.network.StoreResponse
-import com.devdroid07.storeapp.store.data.network.dto.store.CardDto
-import com.devdroid07.storeapp.store.data.network.dto.store.CardRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.card.CardDto
+import com.devdroid07.storeapp.store.data.network.dto.store.card.CardRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

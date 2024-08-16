@@ -6,9 +6,9 @@ import com.devdroid07.storeapp.core.domain.util.DataError
 import com.devdroid07.storeapp.core.domain.util.EmptyResult
 import com.devdroid07.storeapp.core.domain.util.asEmptyDataResult
 import com.devdroid07.storeapp.store.data.network.api.PaymentApiService
-import com.devdroid07.storeapp.store.data.network.dto.store.OrderRequest
-import com.devdroid07.storeapp.store.data.network.dto.store.Payer
-import com.devdroid07.storeapp.store.data.network.dto.store.PaymentRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.payment.OrderRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.payment.Payer
+import com.devdroid07.storeapp.store.data.network.dto.store.payment.PaymentRequest
 import com.devdroid07.storeapp.store.domain.repository.PaymentRepository
 
 class PaymentRepositoryImpl (

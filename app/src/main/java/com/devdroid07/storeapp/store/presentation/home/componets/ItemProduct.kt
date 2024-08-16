@@ -20,8 +20,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.store.domain.model.Product
 
@@ -53,6 +55,9 @@ fun ItemProduct(
                     .height(200.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.White),
+                loading = placeholder(R.drawable.loading_image),
+                failure = placeholder(R.drawable.error_image),
+                transition = CrossFade,
                 model = product.image,
                 contentDescription = stringResource(R.string.content_description_img_product)
             )

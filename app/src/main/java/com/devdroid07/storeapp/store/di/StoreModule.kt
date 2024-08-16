@@ -1,6 +1,7 @@
 package com.devdroid07.storeapp.store.di
 
 import com.devdroid07.storeapp.core.domain.SessionStorage
+import com.devdroid07.storeapp.store.data.network.api.AccountApiService
 import com.devdroid07.storeapp.store.data.network.api.AddressApiService
 import com.devdroid07.storeapp.store.data.network.api.CardApiService
 import com.devdroid07.storeapp.store.data.network.api.CartApiService
@@ -10,6 +11,7 @@ import com.devdroid07.storeapp.store.data.network.api.MercadoPagoApiService
 import com.devdroid07.storeapp.store.data.network.api.OrderApiService
 import com.devdroid07.storeapp.store.data.network.api.PaymentApiService
 import com.devdroid07.storeapp.store.data.network.api.ProductApiService
+import com.devdroid07.storeapp.store.data.repository.AccountRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.AddressRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.CardRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.CartRepositoryImpl
@@ -17,12 +19,15 @@ import com.devdroid07.storeapp.store.data.repository.FavoriteRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.OrderRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.PaymentRepositoryImpl
 import com.devdroid07.storeapp.store.data.repository.ProductRepositoryImpl
+import com.devdroid07.storeapp.store.domain.repository.AccountRepository
 import com.devdroid07.storeapp.store.domain.repository.CardRepository
 import com.devdroid07.storeapp.store.domain.repository.CartRepository
 import com.devdroid07.storeapp.store.domain.repository.FavoriteRepository
 import com.devdroid07.storeapp.store.domain.repository.OrderRepository
 import com.devdroid07.storeapp.store.domain.repository.PaymentRepository
 import com.devdroid07.storeapp.store.domain.repository.ProductRepository
+import com.devdroid07.storeapp.store.domain.usecases.account.AccountUseCases
+import com.devdroid07.storeapp.store.domain.usecases.account.UpdateProfileUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.AddressUseCases
 import com.devdroid07.storeapp.store.domain.usecases.address.CreateAddressUseCase
 import com.devdroid07.storeapp.store.domain.usecases.address.DeleteAddressUseCase
@@ -131,6 +136,18 @@ object StoreModule {
 
     @Singleton
     @Provides
+    fun provideAccountRepository(
+        sessionStorage: SessionStorage,
+        accountApiService: AccountApiService,
+    ): AccountRepository {
+        return AccountRepositoryImpl(
+            sessionStorage = sessionStorage,
+            accountApiService = accountApiService
+        )
+    }
+
+    @Singleton
+    @Provides
     fun providePaymentRepository(
         paymentApiService: PaymentApiService,
         sessionStorage: SessionStorage,
@@ -159,6 +176,16 @@ object StoreModule {
         repository: PaymentRepository,
     ): PaymentUseCases {
         return PaymentUseCases(createPaymentAndOrderUseCase = CreatePaymentAndOrderUseCase(repository))
+    }
+
+    @Provides
+    @Singleton
+    fun provideAccountUseCase(
+        repository: AccountRepository
+    ): AccountUseCases{
+        return AccountUseCases(
+            updateProfileUseCase = UpdateProfileUseCase(repository)
+        )
     }
 
     @Singleton
@@ -231,8 +258,8 @@ object StoreModule {
     @Singleton
     @Provides
     fun provideOrderUseCase(
-        repository: OrderRepository
-    ): OrderUseCases{
+        repository: OrderRepository,
+    ): OrderUseCases {
         return OrderUseCases(
             getAllOrderUseCase = GetAllOrderUseCase(repository),
             getSingleOrderUseCase = GetSingleOrderUseCase(repository)

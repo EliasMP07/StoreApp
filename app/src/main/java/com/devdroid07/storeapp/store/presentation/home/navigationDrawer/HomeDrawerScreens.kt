@@ -34,6 +34,8 @@ import com.devdroid07.storeapp.store.presentation.home.componets.DrawerContent
 import com.devdroid07.storeapp.store.presentation.home.navigationDrawer.utils.drawerItems
 import com.devdroid07.storeapp.store.presentation.orders.OrderScreenRoot
 import com.devdroid07.storeapp.store.presentation.orders.OrdersViewModel
+import com.devdroid07.storeapp.store.presentation.updateProfile.UpdateProfileScreenRoot
+import com.devdroid07.storeapp.store.presentation.updateProfile.UpdateProfileViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -45,7 +47,7 @@ internal fun HomeDrawerScreens(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     navigateToDetailProduct: (String) -> Unit,
-    navigateToLogout :() -> Unit,
+    navigateToLogout: () -> Unit,
     navigateToSearch: () -> Unit,
     navigateToDetailOrder: (String) -> Unit,
     navigateToCart: () -> Unit,
@@ -123,9 +125,41 @@ internal fun HomeDrawerScreens(
 
                 AccountScreenRoot(
                     viewModel = viewModel,
+                    drawerState = drawerState,
                     onLogout = navigateToLogout,
+                    closeDrawer = { coroutineScope.launch { drawerState.close() } },
+                    navigateToUpdateProfile = {
+                        navController.navigateAndRemoveCurrent(
+                            navBackStackEntry,
+                            RoutesScreens.UpdateAccount.route
+                        )
+                    },
+                    onBack = {
+                        navController.navigateToSingleTop(
+                            navBackStackEntry,
+                            RoutesScreens.Home.route
+                        )
+                    },
                     openDrawer = {
                         coroutineScope.launch { drawerState.open() }
+                    }
+                )
+            }
+
+            composable(
+                route = RoutesScreens.UpdateAccount.route
+            ) {
+
+                val viewModel: UpdateProfileViewModel = hiltViewModel()
+
+                UpdateProfileScreenRoot(
+                    context = context,
+                    viewModel = viewModel,
+                    onBack = {
+                        navController.navigateAndRemoveCurrent(
+                            navBackStackEntry,
+                            RoutesScreens.Account.route
+                        )
                     }
                 )
             }

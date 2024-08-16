@@ -1,6 +1,6 @@
 package com.devdroid07.storeapp.store.data.mappers
 
-import com.devdroid07.storeapp.store.data.network.dto.store.AddressDto
+import com.devdroid07.storeapp.store.data.network.dto.store.address.AddressDto
 import com.devdroid07.storeapp.store.domain.model.Address
 
 fun AddressDto.toAddress(): Address{

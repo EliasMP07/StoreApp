@@ -1,4 +1,4 @@
-package com.devdroid07.storeapp.store.data.network.dto.store
+package com.devdroid07.storeapp.store.data.network.dto.store.payment
 
 import com.google.gson.annotations.SerializedName
 

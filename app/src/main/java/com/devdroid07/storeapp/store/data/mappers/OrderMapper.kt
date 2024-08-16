@@ -1,6 +1,6 @@
 package com.devdroid07.storeapp.store.data.mappers
 
-import com.devdroid07.storeapp.store.data.network.dto.store.OrderDto
+import com.devdroid07.storeapp.store.data.network.dto.store.order.OrderDto
 import com.devdroid07.storeapp.store.domain.model.Order
 
 fun OrderDto.toOrder(): Order{

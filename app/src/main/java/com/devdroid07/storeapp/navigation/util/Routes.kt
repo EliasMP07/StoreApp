@@ -10,6 +10,7 @@ sealed class RoutesScreens(val route: String){
     data object Store: RoutesScreens("store")
     data object Cart: RoutesScreens("cart")
     data object Account: RoutesScreens("account")
+    data object UpdateAccount: RoutesScreens("update_profile")
     data object Payment: RoutesScreens("payment/{${NavArgs.AddressID.key}}"){
         fun createRoute(addressId: String) = "payment/$addressId"
     }

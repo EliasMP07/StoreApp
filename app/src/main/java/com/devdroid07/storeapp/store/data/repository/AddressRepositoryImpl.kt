@@ -10,8 +10,8 @@ import com.devdroid07.storeapp.store.data.mappers.toAddress
 import com.devdroid07.storeapp.store.data.mappers.toPostalCode
 import com.devdroid07.storeapp.store.data.network.api.AddressApiService
 import com.devdroid07.storeapp.store.data.network.api.CopomexApi
-import com.devdroid07.storeapp.store.data.network.dto.store.AddressRequest
-import com.devdroid07.storeapp.store.data.network.dto.store.AddressUpdateRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.address.AddressRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.address.AddressUpdateRequest
 import com.devdroid07.storeapp.store.domain.model.Address
 import com.devdroid07.storeapp.store.domain.model.PostalCode
 import com.devdroid07.storeapp.store.domain.repository.AddressRepository

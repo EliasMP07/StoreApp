@@ -1,10 +1,10 @@
 package com.devdroid07.storeapp.store.data.network.api
 
 import com.devdroid07.storeapp.core.data.network.StoreResponse
-import com.devdroid07.storeapp.store.data.network.dto.store.BannerDto
-import com.devdroid07.storeapp.store.data.network.dto.store.ProductDto
-import com.devdroid07.storeapp.store.data.network.dto.store.ReviewDto
-import com.devdroid07.storeapp.store.data.network.dto.store.ReviewRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.product.BannerDto
+import com.devdroid07.storeapp.store.data.network.dto.store.product.ProductDto
+import com.devdroid07.storeapp.store.data.network.dto.store.product.ReviewDto
+import com.devdroid07.storeapp.store.data.network.dto.store.product.ReviewRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

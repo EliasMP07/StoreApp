@@ -9,7 +9,7 @@ import com.devdroid07.storeapp.store.data.network.api.CardApiService
 import com.devdroid07.storeapp.store.data.network.api.MercadoPagoApiService
 import com.devdroid07.storeapp.store.data.network.dto.mercadoPago.Cardholder
 import com.devdroid07.storeapp.store.data.network.dto.mercadoPago.MercadoPagoCardTokenRequest
-import com.devdroid07.storeapp.store.data.network.dto.store.CardRequest
+import com.devdroid07.storeapp.store.data.network.dto.store.card.CardRequest
 import com.devdroid07.storeapp.store.domain.model.Card
 import com.devdroid07.storeapp.store.domain.repository.CardRepository
 import kotlinx.coroutines.flow.Flow

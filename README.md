@@ -27,7 +27,7 @@ gestión de direcciones, y pagos a través de Mercado Pago.
 ## Estructura del proyecto
 ![image](https://github.com/user-attachments/assets/122f598c-2cd3-4048-af60-53cbd15a6b77)
 
-##Video de ejecucion de App
+## Video de ejecucion de App
 https://github.com/user-attachments/assets/4d8b35ab-5103-4ab4-a69a-588da8be28d8
 
 ## Autenticacion

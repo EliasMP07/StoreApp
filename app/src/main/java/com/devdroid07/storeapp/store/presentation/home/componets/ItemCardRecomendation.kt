@@ -26,13 +26,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StarRating
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateOffset
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.devdroid07.storeapp.core.presentation.designsystem.components.LoadImageCoil
 import com.devdroid07.storeapp.store.domain.model.Product
 
 @Composable
@@ -57,16 +56,13 @@ fun ItemCardRecommended(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SubcomposeAsyncImage(
+            LoadImageCoil(
                 modifier = Modifier.size(80.dp),
                 model = product.image,
-                loading = {
+                contentLoading = {
                     Box(modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp)).shimmerEffect())
                 },
-                error = {
-                    ErrorImageLoad()
-                },
-                contentDescription = stringResource(id = R.string.content_description_img_product)
+                contentDescription =  R.string.content_description_img_product
             )
             Column(
                 modifier = Modifier

@@ -1,6 +1,7 @@
 package com.devdroid07.storeapp.store.presentation.home
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.core.domain.SessionStorage
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,14 +31,12 @@ class HomeViewModel @Inject constructor(
     init {
         getUser()
         loadProducts()
-        getBanners()
     }
 
     fun onAction(action: HomeAction) {
         when (action) {
             HomeAction.RetryClick -> {
                 loadProducts()
-                getBanners()
             }
             else -> Unit
         }
@@ -52,28 +52,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getBanners(){
-        viewModelScope.launch {
-            productUseCases.getAllBannersUseCases().collectLatest { result ->
-                _state.update { currentState ->
-                    when (result) {
-                        is Result.Error -> {
-                            currentState.copy(
-                                bannersList = emptyList(),
-                            )
-                        }
-                        is Result.Success -> {
-                            currentState.copy(
-                                bannersList = result.data,
-                            )
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-
     private fun loadProducts() {
         viewModelScope.launch {
             _state.update {
@@ -82,28 +60,32 @@ class HomeViewModel @Inject constructor(
                     error = null
                 )
             }
-            productUseCases.getAllProducts().collect { result ->
-                _state.update { currentState ->
-                    when (result) {
-                        is Result.Error -> {
-                            currentState.copy(
-                                error = result.error.asUiText(),
-                                isLoading = false
-                            )
-                        }
-                        is Result.Success -> {
-                            currentState.copy(
+            combine(productUseCases.getAllProducts(), productUseCases.getAllBannersUseCases()){products, banners ->
+                products to banners
+            }.collectLatest { (products, banners) ->
+                when{
+                    products is Result.Success && banners is Result.Success -> {
+                        _state.update {
+                            it.copy(
                                 error = null,
-                                productsList = result.data,
-                                productRecommended = result.data.firstOrNull { product ->
+                                bannersList = banners.data,
+                                productsList = products.data,
+                                productRecommended = products.data.firstOrNull { product ->
                                     product.ratingRate > 4.0
                                 } ?: Product(),
                                 isLoading = false
                             )
                         }
                     }
+                    products is Result.Error && banners is Result.Error -> {
+                        _state.update {
+                            it.copy(
+                                error = products.error.asUiText(),
+                                isLoading = false
+                            )
+                        }
+                    }
                 }
-
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp.store.presentation.home.componets
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.devdroid07.storeapp.core.presentation.designsystem.components.LoadImageCoil
 import com.devdroid07.storeapp.store.domain.model.Banner
 
 @Composable
@@ -24,19 +25,18 @@ fun BannerItem(
         onClick = {
         }
     ) {
-        SubcomposeAsyncImage(
+        LoadImageCoil(
             modifier = Modifier.fillMaxSize(),
             model = banner.imageUrl,
             contentScale = ContentScale.FillBounds,
-            contentDescription = null,
-            loading = {
+            contentLoading = {
                 Box(
-                    modifier = Modifier.aspectRatio(16f / 7f).shimmerEffect()
+                    modifier = Modifier
+                        .aspectRatio(16f / 7f)
+                        .shimmerEffect()
                 )
             },
-            error = {
-                ErrorImageLoad()
-            }
+            contentDescription = R.string.image_banner
         )
     }
 }

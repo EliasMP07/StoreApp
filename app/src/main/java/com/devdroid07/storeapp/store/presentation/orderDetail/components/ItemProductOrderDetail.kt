@@ -20,18 +20,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
+import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterRight
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.devdroid07.storeapp.core.presentation.designsystem.components.LoadImageCoil
 import com.devdroid07.storeapp.store.domain.model.Product
 
 @Composable
 fun ItemProductOrderDetail(
     spacing: Dimensions,
     product: Product,
-    onProductClick: (String) -> Unit
+    onProductClick: (String) -> Unit,
 ) {
     ElevatedCard(
         modifier = Modifier.animateEnterRight(),
@@ -48,17 +48,17 @@ fun ItemProductOrderDetail(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SubcomposeAsyncImage(
+            LoadImageCoil(
                 modifier = Modifier.size(80.dp),
-                model = product.image, contentDescription = null,
-                loading = {
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .shimmerEffect())
+                model = product.image,
+                contentDescription = R.string.content_description_img_product,
+                contentLoading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .shimmerEffect()
+                    )
                 },
-                error = {
-                    ErrorImageLoad()
-                }
             )
             Column(
                 modifier = Modifier

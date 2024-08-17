@@ -24,12 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterRight
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.devdroid07.storeapp.core.presentation.designsystem.components.LoadImageCoil
 import com.devdroid07.storeapp.store.domain.model.Order
 import com.devdroid07.storeapp.store.presentation.orderDetail.components.utils.StatusOrder
 import dashedBorder
@@ -61,7 +60,7 @@ fun ItemOrder(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
-            SubcomposeAsyncImage(
+            LoadImageCoil(
                 modifier = Modifier
                     .width(120.dp)
                     .height(120.dp)
@@ -71,18 +70,14 @@ fun ItemOrder(
                         color = Color(0xFF562F0C),
                         shape = RoundedCornerShape(12.dp)
                     )
-                    .background(Color.White)
-                ,
-                loading = {
+                    .background(Color.White),
+                model = order.products.first().image,
+                contentDescription = R.string.content_description_img_product,
+                contentLoading = {
                     Box(modifier = Modifier
                         .fillMaxSize()
                         .shimmerEffect())
-                },
-                error = {
-                    ErrorImageLoad()
-                },
-                model = order.products.first().image,
-                contentDescription = stringResource(R.string.content_description_img_product)
+                }
             )
             Column(
                 modifier = Modifier.weight(0.4f),

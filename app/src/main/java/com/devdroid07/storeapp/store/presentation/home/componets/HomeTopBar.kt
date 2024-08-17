@@ -34,13 +34,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
-import com.devdroid07.storeapp.core.presentation.designsystem.CamaraIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
-import com.devdroid07.storeapp.core.presentation.designsystem.PersonIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.devdroid07.storeapp.core.presentation.designsystem.components.LoadImageCoil
 
 @Composable
 fun HomeTopBar(
@@ -110,22 +107,19 @@ fun HomeTopBar(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                SubcomposeAsyncImage(
+                LoadImageCoil(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.background),
                     contentScale = ContentScale.Crop,
                     model = profile.ifBlank { R.drawable.ic_account },
-                    loading = {
+                    contentLoading = {
                         Box(modifier = Modifier
                             .fillMaxSize()
                             .shimmerEffect())
                     },
-                    error = {
-                        ErrorImageLoad()
-                    },
-                    contentDescription = stringResource(id = R.string.content_description_profile)
+                    contentDescription = R.string.content_description_profile
                 )
             }
             Spacer(modifier = Modifier.width(spacing.spaceMedium))

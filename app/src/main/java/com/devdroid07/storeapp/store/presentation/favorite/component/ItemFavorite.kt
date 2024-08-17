@@ -20,12 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.devdroid07.storeapp.core.presentation.designsystem.components.LoadImageCoil
 import com.devdroid07.storeapp.store.domain.model.Product
 
 @Composable
@@ -46,7 +44,7 @@ fun ItemFavorite(
                 .background(MaterialTheme.colorScheme.background),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SubcomposeAsyncImage(
+            LoadImageCoil(
                 modifier = Modifier
                     .padding(20.dp)
                     .weight(0.4f)
@@ -54,16 +52,13 @@ fun ItemFavorite(
                     .size(80.dp)
                     .background(Color.White),
                 model = product.image,
-                error = {
-                    ErrorImageLoad()
-                },
-                loading = {
+                contentLoading = {
                     Box(modifier = Modifier
                         .fillMaxSize()
                         .shimmerEffect())
                 },
                 contentScale = ContentScale.Fit,
-                contentDescription = stringResource(id = R.string.content_description_img_product)
+                contentDescription = R.string.content_description_img_product
             )
             Column(
                 modifier = Modifier.weight(1f)

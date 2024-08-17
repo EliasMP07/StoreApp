@@ -165,15 +165,12 @@ private fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
             ) {
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                    if (state.productRecommended.ratingRate != 0.0) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ){
-                            BannerPager(state = state.bannersList)
-                        }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        BannerPager(state = state.bannersList)
                     }
-
                 }
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
                     if (state.productRecommended.ratingRate != 0.0) {

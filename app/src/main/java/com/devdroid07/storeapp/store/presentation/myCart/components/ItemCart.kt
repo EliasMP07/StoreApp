@@ -22,10 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.devdroid07.storeapp.core.presentation.designsystem.components.LoadImageCoil
 import com.devdroid07.storeapp.core.presentation.ui.util.roundToTwoDecimals
 import com.devdroid07.storeapp.store.domain.model.Cart
 
@@ -49,24 +48,21 @@ fun ItemCart(
                 .background(MaterialTheme.colorScheme.background),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SubcomposeAsyncImage(
+            LoadImageCoil(
                 modifier = Modifier
                     .padding(20.dp)
                     .weight(0.4f)
                     .clip(RoundedCornerShape(12.dp))
                     .size(80.dp)
                     .background(Color.White),
-                model = cart.image,
+                model = cart.image ,
                 contentScale = ContentScale.Fit,
-                loading = {
+                contentLoading = {
                     Box(modifier = Modifier
                         .fillMaxSize()
                         .shimmerEffect())
                 },
-                error = {
-                    ErrorImageLoad()
-                },
-                contentDescription = stringResource(id = R.string.content_description_img_product)
+                contentDescription = R.string.content_description_img_product
             )
             Column(
                 modifier = Modifier.weight(1f)

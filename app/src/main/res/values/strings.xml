@@ -183,5 +183,6 @@
     <string name="update_profile_title_screen">Actualizar perfil</string>
     <string name="content_description_error_image">Error al carga la imagen</string>
     <string name="update_address">Actualizar</string>
+    <string name="image_banner">Banner de promocion</string>
 
 </resources>

@@ -18,14 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
-import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.devdroid07.storeapp.core.presentation.designsystem.components.LoadImageCoil
 import com.devdroid07.storeapp.store.domain.model.Product
 
 @Composable
@@ -49,24 +49,22 @@ fun ItemProduct(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SubcomposeAsyncImage(
+            LoadImageCoil(
                 modifier = Modifier
                     .width(180.dp)
                     .height(200.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.White),
                 model = product.image,
-                contentDescription = stringResource(R.string.content_description_img_product),
-                loading = {
+                contentScale = ContentScale.Fit,
+                contentDescription = R.string.content_description_img_product,
+                contentLoading = {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(RoundedCornerShape(12.dp))
                             .shimmerEffect()
                     )
-                },
-                error = {
-                    ErrorImageLoad()
                 }
             )
             Text(

@@ -72,7 +72,13 @@ fun BottomSheetAddCard(
         StoreTextField(
             state = state.numberCard,
             startIcon = null,
-            endIcon = if (isValidCreditCard(state.numberCard.text.toString()))CheckIcon else null,
+            endIcon = if (isValidCreditCard(
+                    state.numberCard.text.toString().replace(
+                        " ",
+                        ""
+                    )
+                )
+            ) CheckIcon else null,
             hint = "",
             inputTransformation = TextCardTransformation(),
             title = stringResource(R.string.number_tarjet),
@@ -83,7 +89,7 @@ fun BottomSheetAddCard(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
-        ){
+        ) {
             StoreTextField(
                 modifier = Modifier.weight(0.5f),
                 state = state.cvv,
@@ -116,6 +122,7 @@ fun BottomSheetAddCard(
             modifier = Modifier.padding(
                 vertical = spacing.spaceSmall
             ),
+            enabled = state.canCreateCard,
             text = stringResource(R.string.add_address),
             isLoading = state.isCreatingCard
         ) {

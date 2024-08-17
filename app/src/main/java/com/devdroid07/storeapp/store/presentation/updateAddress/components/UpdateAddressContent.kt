@@ -37,6 +37,7 @@ fun UpdateAddressContent(
     spacing: Dimensions,
     onAction: (UpdateAddressAction) -> Unit = {},
 ) {
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -143,7 +144,7 @@ fun UpdateAddressContent(
             modifier = Modifier.padding(
                 vertical = spacing.spaceSmall
             ),
-            text = stringResource(R.string.add_address),
+            text = stringResource(R.string.update_address),
             enabled = true,
             isLoading = state.isUpdatingAddress
         ) {

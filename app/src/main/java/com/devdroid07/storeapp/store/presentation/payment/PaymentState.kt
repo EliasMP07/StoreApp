@@ -11,6 +11,7 @@ data class PaymentState(
     val cards: List<Card> = emptyList(),
     val isLoading: Boolean = false,
     val isCreatingCard: Boolean = false,
+    val canCreateCard: Boolean = false,
     val error: UiText? = null,
     val cvv: TextFieldState = TextFieldState(),
     val numberCard: TextFieldState = TextFieldState(),

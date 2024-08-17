@@ -42,7 +42,7 @@ fun StoreSnackBar(
     snackbarData: SnackbarData,
     labelButton: UiText? = null,
 ) {
-    val style = SnackBarStyle.TypeStyle(snackbarData.visuals.actionLabel?:"")
+    val style = SnackBarStyle.typeStyle(snackbarData.visuals.actionLabel?:"")
     val totalDuration = remember(style.duration) { style.duration * 500 }
     var millisRemaining by remember { mutableIntStateOf(totalDuration) }
 

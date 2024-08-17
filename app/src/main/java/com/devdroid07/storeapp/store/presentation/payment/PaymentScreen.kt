@@ -16,6 +16,7 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -32,8 +34,10 @@ import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.CircularLoading
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreSnackBar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
+import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.SnackBarStyle
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.isVisibleBottomSheet
 import com.devdroid07.storeapp.store.presentation.payment.components.BottomSheetAddCard
@@ -48,7 +52,7 @@ fun PaymentScreenRoot(
     navigateToFinishPay: (String, String, String) -> Unit,
 ) {
 
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -73,25 +77,24 @@ fun PaymentScreenRoot(
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             is PaymentEvent.Error -> {
-                keyboardController?.hide()
-                Toast.makeText(
-                    context,
-                    event.error.asString(context),
-                    Toast.LENGTH_SHORT
-                ).show()
+                focusManager.clearFocus()
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.error.asString(context)
+                    )
+                }
             }
             is PaymentEvent.Success -> {
-                keyboardController?.hide()
+                focusManager.clearFocus()
                 if (scaffoldState.isVisibleBottomSheet) {
                     scope.launch {
                         scaffoldState.bottomSheetState.hide()
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = event.message.asString(context),
+                            actionLabel = SnackBarStyle.SuccessCreateCard.type
+                        )
                     }
                 }
-                Toast.makeText(
-                    context,
-                    event.message.asString(context),
-                    Toast.LENGTH_SHORT
-                ).show()
             }
             is PaymentEvent.SuccessCreateToken -> {
                 navigateToFinishPay(
@@ -141,6 +144,11 @@ private fun PaymentScreen(
                     onAction(PaymentAction.OnBackClick)
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = scaffoldState.snackbarHostState) {
+                StoreSnackBar(snackbarData = it)
+            }
         },
         sheetTonalElevation = 0.dp,
         sheetShadowElevation = 30.dp,

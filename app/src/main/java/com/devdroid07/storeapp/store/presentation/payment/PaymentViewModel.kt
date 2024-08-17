@@ -2,11 +2,13 @@ package com.devdroid07.storeapp.store.presentation.payment
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.clearText
+import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.domain.util.Result
+import com.devdroid07.storeapp.core.presentation.designsystem.components.card.utils.isValidCreditCard
 import com.devdroid07.storeapp.core.presentation.ui.UiText
 import com.devdroid07.storeapp.core.presentation.ui.asUiText
 import com.devdroid07.storeapp.navigation.util.NavArgs
@@ -18,6 +20,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,6 +43,23 @@ class PaymentViewModel @Inject constructor(
     private val addressId: String = checkNotNull(savedStateHandle[NavArgs.AddressID.key])
 
     init {
+        combine(
+            _state.value.numberCard.textAsFlow(),
+            _state.value.expireDate.textAsFlow(),
+            _state.value.cvv.textAsFlow(),
+            _state.value.nameHeadlineCard.textAsFlow()
+        ) { cardNumber, expireDate, cvv, name ->
+            _state.update {
+                it.copy(
+                    canCreateCard = isValidCreditCard(
+                        cardNumber.toString().replace(
+                            " ",
+                            ""
+                        )
+                    ) && expireDate.isNotEmpty() && cvv.isNotEmpty() && name.isNotEmpty()
+                )
+            }
+        }.launchIn(viewModelScope)
         getAllMyCard()
     }
 
@@ -89,11 +110,7 @@ class PaymentViewModel @Inject constructor(
 
     private fun createCard() {
         viewModelScope.launch {
-            _state.update { paymentState ->
-                paymentState.copy(
-                    isCreatingCard = true
-                )
-            }
+            _state.update { it.copy(isCreatingCard = true) }
             val result = cardUseCases.createCardUseCase(
                 cardNumber = state.value.numberCard.text.toString().replace(
                     " ",
@@ -103,28 +120,22 @@ class PaymentViewModel @Inject constructor(
                 expireDate = state.value.expireDate.text.toString(),
                 nameHeadline = state.value.nameHeadlineCard.text.toString()
             )
-            _state.update { paymentState ->
+            _state.update {
                 when (result) {
                     is Result.Error -> {
                         eventChannel.send(
-                            PaymentEvent.Error(UiText.StringResource(R.string.error_create_card))
+                            PaymentEvent.Error(result.error.asUiText())
                         )
-                        paymentState.copy(
-                            isCreatingCard = false,
-                            cards = emptyList()
-                        )
-
+                        it.copy(isCreatingCard = false)
                     }
                     is Result.Success -> {
                         clearTextFieldState()
                         eventChannel.send(
                             PaymentEvent.Success(UiText.StringResource(R.string.success_create_card))
                         )
-                        val newList = paymentState.cards.toMutableList()
-                        newList.add(result.data)
-                        paymentState.copy(
+                        it.copy(
                             isCreatingCard = false,
-                            cards = newList
+                            cards = it.cards + result.data
                         )
 
                     }
@@ -138,46 +149,29 @@ class PaymentViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
 
-            _state.update { paymentState ->
-                paymentState.copy(
-                    isGetTokenId = true
-                )
-            }
+            _state.update { it.copy(isGetTokenId = true) }
 
             val date = card.expireDate.replace(
                 "/",
                 ""
             )
 
-            val year = "20${date.takeLast(2)}"
-
-            val month = date.take(2)
-
-            val result = cardUseCases.createCardTokenUseCase.invoke(
-                year = year,
-                month = month.toInt(),
+            val result = cardUseCases.createCardTokenUseCase(
+                year = "20${date.takeLast(2)}",
+                month = date.take(2).toInt(),
                 cardNumber = card.cardNumber,
                 cardHolder = card.nameHeadline,
                 securityCode = card.cvv,
             )
-
             when (result) {
                 is Result.Error -> {
-                    _state.update { paymentState ->
-                        paymentState.copy(
-                            isGetTokenId = false
-                        )
-                    }
+                    _state.update { it.copy(isGetTokenId = false) }
                     eventChannel.send(
                         PaymentEvent.Error(result.error.asUiText())
                     )
                 }
                 is Result.Success -> {
-                    _state.update { paymentState ->
-                        paymentState.copy(
-                            isGetTokenId = false
-                        )
-                    }
+                    _state.update { it.copy(isGetTokenId = false) }
                     eventChannel.send(
                         PaymentEvent.SuccessCreateToken(
                             addressId = addressId,

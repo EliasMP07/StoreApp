@@ -29,7 +29,7 @@ class PaymentRepositoryImpl (
                         addressId = addressId,
                     ),
                     token = token,
-                    description = "Pagoo",
+                    description = "Pago",
                     payer = Payer(
                         email = sessionStorage.get()?.email.orEmpty()
                     ),

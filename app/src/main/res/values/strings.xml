@@ -182,5 +182,6 @@
     <string name="btn_text_logout">Cerrar sesion</string>
     <string name="update_profile_title_screen">Actualizar perfil</string>
     <string name="content_description_error_image">Error al carga la imagen</string>
+    <string name="update_address">Actualizar</string>
 
 </resources>

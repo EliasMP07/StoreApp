@@ -9,6 +9,8 @@ import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material.icons.filled.RemoveShoppingCart
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.rounded.CreditCard
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.devdroid07.storeapp.core.presentation.designsystem.errorLight
@@ -34,6 +36,20 @@ sealed class SnackBarStyle(
         icon = Icons.Default.RemoveShoppingCart,
         backgroundColor = primaryLight,
         type = "SUCCESS_REMOVE_CART",
+        duration = 2
+    )
+
+    data object SuccessCreateAddress: SnackBarStyle(
+        icon = Icons.Rounded.LocationOn,
+        backgroundColor = successColor,
+        type = "SUCCESS_CREATE_ADDRESS",
+        duration = 2
+    )
+
+    data object SuccessCreateCard: SnackBarStyle(
+        icon = Icons.Rounded.CreditCard,
+        backgroundColor = successColor,
+        type = "SUCCESS_CREATE_CARD",
         duration = 2
     )
 
@@ -87,7 +103,7 @@ sealed class SnackBarStyle(
     )
 
     companion object{
-        fun TypeStyle(value: String): SnackBarStyle{
+        fun typeStyle(value: String): SnackBarStyle{
             return when(value){
                 SuccessRemoveCart.type -> SuccessRemoveCart
                 SuccessAddCart.type -> SuccessAddCart
@@ -95,6 +111,8 @@ sealed class SnackBarStyle(
                 SuccessRemoveFavorite.type -> SuccessRemoveFavorite
                 SuccessAddReview.type -> SuccessAddReview
                 SuccessUpdateQuantity.type -> SuccessUpdateQuantity
+                SuccessCreateAddress.type -> SuccessCreateAddress
+                SuccessCreateCard.type -> SuccessCreateCard
                 else -> Error
             }
         }

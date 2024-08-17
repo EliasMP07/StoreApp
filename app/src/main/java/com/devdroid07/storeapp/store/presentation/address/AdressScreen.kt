@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,8 +32,10 @@ import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorContent
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreActionButton
+import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreSnackBar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreToolbar
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
+import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.SnackBarStyle
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.core.presentation.designsystem.components.utils.isVisibleBottomSheet
 import com.devdroid07.storeapp.store.presentation.address.components.BottomSheetAddAddress
@@ -48,6 +51,8 @@ fun AddressScreenRoot(
     navigateToUpdateAddress: (String) -> Unit,
     onBack: () -> Unit,
 ) {
+
+    val focusManager = LocalFocusManager.current
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -72,16 +77,21 @@ fun AddressScreenRoot(
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             is AddressEvent.Error -> {
+                focusManager.clearFocus()
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(event.error.asString(context))
                 }
             }
             is AddressEvent.Success -> {
+                focusManager.clearFocus()
                 scope.launch {
                     if (scaffoldState.isVisibleBottomSheet) {
                         scaffoldState.bottomSheetState.hide()
                     }
-                    scaffoldState.snackbarHostState.showSnackbar(event.message.asString(context))
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        event.message.asString(context),
+                        SnackBarStyle.SuccessCreateAddress.type
+                    )
                 }
 
             }
@@ -131,7 +141,9 @@ fun AddressScreen(
             )
         },
         snackbarHost = {
-            SnackbarHost(hostState = scaffoldState.snackbarHostState)
+            SnackbarHost(hostState = scaffoldState.snackbarHostState) {
+                StoreSnackBar(snackbarData = it)
+            }
         },
         sheetContent = {
             BottomSheetAddAddress(
@@ -178,7 +190,7 @@ fun AddressScreen(
                     items(
                         state.addressList,
                         key = { it.id }
-                    ) {address ->
+                    ) { address ->
                         ItemAddress(
                             address = address,
                             spacing = spacing,

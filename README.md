@@ -7,22 +7,23 @@
 - Kotlin 2.0.0.
 
 ## Descripcion del proyecto
-Este es un proyecto de una aplicación de tienda en línea que sigue buenas prácticas de desarrollo, 
-como el uso de MVVM y una arquitectura limpia. La app incluye funciones como autenticación de usuarios, 
-gestión de direcciones, y pagos a través de Mercado Pago.
+Proyecto de aplicación de tienda en línea que sigue buenas prácticas de desarrollo, 
+como el uso de MVVM, arquitectura limpia, principios SOLID. La app incluye funciones como autenticación de usuarios, 
+gestión de direcciones, y pagos a través de Mercado Pago, calificacion de productos, banners de promociones, etc.
 
 ## Tecnologías y Herramientas Utilizadas
--Jetpack Compose: Para la creación de interfaces de usuario modernas y reactivas.
--Arquitectura Limpia: Separación clara de responsabilidades para un código mantenible.
--MVVM: Para estructurar el código de manera organizada y modular.
--Principios SOLID: Aplicados para mejorar la calidad y escalabilidad del código.
--Retrofit: Utilizado para la comunicación con APIs y el manejo de solicitudes HTTP.
--Hilt: Para la inyección de dependencias, facilitando la gestión de componentes.
--Coroutines: Para manejar operaciones asíncronas y concurrencia de manera eficiente.
--Navigation Compose: Para la gestión de la navegación entre pantallas de forma fluida.
--Material Design: Para garantizar una interfaz de usuario coherente y fácil de usar.
--Coil: Utilizado para la carga y manipulación eficiente de imágenes.
--DataStore: Para la persistencia de datos, incluyendo el manejo de la sesión de usuario.
+
+- **Jetpack Compose**: Para la creación de interfaces de usuario modernas y reactivas.
+- **Arquitectura Limpia**: Separación clara de responsabilidades para un código mantenible.
+- **MVVM**: Para estructurar el código de manera organizada y modular.
+- **Principios SOLID**: Aplicados para mejorar la calidad y escalabilidad del código.
+- **Retrofit**: Utilizado para la comunicación con APIs y el manejo de solicitudes HTTP.
+- **Hilt**: Para la inyección de dependencias, facilitando la gestión de componentes.
+- **Coroutines**: Para manejar operaciones asíncronas y concurrencia de manera eficiente.
+- **Navigation Compose**: Para la gestión de la navegación entre pantallas de forma fluida.
+- **Material Design**: Para garantizar una interfaz de usuario coherente y fácil de usar.
+- **Coil**: Utilizado para la carga y manipulación eficiente de imágenes.
+- **DataStore**: Para la persistencia de datos, incluyendo el manejo de la sesión de usuario.
 
 ## Estructura del proyecto
 ![image](https://github.com/user-attachments/assets/122f598c-2cd3-4048-af60-53cbd15a6b77)

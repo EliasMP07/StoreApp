@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalGlideComposeApi::class)
 
 package com.devdroid07.storeapp.store.presentation.productDetail.components
 
@@ -18,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.devdroid07.storeapp.auth.presentation.register.components.PhotoProfile
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StarRating

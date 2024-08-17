@@ -1,9 +1,11 @@
 package com.devdroid07.storeapp.store.presentation.favorite.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,12 +22,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
 import com.devdroid07.storeapp.store.domain.model.Product
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ItemFavorite(
     product: Product,
@@ -44,7 +46,7 @@ fun ItemFavorite(
                 .background(MaterialTheme.colorScheme.background),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            GlideImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier
                     .padding(20.dp)
                     .weight(0.4f)
@@ -52,6 +54,14 @@ fun ItemFavorite(
                     .size(80.dp)
                     .background(Color.White),
                 model = product.image,
+                error = {
+                    ErrorImageLoad()
+                },
+                loading = {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .shimmerEffect())
+                },
                 contentScale = ContentScale.Fit,
                 contentDescription = stringResource(id = R.string.content_description_img_product)
             )

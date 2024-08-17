@@ -1,13 +1,11 @@
-@file:OptIn(ExperimentalGlideComposeApi::class)
-
 package com.devdroid07.storeapp.store.presentation.updateProfile.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -21,12 +19,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.CrossFade
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
+import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.CamaraIcon
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
+import com.ehsanmsz.mszprogressindicator.progressindicator.BallSpinFadeLoaderProgressIndicator
 
 @Composable
 fun PhotoProfileUpdate(
@@ -54,25 +51,29 @@ fun PhotoProfileUpdate(
                     onClick()
                 }
         ) {
-            GlideImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .size(80.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.background),
                 contentScale = ContentScale.Crop,
-                model = image,
+                model = image.ifBlank { R.drawable.ic_account },
                 contentDescription = stringResource(id = R.string.content_description_profile),
-                transition = CrossFade,
-                failure = placeholder(R.drawable.error_image)
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        BallSpinFadeLoaderProgressIndicator(
+                            diameter = 40.dp
+                        )
+                    }
+                },
+                error = {
+                    ErrorImageLoad()
+                }
             )
-            if (image.isBlank()) {
-                Icon(
-                    imageVector = CamaraIcon,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
         }
         Box(
             modifier = Modifier

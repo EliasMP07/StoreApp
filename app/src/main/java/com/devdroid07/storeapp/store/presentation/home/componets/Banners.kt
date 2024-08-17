@@ -1,6 +1,4 @@
-@file:OptIn(ExperimentalGlideComposeApi::class,
-            ExperimentalFoundationApi::class
-)
+@file:OptIn(ExperimentalFoundationApi::class)
 
 package com.devdroid07.storeapp.store.presentation.home.componets
 
@@ -22,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.devdroid07.storeapp.store.domain.model.Banner
 
 @Composable

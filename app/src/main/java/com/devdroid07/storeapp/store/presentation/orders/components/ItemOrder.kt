@@ -1,11 +1,11 @@
-@file:OptIn(ExperimentalGlideComposeApi::class)
-
 package com.devdroid07.storeapp.store.presentation.orders.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,11 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterRight
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
 import com.devdroid07.storeapp.store.domain.model.Order
 import com.devdroid07.storeapp.store.presentation.orderDetail.components.utils.StatusOrder
 import dashedBorder
@@ -60,7 +61,7 @@ fun ItemOrder(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
-            GlideImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier
                     .width(120.dp)
                     .height(120.dp)
@@ -72,6 +73,14 @@ fun ItemOrder(
                     )
                     .background(Color.White)
                 ,
+                loading = {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .shimmerEffect())
+                },
+                error = {
+                    ErrorImageLoad()
+                },
                 model = order.products.first().image,
                 contentDescription = stringResource(R.string.content_description_img_product)
             )

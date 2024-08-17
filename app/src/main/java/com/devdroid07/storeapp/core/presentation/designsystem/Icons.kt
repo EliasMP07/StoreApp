@@ -5,13 +5,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.devdroid07.storeapp.R
 
-val ExpandMoreIcon : ImageVector
+val ErrorImageIcon: ImageVector
     @Composable
-    get() = ImageVector.vectorResource(id = R.drawable.ic_expand_more)
-
-val ExpandLessIcon : ImageVector
-    @Composable
-    get() = ImageVector.vectorResource(id = R.drawable.ic_expand_less)
+    get() = ImageVector.vectorResource(id = R.drawable.error_image)
 
 val CartIcon : ImageVector
     @Composable

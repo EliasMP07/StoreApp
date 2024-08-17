@@ -63,7 +63,10 @@ fun NavGraphBuilder.store(
                 },
                 navBackStackEntry = navBackEntry,
                 navigateToLogout = {
-                    navController.navigateToSingleTop(navBackEntry, RoutesScreens.Intro.route)
+                    navController.navigateToSingleTop(
+                        navBackEntry,
+                        RoutesScreens.Intro.route
+                    )
                 },
                 navigateToCart = {
                     navController.navigateScreen(
@@ -142,6 +145,12 @@ fun NavGraphBuilder.store(
 
             SearchScreenRoot(
                 viewModel = viewModel,
+                onBack = {
+                    navController.navigateAndRemoveCurrent(
+                        navBackEntry,
+                        RoutesScreens.HomeDrawerRoute.route
+                    )
+                },
                 navigateToDetailProduct = {
                     navController.navigateScreen(
                         navBackEntry,

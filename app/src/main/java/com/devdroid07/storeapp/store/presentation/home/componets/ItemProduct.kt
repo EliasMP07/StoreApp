@@ -1,7 +1,9 @@
 package com.devdroid07.storeapp.store.presentation.home.componets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,14 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.CrossFade
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
+import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
 import com.devdroid07.storeapp.store.domain.model.Product
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ItemProduct(
     product: Product,
@@ -49,17 +49,25 @@ fun ItemProduct(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            GlideImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier
                     .width(180.dp)
                     .height(200.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.White),
-                loading = placeholder(R.drawable.loading_image),
-                failure = placeholder(R.drawable.error_image),
-                transition = CrossFade,
                 model = product.image,
-                contentDescription = stringResource(R.string.content_description_img_product)
+                contentDescription = stringResource(R.string.content_description_img_product),
+                loading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(12.dp))
+                            .shimmerEffect()
+                    )
+                },
+                error = {
+                    ErrorImageLoad()
+                }
             )
             Text(
                 text = product.title,

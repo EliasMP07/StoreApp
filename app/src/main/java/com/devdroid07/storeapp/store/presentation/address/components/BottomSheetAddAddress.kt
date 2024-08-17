@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text2.input.InputTransformation
 import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.foundation.text2.input.maxLengthInChars
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,6 +37,7 @@ fun BottomSheetAddAddress(
     spacing: Dimensions,
     onAction: (AddressAction) -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -104,7 +107,12 @@ fun BottomSheetAddAddress(
             hint = stringResource(R.string.example_number),
             keyboardType = KeyboardType.Phone,
             inputTransformation = InputTransformation.maxLengthInChars(10),
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Done,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
             title = stringResource(R.string.number_contact)
         )
 
@@ -141,6 +149,7 @@ fun BottomSheetAddAddress(
             enabled = state.canCreateAddress,
             isLoading = state.isCreatingAddress
         ) {
+            focusManager.clearFocus()
             onAction(AddressAction.OnCreateAddress)
         }
 

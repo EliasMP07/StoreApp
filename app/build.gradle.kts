@@ -54,7 +54,8 @@ android {
 
         create("production") {
             dimension = "env"
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.81:3000/v1/\"")
+            val baseUrl = gradleLocalProperties(rootDir, providers).getProperty("BASE_URL")
+            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "MERCADOPAGO_URL", "\"https://api.mercadopago.com/\"")
             buildConfigField("String", "COPOMEX_URL", "\"https://api.copomex.com/query/\"")
             val apiKeyMercado = gradleLocalProperties(rootDir, providers).getProperty("API_KEY_PRODUCTION_MERCADOPAGO")
@@ -93,6 +94,7 @@ dependencies {
 
     implementation(libs.msz.progress.indicator)
 
+    implementation(libs.coil.compose)
     //Serialization
     implementation(libs.kotlinx.serialization.json)
 
@@ -111,7 +113,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
-    implementation(libs.glide.compose)
 
     implementation(libs.androidx.compose.animation)
     implementation(libs.androidx.navigation.compose)

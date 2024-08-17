@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text2.input.InputTransformation
 import androidx.compose.foundation.text2.input.maxLengthInChars
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,6 +41,7 @@ fun BottomSheetAddCard(
     spacing: Dimensions,
     onAction: (PaymentAction) -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -97,6 +100,11 @@ fun BottomSheetAddCard(
                 startIcon = null,
                 endIcon = null,
                 hint = "",
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
                 keyboardType = KeyboardType.Number,
                 inputTransformation = ExpiryDateInputTransformation(),
                 imeAction = ImeAction.Done,
@@ -111,6 +119,7 @@ fun BottomSheetAddCard(
             text = stringResource(R.string.add_address),
             isLoading = state.isCreatingCard
         ) {
+            focusManager.clearFocus()
             onAction(PaymentAction.OnCreateCardClick)
         }
 

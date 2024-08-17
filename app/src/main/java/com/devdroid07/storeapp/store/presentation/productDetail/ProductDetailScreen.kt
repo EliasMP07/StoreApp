@@ -1,8 +1,6 @@
 @file:OptIn(
-    ExperimentalGlideComposeApi::class,
-    ExperimentalMaterial3Api::class,
-    ExperimentalGlideComposeApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class
 )
 
 package com.devdroid07.storeapp.store.presentation.productDetail
@@ -18,6 +16,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,13 +29,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,8 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
 import com.devdroid07.storeapp.core.presentation.designsystem.StoreAppTheme
@@ -54,11 +50,14 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIc
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreIconButtonFavorite
 import com.devdroid07.storeapp.core.presentation.designsystem.components.StoreSnackBar
 import com.devdroid07.storeapp.core.presentation.designsystem.animation.animateEnterBottom
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.core.presentation.ui.ObserveAsEvents
 import com.devdroid07.storeapp.store.presentation.productDetail.components.BottomSheetReviews
 import com.devdroid07.storeapp.store.presentation.productDetail.components.FooterProductDetail
 import com.devdroid07.storeapp.store.presentation.productDetail.components.ProductDetailShimmerEffect
+import com.ehsanmsz.mszprogressindicator.progressindicator.BallSpinFadeLoaderProgressIndicator
 import kotlinx.coroutines.launch
 
 @Composable
@@ -108,7 +107,7 @@ fun ProductDetailRootScreenRoot(
                         duration = SnackbarDuration.Short,
                         actionLabel = event.snackBarStyle.type
                     )
-                    when(result){
+                    when (result) {
                         SnackbarResult.ActionPerformed -> navigateToCart()
                         else -> Unit
                     }
@@ -146,8 +145,11 @@ private fun ProductDetailScreen(
 
     BottomSheetScaffold(
         snackbarHost = {
-            SnackbarHost(hostState = scaffoldState.snackbarHostState){
-                StoreSnackBar(snackbarData = it, labelButton = state.labelButton)
+            SnackbarHost(hostState = scaffoldState.snackbarHostState) {
+                StoreSnackBar(
+                    snackbarData = it,
+                    labelButton = state.labelButton
+                )
             }
         },
         sheetTonalElevation = 0.dp,
@@ -188,11 +190,16 @@ private fun ProductDetailScreen(
                         .fillMaxWidth()
                         .weight(1f),
                 ) {
-                    GlideImage(
+                    SubcomposeAsyncImage(
                         modifier = Modifier
+                            .aspectRatio(13f / 13f)
+                            .padding(16.dp)
                             .align(Alignment.Center),
                         model = state.product.image,
-                        contentDescription = stringResource(id = R.string.content_description_img_product)
+                        contentDescription = stringResource(id = R.string.content_description_img_product),
+                        error = {
+                            ErrorImageLoad()
+                        }
                     )
 
                     this@Column.AnimatedVisibility(

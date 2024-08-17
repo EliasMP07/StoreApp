@@ -1,5 +1,6 @@
 package com.devdroid07.storeapp.store.presentation.search
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devdroid07.storeapp.R
 import com.devdroid07.storeapp.core.presentation.designsystem.LocalSpacing
@@ -21,12 +23,18 @@ import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorCo
 import com.devdroid07.storeapp.core.presentation.designsystem.components.handleResultView
 import com.devdroid07.storeapp.store.presentation.home.componets.ItemProduct
 import com.devdroid07.storeapp.store.presentation.search.components.SearchTextField
+import com.ehsanmsz.mszprogressindicator.progressindicator.BallSpinFadeLoaderProgressIndicator
 
 @Composable
 fun SearchScreenRoot(
     viewModel: SearchViewModel,
+    onBack: () -> Unit,
     navigateToDetailProduct: (String) -> Unit,
 ) {
+
+    BackHandler {
+        onBack()
+    }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -74,7 +82,9 @@ fun SearchScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    BallSpinFadeLoaderProgressIndicator(
+                        diameter = 60.dp
+                    )
                 }
             },
             isEmpty = state.isEmpty,

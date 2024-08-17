@@ -1,7 +1,4 @@
-@file:OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalGlideComposeApi::class
-)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.devdroid07.storeapp.store.presentation.home.componets
 
@@ -13,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,11 +34,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.CrossFade
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.SubcomposeAsyncImage
 import com.devdroid07.storeapp.R
+import com.devdroid07.storeapp.core.presentation.designsystem.CamaraIcon
 import com.devdroid07.storeapp.core.presentation.designsystem.Dimensions
+import com.devdroid07.storeapp.core.presentation.designsystem.PersonIcon
+import com.devdroid07.storeapp.core.presentation.designsystem.animation.shimmerEffect
+import com.devdroid07.storeapp.core.presentation.designsystem.components.ErrorImageLoad
 
 @Composable
 fun HomeTopBar(
@@ -110,14 +110,21 @@ fun HomeTopBar(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                GlideImage(
+                SubcomposeAsyncImage(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.background),
                     contentScale = ContentScale.Crop,
                     model = profile.ifBlank { R.drawable.ic_account },
-                    transition = CrossFade,
+                    loading = {
+                        Box(modifier = Modifier
+                            .fillMaxSize()
+                            .shimmerEffect())
+                    },
+                    error = {
+                        ErrorImageLoad()
+                    },
                     contentDescription = stringResource(id = R.string.content_description_profile)
                 )
             }
